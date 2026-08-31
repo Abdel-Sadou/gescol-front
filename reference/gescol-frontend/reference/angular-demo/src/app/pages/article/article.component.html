@@ -1,0 +1,103 @@
+<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#FFFFFF; line-height:1.6;">
+
+  <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; border-bottom:1px solid #E7E7E5;">
+    <div style="max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:10px 24px; gap:16px;">
+      <a href="#" (click)="goLanding($event)" style="display:flex; align-items:center; gap:10px; color:#1c2a20; min-width:0; overflow:hidden;">
+        <img src="assets/logo-cobimag.png" [attr.width]="logoParentSize" [attr.height]="logoParentSize" alt="Logo COBIMAG" style="flex-shrink:0; border-radius:50%; object-fit:cover;">
+        <span style="display:flex; flex-direction:column; line-height:1.2; min-width:0;">
+          <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Collège Bilingue Marie Gisèle</span>
+          @if (showSubtitle) {
+            <span style="font-size:10.5px; font-style:italic; color:#5F6161; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Actualités de l'établissement</span>
+          }
+        </span>
+      </a>
+      <a href="#" (click)="goLanding($event)" style="font-size:12.5px; color:#5F6161; white-space:nowrap;">← Toutes les actualités</a>
+    </div>
+  </header>
+
+  <section style="position:relative; min-height:clamp(300px,42vw,460px); display:flex; align-items:flex-end; overflow:hidden;">
+    <div style="position:absolute; inset:0; background:#00532B;"></div>
+    <div style="position:absolute; inset:0; background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 22px);"></div>
+    <div style="position:absolute; top:14px; right:16px; max-width:280px; text-align:right; z-index:1;">
+      <span style="font-family:monospace; font-size:11px; color:rgba(255,255,255,0.4);">PHOTO — {{article.imageAlt}}</span>
+    </div>
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,40,20,0.15) 0%, rgba(0,30,16,0.92) 100%);"></div>
+
+    <div style="position:relative; z-index:2; width:100%; max-width:1180px; margin:0 auto; padding:64px 24px 40px; color:#FFFFFF;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <span style="background:#E8722C; color:#FFFFFF; font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; padding:5px 12px;">{{article.tag}}</span>
+        <span style="font-size:12.5px; color:rgba(255,255,255,0.8);">{{article.date}}</span>
+      </div>
+      <h1 style="font-family:'Lora',serif; font-weight:700; font-size:clamp(26px,4.4vw,46px); line-height:1.14; margin:0; max-width:800px; text-wrap:pretty;">{{article.title}}</h1>
+    </div>
+  </section>
+
+  <div style="border-bottom:1px solid #E7E7E5;">
+    <div style="max-width:760px; margin:0 auto; padding:16px 24px; display:flex; gap:20px; flex-wrap:wrap; font-size:12.5px; color:#5F6161;">
+      <span>Par <strong style="color:#1c2a20;">{{article.author}}</strong></span>
+      <span>{{article.readTime}}</span>
+    </div>
+  </div>
+
+  <article style="max-width:760px; margin:0 auto; padding:40px 24px 8px;">
+    <p style="font-family:'Lora',serif; font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:#1c2a20; margin:0 0 32px; text-wrap:pretty;">{{article.lead}}</p>
+
+    @for (block of articleBody; track $index) {
+      <div>
+        @if (block.isP) {
+          <p style="font-size:16px; color:#3d4a41; margin:0 0 22px; text-wrap:pretty;">{{block.text}}</p>
+        }
+        @if (block.isH) {
+          <h2 style="font-family:'Lora',serif; font-size:22px; font-weight:700; color:#1c2a20; margin:34px 0 14px; line-height:1.3;">{{block.text}}</h2>
+        }
+        @if (block.isQuote) {
+          <blockquote style="margin:36px 0; padding:0; text-align:center;">
+            <span style="display:inline-flex; align-items:center; margin-bottom:10px;">
+              <span style="width:22px;height:22px;border-radius:50%;background:#008B47;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;">FR</span>
+              <span style="width:22px;height:22px;border-radius:50%;border:1.5px solid #008B47;color:#008B47;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:-8px;background:#FFFFFF;">EN</span>
+            </span>
+            <p style="font-family:'Lora',serif; font-style:italic; font-size:clamp(19px,2.6vw,25px); line-height:1.4; color:#008B47; margin:0; text-wrap:pretty;">{{block.text}}</p>
+          </blockquote>
+        }
+      </div>
+    }
+  </article>
+
+  <div style="max-width:760px; margin:0 auto; padding:24px 24px 56px;">
+    <div style="border-top:2px solid #008B47; border-bottom:1px solid #E7E7E5; padding:20px 0;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <span style="width:22px;height:22px;border-radius:50%;border:1.5px solid #008B47;color:#008B47;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;background:#FFFFFF;">EN</span>
+        <span style="font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#5F6161;">In English — summary</span>
+      </div>
+      <p style="font-size:15px; color:#3d4a41; margin:0; font-style:italic; text-wrap:pretty;">{{article.summaryEn}}</p>
+    </div>
+  </div>
+
+  <section style="background:#F7F8F6; padding:56px 24px 64px;">
+    <div style="max-width:1180px; margin:0 auto;">
+      <p style="text-transform:uppercase; letter-spacing:1.5px; font-size:12.5px; font-weight:700; color:#E8722C; margin:0 0 8px;">À lire également</p>
+      <h2 style="font-family:'Lora',serif; font-size:clamp(22px,3vw,28px); color:#1c2a20; margin:0 0 28px; font-weight:600;">Autres actualités du collège</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+        @for (item of relatedArticles; track $index) {
+          <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-radius:4px; overflow:hidden; display:flex; flex-direction:column;">
+            <div style="aspect-ratio:16/10; background:repeating-linear-gradient(45deg, rgba(0,139,71,0.08) 0px, rgba(0,139,71,0.08) 10px, transparent 10px, transparent 20px), #F0F1EF; display:flex; align-items:center; justify-content:center; padding:14px; text-align:center;">
+              <span style="font-family:monospace; font-size:11.5px; color:#5F6161;">PHOTO — {{item.imageAlt}}</span>
+            </div>
+            <div style="padding:20px; display:flex; flex-direction:column; gap:8px; flex:1;">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <span style="background:#FDECE1; color:#E8722C; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;">{{item.tag}}</span>
+                <span style="font-size:12px; color:#5F6161;">{{item.date}}</span>
+              </div>
+              <h3 style="font-family:'Lora',serif; font-size:17px; color:#1c2a20; margin:0; font-weight:700; line-height:1.3;">{{item.title}}</h3>
+              <p style="font-size:13.5px; margin:0; flex:1;">{{item.excerpt}}</p>
+              <a href="#" (click)="item.open($event)" style="color:#008B47; font-weight:700; font-size:13.5px; margin-top:4px;">Lire la suite →</a>
+            </div>
+          </div>
+        }
+      </div>
+      <div style="margin-top:32px;">
+        <a href="#" (click)="goLanding($event)" style="display:inline-block; border:1.5px solid #008B47; color:#008B47; font-weight:700; font-size:14px; padding:12px 22px; border-radius:2px;" class="hov4">← Retour à l'accueil</a>
+      </div>
+    </div>
+  </section>
+</div>

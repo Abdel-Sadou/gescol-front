@@ -1,0 +1,84 @@
+{
+  "menu": {
+    "tableauDeBord": "Tableau de bord",
+    "eleves": {
+      "label": "Gestion des élèves",
+      "liste": "Liste des élèves",
+      "fiche": "Fiche élève",
+      "inscriptions": "Inscriptions"
+    },
+    "finances": {
+      "label": "Finances",
+      "scolarite": "Scolarité",
+      "quittances": "Quittances",
+      "moratoires": "Moratoires"
+    },
+    "paie": {
+      "label": "Paie",
+      "baremes": "Barèmes",
+      "bulletins": "Bulletins de paie"
+    },
+    "personnel": "Personnel",
+    "parametrage": {
+      "label": "Paramétrage",
+      "classes": "Classes",
+      "taux": "Taux de scolarité",
+      "matieres": "Matières",
+      "emploisDuTemps": "Emplois du temps"
+    },
+    "emploiDuTemps": "Emploi du temps",
+    "resultats": {
+      "label": "Résultats",
+      "saisie": "Saisie des notes",
+      "bulletins": "Bulletins"
+    },
+    "discipline": "Discipline",
+    "cahierDeTexte": "Cahier de texte",
+    "communication": {
+      "label": "Communication",
+      "actualites": "Actualités",
+      "vitrine": "Vitrine"
+    }
+  },
+  "fiche": {
+    "titre": "Back-office COBIMAG",
+    "sousTitre": "Recherche & fiche élève",
+    "retour": "← Retour à l'accueil",
+    "recherche": {
+      "placeholder": "Rechercher par nom, matricule, classe...",
+      "aucunResultat": "Aucun élève ne correspond à cette recherche.",
+      "chargement": "Recherche en cours...",
+      "erreur": "Erreur réseau. Réessayez."
+    },
+    "chargement": "Chargement de la fiche...",
+    "erreur": "Impossible de charger les données de cet élève.",
+    "aucuneSelection": "Recherchez un élève par nom, matricule ou classe pour afficher sa fiche.",
+    "info": {
+      "titre": "Informations",
+      "sexe": "Sexe",
+      "groupeSanguin": "Groupe sanguin",
+      "naissance": "Date et lieu de naissance",
+      "sport": "Apte au sport",
+      "redoublant": "Redoublant",
+      "oui": "Oui",
+      "non": "Non"
+    },
+    "filiation": {
+      "titre": "Filiation",
+      "pere": "Père / Tuteur",
+      "mere": "Mère",
+      "quartier": "Quartier",
+      "contact": "Personne à contacter"
+    },
+    "solde": {
+      "label": "Solde de scolarité restant"
+    },
+    "bouton": {
+      "modifier": "Modifier",
+      "versement": "Enregistrer un versement",
+      "imprimer": "Imprimer la fiche",
+      "supprimer": "Supprimer",
+      "suppressionInfo": "Suppression soumise à autorisation"
+    }
+  }
+}

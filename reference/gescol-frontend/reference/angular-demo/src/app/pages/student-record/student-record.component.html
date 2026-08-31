@@ -1,0 +1,110 @@
+<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#F7F8F6; min-height:100vh; line-height:1.5;">
+
+  <header style="background:#FFFFFF; border-bottom:1px solid #E7E7E5;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:16px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden;">
+        <img src="assets/logo-cobimag.png" [attr.width]="logoFicheSize" [attr.height]="logoFicheSize" alt="Logo COBIMAG" style="flex-shrink:0; border-radius:50%; object-fit:cover;">
+        <span style="display:flex; flex-direction:column; line-height:1.2; min-width:0;">
+          <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Back-office COBIMAG</span>
+          @if (showSubtitle) {
+            <span style="font-size:11px; color:#5F6161; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Recherche &amp; fiche élève</span>
+          }
+        </span>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <a href="#" (click)="goLanding($event)" style="color:#5F6161; font-size:12px;">← Retour à l'accueil</a>
+        <span style="font-size:13px; font-weight:600; color:#1c2a20;">Mme Solange Ateba</span>
+        <span style="background:#EAF5EE; color:#008B47; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;">Secrétariat</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1040px; margin:0 auto; padding:24px 20px 64px;">
+    <div [style]="'position:relative; margin-bottom:' + (searchMarginBottom) + ';'">
+      <input type="text" [attr.value]="query" (input)="onQueryChange($event)" (focus)="onFocus($event)" placeholder="Rechercher par nom, matricule, classe..." style="width:100%; font-family:'Work Sans',sans-serif; font-size:15px; padding:14px 16px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+
+      @if (showSuggestions) {
+        <div style="position:absolute; top:calc(100% + 4px); left:0; right:0; background:#FFFFFF; border:1px solid #E7E7E5; border-radius:3px; box-shadow:0 4px 14px rgba(0,0,0,0.1); z-index:10; overflow:hidden;">
+          @for (s of suggestions; track $index) {
+            <button (click)="s.select($event)" style="width:100%; text-align:left; background:none; border:none; border-bottom:1px solid #F0F0EE; padding:10px 14px; display:flex; align-items:center; gap:12px; cursor:pointer;" class="hov5">
+              <span style="width:34px; height:34px; border-radius:50%; flex-shrink:0; background:repeating-linear-gradient(45deg, rgba(0,139,71,0.12) 0px, rgba(0,139,71,0.12) 6px, transparent 6px, transparent 12px), #EDEEEC; display:flex; align-items:center; justify-content:center;"><span style="font-family:monospace; font-size:7px; color:#5F6161;">PHOTO</span></span>
+              <span style="display:flex; flex-direction:column;">
+                <span style="font-weight:600; color:#1c2a20; font-size:13.5px;">{{s.name}}</span>
+                <span style="font-size:11.5px; color:#5F6161;">{{s.matricule}} · {{s.classe}}</span>
+              </span>
+            </button>
+          }
+          @if (noResults) {
+            <div style="padding:14px; font-size:13px; color:#5F6161;">Aucun élève ne correspond à cette recherche.</div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (hasSelected) {
+      <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <div [style]="'background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:' + (cardPadding) + '; box-shadow:0 1px 3px rgba(0,0,0,0.05); display:flex; gap:18px; align-items:center; flex-wrap:wrap;'">
+          <div style="width:78px; height:78px; border-radius:4px; flex-shrink:0; background:repeating-linear-gradient(45deg, rgba(0,139,71,0.12) 0px, rgba(0,139,71,0.12) 8px, transparent 8px, transparent 16px), #EDEEEC; display:flex; align-items:center; justify-content:center;"><span style="font-family:monospace; font-size:9px; color:#5F6161;">PHOTO</span></div>
+          <div style="flex:1; min-width:220px;">
+            <div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;">
+              <h1 style="font-family:'Lora',serif; font-size:22px; color:#1c2a20; margin:0; font-weight:700;">{{selected.nom}} {{selected.prenom}}</h1>
+              <span style="font-family:monospace; font-weight:700; font-size:13px; color:#008B47; background:#EAF5EE; padding:3px 10px; border-radius:3px;">{{selected.matricule}}</span>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+              <span style="font-size:12px; font-weight:600; color:#1c2a20; background:#F0F1EF; padding:4px 10px; border-radius:20px;">{{selected.classe}}</span>
+              <span [style]="'display:inline-flex; align-items:center; gap:5px; border-radius:20px; padding:4px 10px; font-size:12px; font-weight:700; background:' + (selected.trackBg) + '; color:' + (selected.trackColor) + '; border:' + (selected.trackBorder) + ';'">{{selected.trackLabel}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+          <div [style]="'background:#FFFFFF; border:1px solid #E7E7E5; border-radius:2px; padding:' + (cardPadding) + ';'">
+            <h3 style="font-family:'Lora',serif; font-size:14px; color:#1c2a20; margin:0 0 12px; font-weight:700;">Informations</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; font-size:13px;">
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Sexe</div><div style="color:#1c2a20; font-weight:600;">{{selected.sexe}}</div></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Groupe sanguin</div><div style="color:#1c2a20; font-weight:600;">{{selected.groupeSanguin}}</div></div>
+              <div style="grid-column:1 / -1;"><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Date et lieu de naissance</div><div style="color:#1c2a20; font-weight:600;">{{selected.naissance}}</div></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161; margin-bottom:3px;">Apte au sport</div><span [style]="'font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; background:' + (selected.sportBg) + '; color:' + (selected.sportColor) + ';'">{{selected.sportLabel}}</span></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161; margin-bottom:3px;">Redoublant</div><span [style]="'font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; background:' + (selected.redoubleBg) + '; color:' + (selected.redoubleColor) + ';'">{{selected.redoubleLabel}}</span></div>
+            </div>
+          </div>
+
+          <div [style]="'background:#FFFFFF; border:1px solid #E7E7E5; border-radius:2px; padding:' + (cardPadding) + ';'">
+            <h3 style="font-family:'Lora',serif; font-size:14px; color:#1c2a20; margin:0 0 12px; font-weight:700;">Filiation</h3>
+            <div style="display:flex; flex-direction:column; gap:9px; font-size:13px;">
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Père / Tuteur</div><div style="color:#1c2a20; font-weight:600;">{{selected.pere}}</div></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Mère</div><div style="color:#1c2a20; font-weight:600;">{{selected.mere}}</div></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Quartier</div><div style="color:#1c2a20; font-weight:600;">{{selected.quartier}}</div></div>
+              <div><div style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; color:#5F6161;">Personne à contacter</div><div style="color:#1c2a20; font-weight:600;">{{selected.contact}}</div></div>
+            </div>
+          </div>
+        </div>
+
+        @if (financialIsBanner) {
+          <div [style]="'display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:' + (selected.soldeBg) + '; border:1px solid ' + (selected.soldeBorder) + '; border-radius:2px; padding:16px 20px;'">
+            <span style="font-size:13.5px; font-weight:600; color:#1c2a20;">Solde de scolarité restant</span>
+            <span [style]="'font-family:\'Lora\',serif; font-size:24px; font-weight:700; color:' + (selected.soldeColor) + ';'">{{selected.soldeFmt}}</span>
+          </div>
+        }
+        @if (financialIsCard) {
+          <div [style]="'background:#FFFFFF; border-top:3px solid ' + (selected.soldeColor) + '; border-radius:2px; padding:' + (cardPadding) + '; box-shadow:0 1px 3px rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center;'">
+            <h3 style="font-family:'Lora',serif; font-size:14px; color:#1c2a20; margin:0; font-weight:700;">Solde de scolarité restant</h3>
+            <span [style]="'font-family:\'Lora\',serif; font-size:24px; font-weight:700; color:' + (selected.soldeColor) + ';'">{{selected.soldeFmt}}</span>
+          </div>
+        }
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="#" style="border:1.5px solid #008B47; color:#008B47; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px;" class="hov4">Modifier</a>
+          <a href="#" style="background:#008B47; color:#FFFFFF; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px;" class="hov3">Enregistrer un versement</a>
+          <a href="#" style="border:1.5px solid #5F6161; color:#5F6161; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px;" class="hov6">Imprimer la fiche</a>
+          <span title="Suppression soumise à autorisation" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">Supprimer</span>
+        </div>
+      </div>
+    }
+
+    @if (hasNoSelection) {
+      <div style="text-align:center; padding:60px 20px; color:#5F6161; font-size:14px;">Recherchez un élève par nom, matricule ou classe pour afficher sa fiche.</div>
+    }
+  </main>
+</div>

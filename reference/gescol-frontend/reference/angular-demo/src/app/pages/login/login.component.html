@@ -1,0 +1,80 @@
+<div style="position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; font-family:'Work Sans',sans-serif; overflow:hidden;">
+  <div style="position:absolute; inset:0; background:#00532B;"></div>
+  <div style="position:absolute; inset:-20px; background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 3px, transparent 3px, transparent 26px); filter:blur(6px);"></div>
+  <div style="position:absolute; inset:0; background:radial-gradient(circle at 50% 30%, rgba(0,139,71,0.35) 0%, rgba(0,40,20,0.88) 75%);"></div>
+  <div style="position:absolute; top:14px; left:16px; font-family:monospace; font-size:10.5px; color:rgba(255,255,255,0.3);">PHOTO — cour d'école (arrière-plan flouté)</div>
+
+  <div style="position:relative; z-index:2; width:100%; max-width:420px; background:#FFFFFF; border-radius:6px; padding:36px 32px; box-shadow:0 20px 50px rgba(0,0,0,0.35);">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:26px;">
+      <img src="assets/logo-cobimag.png" width="56" height="56" alt="Logo COBIMAG" style="border-radius:50%; object-fit:cover;">
+      <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; text-align:center;">Espace Parent</span>
+      <span style="font-size:10.5px; font-style:italic; color:#5F6161; text-align:center;">COBIMAG — Marie Gisèle Bilingual College</span>
+    </div>
+
+    <div style="display:flex; border-bottom:1px solid #E7E7E5; margin-bottom:24px;">
+      <button (click)="selectLoginTab($event)" [style]="'flex:1; background:none; border:none; padding:10px 0; font-weight:700; font-size:14px; cursor:pointer; color:' + (loginTabColor) + '; border-bottom:2px solid ' + (loginTabBorder) + ';'">Se connecter</button>
+      <button (click)="selectSignupTab($event)" [style]="'flex:1; background:none; border:none; padding:10px 0; font-weight:700; font-size:14px; cursor:pointer; color:' + (signupTabColor) + '; border-bottom:2px solid ' + (signupTabBorder) + ';'">Créer un compte</button>
+    </div>
+
+    @if (isLogin) {
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <input type="text" placeholder="Nom d'utilisateur" style="width:100%; font-family:'Work Sans',sans-serif; font-size:14px; padding:12px 14px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+
+        <div style="position:relative;">
+          <input [attr.type]="loginPasswordType" placeholder="Mot de passe" style="width:100%; font-family:'Work Sans',sans-serif; font-size:14px; padding:12px 40px 12px 14px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+          <button (click)="toggleLoginPassword($event)" aria-label="Afficher le mot de passe" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:4px; display:flex;">
+            <svg viewBox="0 0 24 14" width="20" height="12">
+              <circle cx="12" cy="7" r="6.5" fill="none" stroke="#5F6161" stroke-width="1.4"></circle>
+              <circle cx="12" cy="7" r="2.6" fill="#5F6161"></circle>
+              @if (loginPasswordHidden) {
+                <line x1="1" y1="13" x2="23" y2="1" stroke="#5F6161" stroke-width="1.4"></line>
+              }
+            </svg>
+          </button>
+        </div>
+
+        <a href="#" style="align-self:flex-end; font-size:12.5px; color:#5F6161; margin-top:-6px;">Mot de passe oublié ?</a>
+
+        <a href="#" (click)="goEspaceParent($event)" style="display:block; text-align:center; width:100%; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14.5px; padding:13px; border:none; border-radius:3px; cursor:pointer; margin-top:6px;" class="hov3">Se connecter</a>
+      </div>
+    }
+
+    @if (isSignup) {
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="background:#EAF5EE; border:1px solid #BFE3CD; border-radius:3px; padding:10px 12px; font-size:12.5px; color:#1c2a20;">Conseil : utilisez le nom d'un de vos enfants comme identifiant.</div>
+
+        <input type="text" placeholder="Nom d'utilisateur" style="width:100%; font-family:'Work Sans',sans-serif; font-size:14px; padding:12px 14px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+
+        <div style="position:relative;">
+          <input [attr.type]="signupPasswordType" [attr.value]="signupPassword" (input)="onSignupPasswordChange($event)" placeholder="Mot de passe" style="width:100%; font-family:'Work Sans',sans-serif; font-size:14px; padding:12px 40px 12px 14px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+          <button (click)="toggleSignupPassword($event)" aria-label="Afficher le mot de passe" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:4px; display:flex;">
+            <svg viewBox="0 0 24 14" width="20" height="12">
+              <circle cx="12" cy="7" r="6.5" fill="none" stroke="#5F6161" stroke-width="1.4"></circle>
+              <circle cx="12" cy="7" r="2.6" fill="#5F6161"></circle>
+              @if (signupPasswordHidden) {
+                <line x1="1" y1="13" x2="23" y2="1" stroke="#5F6161" stroke-width="1.4"></line>
+              }
+            </svg>
+          </button>
+        </div>
+
+        @if (showStrength) {
+          <div style="display:flex; flex-direction:column; gap:4px; margin-top:-8px;">
+            <div style="height:5px; background:#EEEEEC; border-radius:3px; overflow:hidden;">
+              <div [style]="'height:100%; width:' + (strengthPct) + '; background:' + (strengthColor) + '; border-radius:3px; transition:width 0.2s;'"></div>
+            </div>
+            <span [style]="'font-size:11.5px; color:' + (strengthColor) + '; font-weight:600;'">Force du mot de passe : {{strengthLabel}}</span>
+          </div>
+        }
+
+        <input [attr.type]="signupPasswordType" placeholder="Confirmer le mot de passe" style="width:100%; font-family:'Work Sans',sans-serif; font-size:14px; padding:12px 14px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20;">
+
+        <button style="width:100%; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14.5px; padding:13px; border:none; border-radius:3px; cursor:pointer; margin-top:6px;" class="hov3">Créer mon compte</button>
+      </div>
+    }
+
+    <div style="text-align:center; margin-top:22px;">
+      <a href="#" (click)="goLanding($event)" style="font-size:12.5px; color:#5F6161;">← Retour au site</a>
+    </div>
+  </div>
+</div>

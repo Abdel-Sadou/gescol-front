@@ -1,0 +1,84 @@
+{
+  "menu": {
+    "tableauDeBord": "Dashboard",
+    "eleves": {
+      "label": "Student Management",
+      "liste": "Student list",
+      "fiche": "Student record",
+      "inscriptions": "Registrations"
+    },
+    "finances": {
+      "label": "Finances",
+      "scolarite": "Tuition",
+      "quittances": "Receipts",
+      "moratoires": "Payment plans"
+    },
+    "paie": {
+      "label": "Payroll",
+      "baremes": "Salary scales",
+      "bulletins": "Pay slips"
+    },
+    "personnel": "Staff",
+    "parametrage": {
+      "label": "Settings",
+      "classes": "Classes",
+      "taux": "Tuition rates",
+      "matieres": "Subjects",
+      "emploisDuTemps": "Timetables"
+    },
+    "emploiDuTemps": "Timetable",
+    "resultats": {
+      "label": "Results",
+      "saisie": "Grade entry",
+      "bulletins": "Report cards"
+    },
+    "discipline": "Discipline",
+    "cahierDeTexte": "Class diary",
+    "communication": {
+      "label": "Communication",
+      "actualites": "News",
+      "vitrine": "Website"
+    }
+  },
+  "fiche": {
+    "titre": "COBIMAG Back-office",
+    "sousTitre": "Student search & record",
+    "retour": "← Back to home",
+    "recherche": {
+      "placeholder": "Search by name, student ID, class...",
+      "aucunResultat": "No student matches this search.",
+      "chargement": "Searching...",
+      "erreur": "Network error. Please try again."
+    },
+    "chargement": "Loading student record...",
+    "erreur": "Unable to load this student's data.",
+    "aucuneSelection": "Search for a student by name, ID or class to view their record.",
+    "info": {
+      "titre": "Information",
+      "sexe": "Gender",
+      "groupeSanguin": "Blood type",
+      "naissance": "Date and place of birth",
+      "sport": "Fit for sport",
+      "redoublant": "Repeating year",
+      "oui": "Yes",
+      "non": "No"
+    },
+    "filiation": {
+      "titre": "Family details",
+      "pere": "Father / Guardian",
+      "mere": "Mother",
+      "quartier": "Neighbourhood",
+      "contact": "Emergency contact"
+    },
+    "solde": {
+      "label": "Outstanding tuition balance"
+    },
+    "bouton": {
+      "modifier": "Edit",
+      "versement": "Record a payment",
+      "imprimer": "Print record",
+      "supprimer": "Delete",
+      "suppressionInfo": "Deletion requires authorisation"
+    }
+  }
+}

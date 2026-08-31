@@ -1,0 +1,112 @@
+<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#F7F8F6; min-height:100vh; line-height:1.5;">
+
+  <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; box-shadow:0 1px 0 rgba(0,0,0,0.08);">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:16px; flex-wrap:nowrap;">
+      <a href="#" (click)="goLanding($event)" style="display:flex; align-items:center; gap:10px; color:#1c2a20; min-width:0; overflow:hidden;">
+        <img src="assets/logo-cobimag.png" [attr.width]="logoParentSize" [attr.height]="logoParentSize" alt="Logo COBIMAG" style="flex-shrink:0; border-radius:50%; object-fit:cover;">
+        <span style="display:flex; flex-direction:column; line-height:1.2; min-width:0;">
+          <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Espace Parent</span>
+          @if (showSubtitle) {
+            <span style="font-size:10.5px; font-style:italic; color:#5F6161; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">COBIMAG — Marie Gisèle Bilingual College</span>
+          }
+        </span>
+      </a>
+      <div style="display:flex; align-items:center; gap:10px; overflow-x:auto; flex-shrink:0;">
+        @if (showNewEnrollmentButton) {
+          <a href="#" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13px; padding:9px 16px; border-radius:2px; white-space:nowrap;" class="hov1">+ Nouvelle inscription</a>
+        }
+        <a href="#" (click)="goLanding($event)" style="color:#5F6161; font-weight:600; font-size:13px; white-space:nowrap; padding:9px 4px;">Déconnexion</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1180px; margin:0 auto; padding:24px 20px 64px;">
+    <p style="font-size:13.5px; color:#5F6161; margin:0 0 4px;">Bonjour,</p>
+    <h1 style="font-family:'Lora',serif; font-size:clamp(20px,3vw,26px); color:#1c2a20; margin:0 0 24px; font-weight:700;">{{parentName}}</h1>
+
+    @if (showMultipleChildren) {
+      <p style="text-transform:uppercase; letter-spacing:1.3px; font-size:12px; font-weight:700; color:#E8722C; margin:0 0 12px;">Mes enfants</p>
+    }
+
+    @if (childSelectorIsCards) {
+      <div style="display:flex; gap:14px; overflow-x:auto; padding-bottom:6px; margin-bottom:28px;">
+        @for (child of children; track $index) {
+          <button (click)="child.select($event)" [style]="'flex-shrink:0; width:180px; text-align:left; background:' + (child.cardBg) + '; border:' + (child.cardBorder) + '; border-radius:4px; padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px;'">
+            <div style="width:44px; height:44px; border-radius:50%; background:repeating-linear-gradient(45deg, rgba(0,139,71,0.12) 0px, rgba(0,139,71,0.12) 6px, transparent 6px, transparent 12px), #EDEEEC; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:monospace; font-size:8px; color:#5F6161;">PHOTO</span>
+            </div>
+            <span style="font-weight:700; color:#1c2a20; font-size:14px;">{{child.name}}</span>
+            <span style="font-size:12.5px; color:#5F6161;">{{child.classe}}</span>
+            <span [style]="'display:inline-flex; align-self:flex-start; align-items:center; gap:5px; border-radius:20px; padding:3px 9px; font-size:10.5px; font-weight:700; background:' + (child.trackBg) + '; color:' + (child.trackColor) + '; border:' + (child.trackBorder) + ';'">{{child.trackLabel}}</span>
+          </button>
+        }
+      </div>
+    }
+
+    @if (childSelectorIsTabs) {
+      <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:28px; border-bottom:1px solid #E7E7E5;">
+        @for (child of children; track $index) {
+          <button (click)="child.select($event)" [style]="'flex-shrink:0; background:none; border:none; border-bottom:3px solid ' + (child.tabBorder) + '; color:' + (child.tabColor) + '; font-weight:700; font-size:14px; padding:10px 14px; cursor:pointer; white-space:nowrap;'">{{child.name}} · {{child.classe}}</button>
+        }
+      </div>
+    }
+
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+      <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0; font-weight:700;">{{selectedChild.name}}</h2>
+      <span style="font-size:13.5px; color:#5F6161;">{{selectedChild.classe}}</span>
+      <span [style]="'display:inline-flex; align-items:center; gap:5px; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:700; background:' + (selectedChild.trackBg) + '; color:' + (selectedChild.trackColor) + '; border:' + (selectedChild.trackBorder) + ';'">{{selectedChild.trackLabel}}</span>
+    </div>
+
+    @if (showPaymentAlert) {
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:#FDECE1; border:1px solid #F0C39E; border-radius:4px; padding:14px 18px; margin-bottom:22px;">
+        <span style="font-size:13.5px; color:#8a4416; font-weight:600;">Solde restant à régler : {{soldeFmt}}</span>
+        <a href="#" (click)="goQuittance($event)" style="color:#E8722C; font-weight:700; font-size:13px;">Voir les quittances →</a>
+      </div>
+    }
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-bottom:36px;">
+      <div style="background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:10px;">
+        <h3 style="font-family:'Lora',serif; font-size:15.5px; color:#1c2a20; margin:0; font-weight:700;">Scolarité</h3>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span>Total dû</span><span style="font-weight:600; color:#1c2a20;">{{totalFmt}}</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;"><span>Montant versé</span><span style="font-weight:600; color:#1c2a20;">{{verseFmt}}</span></div>
+        <div style="height:1px; background:#EEEEEC; margin:2px 0;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <span style="font-size:13px; color:#5F6161;">{{soldeLabel}}</span>
+          <span [style]="'font-family:\'Lora\',serif; font-size:20px; font-weight:700; color:' + (soldeColor) + ';'">{{soldeFmt}}</span>
+        </div>
+        <a href="#" (click)="goQuittance($event)" style="margin-top:6px; text-align:center; border:1.5px solid #008B47; color:#008B47; font-weight:700; font-size:13px; padding:10px; border-radius:2px;" class="hov4">Voir les quittances</a>
+      </div>
+
+      <div style="background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:10px;">
+        <h3 style="font-family:'Lora',serif; font-size:15.5px; color:#1c2a20; margin:0; font-weight:700;">Résultats</h3>
+        <span style="font-size:12.5px; color:#5F6161;">{{selectedChild.resultats.metricLabel}}</span>
+        <span style="font-family:'Lora',serif; font-size:32px; font-weight:700; color:#1c2a20;">{{selectedChild.resultats.value}}</span>
+        <span style="display:inline-flex; align-self:flex-start; background:#EAF5EE; color:#008B47; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:20px;">{{selectedChild.resultats.mention}}</span>
+        <a href="#" style="margin-top:auto; text-align:center; border:1.5px solid #008B47; color:#008B47; font-weight:700; font-size:13px; padding:10px; border-radius:2px;" class="hov4">Voir le bulletin</a>
+      </div>
+
+      <div style="background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:10px;">
+        <h3 style="font-family:'Lora',serif; font-size:15.5px; color:#1c2a20; margin:0; font-weight:700;">Discipline</h3>
+        <span style="font-family:'Lora',serif; font-size:32px; font-weight:700; color:#1c2a20;">{{selectedChild.discipline.incidents}}</span>
+        <span style="font-size:12.5px; color:#5F6161;">incident(s) sur la période</span>
+        <span [style]="'display:inline-flex; align-self:flex-start; background:' + (disciplineBg) + '; color:' + (disciplineColor) + '; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:20px;'">{{disciplineStatusLabel}}</span>
+      </div>
+    </div>
+
+    <p style="text-transform:uppercase; letter-spacing:1.3px; font-size:12px; font-weight:700; color:#E8722C; margin:0 0 14px;">Historique des versements</p>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      @for (h of historique; track $index) {
+        <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-radius:4px; padding:16px 18px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <span style="font-weight:700; color:#1c2a20; font-size:14px;">{{h.date}}</span>
+            <span style="font-family:'Lora',serif; font-weight:700; color:#008B47; font-size:16px;">{{h.montantFmt}}</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px; font-size:12.5px; color:#5F6161;">
+            <span>Mode : <strong style="color:#1c2a20;">{{h.mode}}</strong></span>
+            <span>Reste à payer : <strong style="color:#1c2a20;">{{h.resteFmt}}</strong></span>
+          </div>
+        </div>
+      }
+    </div>
+  </main>
+</div>
