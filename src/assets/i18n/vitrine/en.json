@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "accueil": "Home",
+    "ecole": "The school",
+    "formations": "Programmes",
+    "vieScolaire": "School life",
+    "actualites": "News",
+    "admissions": "Admissions",
+    "espaceParent": "Parent Portal",
+    "contact": "Contact"
+  },
+  "topbar": {
+    "adresse": "Yaoundé, Cameroon — Nkolbisson",
+    "telephone": "+237 6 99 12 34 56",
+    "email": "contact@cobimag.cm",
+    "bilingue": "Bilingual since 1991"
+  },
+  "accueil": {
+    "region": "Bilingual College · Yaoundé, Cameroon",
+    "badge": "Bilingual school (French & English) — Yaoundé",
+    "mot1": "Discipline.",
+    "mot2": "Rigour.",
+    "mot3": "Method.",
+    "description": "Two real educational sub-systems, one standard of excellence. Marie Gisèle Bilingual College prepares your children for Francophone and Anglophone success, in a disciplined and caring environment.",
+    "cta": {
+      "inscrire": "Enrol my child",
+      "decouvrir": "Discover the school"
+    },
+    "scroller": "Scroll"
+  },
+  "sousSystemes": {
+    "surtitle": "Our two sub-systems",
+    "titre": "One school, two paths of excellence"
+  },
+  "ecole": {
+    "titre": "Our history, our values",
+    "organigramme": "Organisation chart",
+    "motFondateur": {
+      "surtitle": "A word from the founder",
+      "citation": "We do not just educate students — we forge rigorous, bilingual citizens confident in their future, capable of carrying both educational systems that make our country so rich.",
+      "fondatriceNom": "Mrs Marie-Gisèle Nkoa",
+      "fondatriceRole": "Founder and Promoter of COBIMAG"
+    },
+    "presentation": {
+      "surtitle": "About us",
+      "titre": "Our history, our values"
+    },
+    "equipe": {
+      "titre": "Our teaching staff",
+      "vide": "No staff members to display at the moment."
+    }
+  },
+  "formations": {
+    "surtitle": "Programmes",
+    "titre": "Our cycles, across both systems",
+    "description": "COBIMAG integrates both Cameroonian educational sub-systems for a complete and recognised education.",
+    "sections": {
+      "francophone": "FRANCOPHONE",
+      "anglophone": "ENGLISH SECTION"
+    },
+    "francophone": {
+      "titre": "Francophone Sub-System",
+      "sousTitre": "Official MINESEC Programmes",
+      "maternelle": "Nursery",
+      "primaire": "Primary",
+      "college": "Lower Secondary",
+      "lycee": "Upper Secondary"
+    },
+    "anglophone": {
+      "titre": "Anglophone Sub-System",
+      "sousTitre": "GCE Board Official Programmes",
+      "nursery": "Nursery",
+      "primary": "Primary",
+      "secondary": "Secondary — O-Level",
+      "upperSixth": "Upper Sixth — A-Level"
+    }
+  },
+  "vieScolaire": {
+    "surtitle": "School life",
+    "titre": "Daily life for our students",
+    "horaires": {
+      "titre": "Timetable",
+      "vide": "Information coming soon."
+    },
+    "activites": {
+      "titre": "Extra-curricular activities",
+      "vide": "Information coming soon."
+    },
+    "cantine": {
+      "titre": "Canteen & Transport"
+    }
+  },
+  "actualites": {
+    "surtitle": "News",
+    "titre": "College life",
+    "badge": "News",
+    "lireSuite": "Read more →",
+    "vide": "No news available at the moment."
+  },
+  "article": {
+    "sousTitre": "College news",
+    "retourActualites": "← All news",
+    "retourAccueil": "← Back to home",
+    "introuvable": "This article could not be found or is no longer available.",
+    "erreur": {
+      "titre": "Content temporarily unavailable.",
+      "description": "Please try again in a few moments."
+    },
+    "related": {
+      "surtitle": "Read also",
+      "titre": "More college news"
+    }
+  },
+  "admissions": {
+    "surtitle": "Admissions",
+    "titre": "How to enrol your child",
+    "texteDefaut": "To enrol your child at Marie Gisèle Bilingual College, start by creating your parent account online, then follow the enrolment steps. Our team is with you every step of the way.",
+    "cta": "Enrol my child",
+    "demarrer": "Start online enrolment"
+  },
+  "footer": {
+    "droits": "All rights reserved.",
+    "espaceParent": "Parent Portal →",
+    "liensRapides": "Quick links",
+    "reseauxSociaux": "Social media",
+    "mentionsLegales": "Legal notice",
+    "accesSecretariat": "Staff access"
+  }
+}

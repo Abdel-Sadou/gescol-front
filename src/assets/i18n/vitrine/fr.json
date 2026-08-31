@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "accueil": "Accueil",
+    "ecole": "L'école",
+    "formations": "Formations",
+    "vieScolaire": "Vie scolaire",
+    "actualites": "Actualités",
+    "admissions": "Admissions",
+    "espaceParent": "Portail Parent",
+    "contact": "Contact"
+  },
+  "topbar": {
+    "adresse": "Yaoundé, Cameroun — Nkolbisson",
+    "telephone": "+237 6 99 12 34 56",
+    "email": "contact@cobimag.cm",
+    "bilingue": "Bilingue depuis 1991"
+  },
+  "accueil": {
+    "region": "Collège Bilingue · Yaoundé, Cameroun",
+    "badge": "Établissement bilingue francophone / anglophone — Yaoundé",
+    "mot1": "Discipline.",
+    "mot2": "Rigueur.",
+    "mot3": "Méthode.",
+    "description": "Deux sous-systèmes éducatifs réels, une seule exigence d'excellence. Le Collège Bilingue Marie Gisèle prépare vos enfants aux réussites francophones et anglophones, dans un cadre discipliné et bienveillant.",
+    "cta": {
+      "inscrire": "Inscrire mon enfant",
+      "decouvrir": "Découvrir l'école"
+    },
+    "scroller": "Défiler"
+  },
+  "sousSystemes": {
+    "surtitle": "Nos deux sous-systèmes",
+    "titre": "Une même école, deux parcours d'excellence"
+  },
+  "ecole": {
+    "titre": "Notre histoire, nos repères",
+    "organigramme": "Organigramme",
+    "motFondateur": {
+      "surtitle": "Le mot du fondateur",
+      "citation": "Nous ne formons pas seulement des élèves : nous forgeons des citoyens rigoureux, bilingues et confiants en l'avenir, capables de porter les deux systèmes éducatifs qui font la richesse de notre pays.",
+      "fondatriceNom": "Mme Marie-Gisèle Nkoa",
+      "fondatriceRole": "Fondatrice et Promotrice du COBIMAG"
+    },
+    "presentation": {
+      "surtitle": "Présentation",
+      "titre": "Notre histoire, nos repères"
+    },
+    "equipe": {
+      "titre": "Notre équipe pédagogique",
+      "vide": "Aucun membre de l'équipe affiché pour le moment."
+    }
+  },
+  "formations": {
+    "surtitle": "Formations",
+    "titre": "Nos cycles, dans les deux systèmes",
+    "description": "COBIMAG intègre les deux sous-systèmes éducatifs camerounais pour une scolarité complète et reconnue.",
+    "sections": {
+      "francophone": "FRANCOPHONE",
+      "anglophone": "ENGLISH SECTION"
+    },
+    "francophone": {
+      "titre": "Sous-système Francophone",
+      "sousTitre": "Programmes officiels MINESEC",
+      "maternelle": "Maternelle",
+      "primaire": "Primaire",
+      "college": "Collège — 1er cycle",
+      "lycee": "Lycée — 2ème cycle"
+    },
+    "anglophone": {
+      "titre": "Anglophone Sub-System",
+      "sousTitre": "GCE Board Official Programmes",
+      "nursery": "Nursery",
+      "primary": "Primary",
+      "secondary": "Secondary — O-Level",
+      "upperSixth": "Upper Sixth — A-Level"
+    }
+  },
+  "vieScolaire": {
+    "surtitle": "Vie scolaire",
+    "titre": "Le quotidien de nos élèves",
+    "horaires": {
+      "titre": "Horaires",
+      "vide": "Information bientôt disponible."
+    },
+    "activites": {
+      "titre": "Activités périscolaires",
+      "vide": "Information bientôt disponible."
+    },
+    "cantine": {
+      "titre": "Cantine & Transport"
+    }
+  },
+  "actualites": {
+    "surtitle": "Actualités",
+    "titre": "La vie du collège",
+    "badge": "Actualité",
+    "lireSuite": "Lire la suite →",
+    "vide": "Aucune actualité disponible pour le moment."
+  },
+  "article": {
+    "sousTitre": "Actualités de l'établissement",
+    "retourActualites": "← Toutes les actualités",
+    "retourAccueil": "← Retour à l'accueil",
+    "introuvable": "Cet article est introuvable ou n'est plus disponible.",
+    "erreur": {
+      "titre": "Contenu temporairement indisponible.",
+      "description": "Réessayez dans quelques instants."
+    },
+    "related": {
+      "surtitle": "À lire également",
+      "titre": "Autres actualités du collège"
+    }
+  },
+  "admissions": {
+    "surtitle": "Admissions",
+    "titre": "Comment inscrire votre enfant",
+    "texteDefaut": "Pour inscrire votre enfant au Collège Bilingue Marie Gisèle, commencez par créer votre espace parent en ligne, puis suivez les étapes d'inscription. Notre équipe vous accompagne à chaque étape du processus.",
+    "cta": "Inscrire mon enfant",
+    "demarrer": "Démarrer l'inscription en ligne"
+  },
+  "footer": {
+    "droits": "Tous droits réservés.",
+    "espaceParent": "Espace Parent →",
+    "liensRapides": "Liens rapides",
+    "reseauxSociaux": "Réseaux sociaux",
+    "mentionsLegales": "Mentions légales",
+    "accesSecretariat": "Accès secrétariat"
+  }
+}

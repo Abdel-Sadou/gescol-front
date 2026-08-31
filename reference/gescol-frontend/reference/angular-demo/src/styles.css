@@ -1,0 +1,15 @@
+:root{--cobimag-vert:#008B47;--cobimag-gris:#5F6161;--cobimag-orange:#E8722C;}
+*{box-sizing:border-box;}
+body{margin:0;}
+html{scroll-behavior:smooth;}
+a{color:#008B47;text-decoration:none;cursor:pointer;}
+a:hover{color:#E8722C;}
+input:focus{outline:2px solid #008B47;outline-offset:1px;}
+doc-page:not(:defined){visibility:hidden;}
+@media print{.no-print{display:none;}}
+.hov1:hover{background:#c85f1f !important;}
+.hov2:hover{background:rgba(255,255,255,0.12) !important;}
+.hov3:hover{background:#00733b !important;}
+.hov4:hover{background:#EAF5EE !important;}
+.hov5:hover{background:#F7F8F6 !important;}
+.hov6:hover{background:#F0F1EF !important;}

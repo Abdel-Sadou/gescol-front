@@ -1,0 +1,160 @@
+{
+  "connexion": {
+    "espace": "Espace Parent",
+    "sousTitre": "COBIMAG — Marie Gisèle Bilingual College",
+    "retourSite": "Retour au site",
+    "conseil": "Conseil : utilisez le nom d'un de vos enfants comme identifiant.",
+    "onglet": {
+      "seConnecter": "Se connecter",
+      "creerCompte": "Créer un compte"
+    },
+    "champ": {
+      "identifiant": "Nom d'utilisateur",
+      "motDePasse": "Mot de passe",
+      "confirmerMotDePasse": "Confirmer le mot de passe",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "email": "Adresse e-mail",
+      "afficherMotDePasse": "Afficher le mot de passe",
+      "masquerMotDePasse": "Masquer le mot de passe"
+    },
+    "lien": {
+      "motDePasseOublie": "Mot de passe oublié ?",
+      "bientotDisponible": "Bientôt disponible"
+    },
+    "bouton": {
+      "seConnecter": "Se connecter",
+      "connexionEnCours": "Connexion…",
+      "creerCompte": "Créer mon compte",
+      "creationEnCours": "Création…"
+    },
+    "force": {
+      "label": "Force : ",
+      "faible": "Faible",
+      "moyen": "Moyen",
+      "bon": "Bon",
+      "fort": "Fort"
+    },
+    "message": {
+      "compteCreé": "Compte créé ! Vous pouvez maintenant vous connecter.",
+      "erreurIdentifiants": "Identifiants incorrects. Veuillez réessayer.",
+      "erreurGenerale": "Une erreur est survenue. Veuillez réessayer."
+    }
+  },
+  "dashboard": {
+    "zone": "Espace Parent",
+    "sousTitre": "COBIMAG — Marie Gisèle Bilingual College",
+    "bientotDisponible": "Bientôt disponible",
+    "bonjour": "Bonjour,",
+    "mesEnfants": "Mes enfants",
+    "nouvelleInscription": "+ Nouvelle inscription",
+    "deconnexion": "Déconnexion",
+    "chargement": "Chargement de vos données...",
+    "erreur": {
+      "titre": "Impossible de charger vos données.",
+      "description": "Réessayez dans quelques instants.",
+      "reessayer": "Recharger la page"
+    },
+    "aucunEnfant": {
+      "titre": "Aucun enfant lié à ce compte.",
+      "description": "Inscrivez votre enfant pour accéder à son suivi scolaire.",
+      "cta": "Inscrire mon enfant"
+    },
+    "alerte": {
+      "solde": "Solde restant à régler :",
+      "voirQuittances": "Voir les quittances →"
+    },
+    "scolarite": {
+      "titre": "Scolarité",
+      "totalDu": "Total dû",
+      "montantVerse": "Montant versé",
+      "soldeRestant": "Solde restant",
+      "aJour": "Scolarité à jour",
+      "voirQuittances": "Voir les quittances"
+    },
+    "track": {
+      "francophone": "Francophone",
+      "anglophone": "Anglophone"
+    },
+    "mention": {
+      "tresBien": "Très bien",
+      "bien": "Bien",
+      "assezBien": "Assez bien",
+      "passable": "Passable",
+      "insuffisant": "Insuffisant"
+    },
+    "modePaiement": {
+      "caisse": "Caisse",
+      "bancaire": "Virement bancaire"
+    },
+    "resultats": {
+      "titre": "Résultats",
+      "sequence": "Séquence en cours",
+      "aucune": "Aucune note saisie",
+      "voirBulletin": "Voir le bulletin"
+    },
+    "discipline": {
+      "titre": "Discipline",
+      "incidents": "incident(s) sur la période",
+      "ras": "RAS — rien à signaler",
+      "incidentsSignales": "Incidents mineurs signalés"
+    },
+    "suivi": {
+      "chargement": "Chargement du suivi...",
+      "erreur": "Impossible de charger le suivi de cet élève."
+    },
+    "historique": {
+      "titre": "Historique des versements",
+      "mode": "Mode :",
+      "resteAPayer": "Reste à payer :",
+      "quittance": "N° quittance :",
+      "telecharger": "Télécharger",
+      "voirApercu": "Voir l'aperçu →",
+      "enCours": "Téléchargement...",
+      "aucun": "Aucun versement enregistré.",
+      "erreur": "Impossible de charger l'historique des versements.",
+      "erreurPdf": "Échec du téléchargement. Veuillez réessayer.",
+      "statutValide": "Validé",
+      "statutAttente": "En attente de validation",
+      "statutRejete": "Rejeté"
+    }
+  },
+  "quittance": {
+    "retour": "← Retour à l'accueil",
+    "avis": "Cet aperçu est fourni à titre indicatif. Le document officiel est généré par l'établissement.",
+    "introuvable": "Versement introuvable. Il a peut-être été supprimé ou l'identifiant est incorrect.",
+    "erreur": "Impossible de charger les données du versement. Veuillez réessayer.",
+    "bouton": {
+      "telecharger": "Télécharger le PDF officiel",
+      "enCours": "Téléchargement…"
+    },
+    "document": {
+      "titre": "QUITTANCE DE PAIEMENT DE SCOLARITÉ",
+      "numero": "N° quittance :",
+      "emise": "Émise le :",
+      "souche": "SOUCHE — CONSERVÉE PAR L'ÉTABLISSEMENT",
+      "decouperIci": "✂ DÉCOUPER ICI",
+      "copieParent": "COPIE — REMISE AU PARENT",
+      "codeBarre": "CODE-BARRE",
+      "qr": "QR — élève/classe/année/montant",
+      "responsable": "Le Responsable financier",
+      "signatureCachet": "Signature et cachet",
+      "champ": {
+        "nom": "Nom",
+        "prenom": "Prénom",
+        "annee": "Année scolaire",
+        "classe": "Classe",
+        "sousSysteme": "Sous-système",
+        "redoublant": "Redoublant"
+      },
+      "table": {
+        "designation": "Désignation",
+        "montant": "Montant (FCFA)",
+        "total": "Montant total de la scolarité",
+        "dejaVerse": "Déjà versé avant ce paiement",
+        "verseAujourdhui": "Versé aujourd'hui",
+        "resteAVerser": "Reste à verser après ce paiement"
+      }
+    }
+  }
+}
