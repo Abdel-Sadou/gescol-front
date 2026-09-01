@@ -32,10 +32,15 @@ type QuittanceState =
     @if (state() === undefined) {
       <span style="font-family:'Work Sans',sans-serif; font-size:12px; color:#5F6161; background:#F7F8F6; border:1px solid #E7E7E5; border-radius:20px; padding:6px 14px; opacity:0.5;">{{ t('quittance.bouton.telecharger') }}</span>
     } @else if (state()?.kind === 'found') {
-      <button (click)="downloadPdf()" [disabled]="pdfLoading()"
-        style="font-family:'Work Sans',sans-serif; font-size:12px; color:#008B47; background:#EAF5EE; border:1px solid #BFE3CD; border-radius:20px; padding:6px 14px; cursor:pointer;">
-        @if (pdfLoading()) { {{ t('quittance.bouton.enCours') }} } @else { {{ t('quittance.bouton.telecharger') }} }
-      </button>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+        <button (click)="downloadPdf()" [disabled]="pdfLoading()"
+          style="font-family:'Work Sans',sans-serif; font-size:12px; color:#008B47; background:#EAF5EE; border:1px solid #BFE3CD; border-radius:20px; padding:6px 14px; cursor:pointer;">
+          @if (pdfLoading()) { {{ t('quittance.bouton.enCours') }} } @else { {{ t('quittance.bouton.telecharger') }} }
+        </button>
+        @if (pdfError()) {
+          <span style="font-size:11px; color:#C0392B; background:#FFFFFF; border:1px solid #F0C39E; border-radius:20px; padding:3px 10px;">{{ t('quittance.bouton.erreur') }}</span>
+        }
+      </div>
     } @else {
       <button disabled style="font-family:'Work Sans',sans-serif; font-size:12px; color:#5F6161; background:#F7F8F6; border:1px solid #E7E7E5; border-radius:20px; padding:6px 14px; opacity:0.5; cursor:default;">{{ t('quittance.bouton.telecharger') }}</button>
     }
@@ -306,17 +311,19 @@ export class Quittance extends CobimagBase {
     });
 
     readonly pdfLoading = signal(false);
+    readonly pdfError   = signal(false);
 
     downloadPdf(): void {
         const id = this.versementId();
         if (!id || this.pdfLoading()) return;
+        this.pdfError.set(false);
         this.pdfLoading.set(true);
         this.parentService.downloadQuittancePdf(id).pipe(
             take(1),
             catchError(() => of(null))
         ).subscribe(blob => {
             this.pdfLoading.set(false);
-            if (!blob) return;
+            if (!blob) { this.pdfError.set(true); return; }
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;

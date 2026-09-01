@@ -55,6 +55,16 @@ export const appRoutes: Routes = [
                 path: 'quittance/:versementId',
                 loadComponent: () => import('@/app/pages/parent/quittance/quittance').then(c => c.Quittance),
                 data: { breadcrumb: 'Quittance' }
+            },
+            {
+                path: 'inscription/nouvelle',
+                loadComponent: () => import('@/app/pages/parent/inscription/nouvelle-inscription').then(c => c.NouvelleInscription),
+                data: { breadcrumb: 'Nouvelle inscription' }
+            },
+            {
+                path: 'inscription/mes-inscriptions',
+                loadComponent: () => import('@/app/pages/parent/inscription/mes-inscriptions').then(c => c.MesInscriptions),
+                data: { breadcrumb: 'Mes inscriptions' }
             }
         ]
     },

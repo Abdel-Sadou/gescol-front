@@ -47,6 +47,7 @@
     "bientotDisponible": "Coming soon",
     "bonjour": "Hello,",
     "mesEnfants": "My children",
+    "mesInscriptions": "My enrolments",
     "nouvelleInscription": "+ New enrolment",
     "deconnexion": "Log out",
     "chargement": "Loading your data...",
@@ -126,7 +127,8 @@
     "erreur": "Unable to load payment data. Please try again.",
     "bouton": {
       "telecharger": "Download official PDF",
-      "enCours": "Downloading…"
+      "enCours": "Downloading…",
+      "erreur": "Download failed. Please try again."
     },
     "document": {
       "titre": "SCHOOL FEES RECEIPT",
@@ -155,6 +157,92 @@
         "verseAujourdhui": "Paid today",
         "resteAVerser": "Balance remaining after payment"
       }
+    }
+  },
+  "inscription": {
+    "titre": "New enrolment",
+    "retour": "← Back to dashboard",
+    "etape": {
+      "1": "Criteria",
+      "2": "Fees",
+      "3": "Reservation",
+      "4": "Information",
+      "5": "Confirmation"
+    },
+    "criteres": {
+      "titre": "Enrolment criteria",
+      "description": "Please read the criteria carefully before proceeding with your enrolment request.",
+      "chargement": "Loading criteria...",
+      "erreur": "Unable to load enrolment criteria. Please try again.",
+      "accepter": "I have read and accept the enrolment criteria"
+    },
+    "classes": {
+      "titre": "Choose a class",
+      "description": "Select the desired class for your child. The corresponding tuition fees are shown.",
+      "chargement": "Loading available classes...",
+      "erreur": "Unable to load the class list. Please try again.",
+      "francophone": "Francophone stream",
+      "anglophone": "Anglophone stream",
+      "selectionne": "Selected:"
+    },
+    "reservation": {
+      "titre": "Reservation",
+      "description": "Enter the student ID of the child you wish to enrol in this class.",
+      "matriculeLabel": "Student ID",
+      "matriculePlaceholder": "e.g. 2024-0042",
+      "reserver": "Reserve a place",
+      "succes": "Place successfully reserved",
+      "erreur404": "Unknown student ID. Please check the number and try again.",
+      "erreur409": "This student is already enrolled for this school year.",
+      "erreur500": "An error occurred. Please try again."
+    },
+    "informations": {
+      "titre": "Parent information",
+      "description": "These details are optional and help the school contact you easily.",
+      "telephoneLabel": "Phone number",
+      "emailLabel": "Email address",
+      "fonctionLabel": "Occupation / Job title",
+      "localisationLabel": "District / City",
+      "valider": "Save and continue",
+      "passer": "Skip this step",
+      "erreur": "Unable to save information. Please try again."
+    },
+    "confirmation": {
+      "titre": "Confirmation",
+      "description": "Review the summary below before confirming the enrolment.",
+      "recapitulatif": "Summary",
+      "eleve": "Student",
+      "classe": "Class",
+      "montant": "Tuition fees",
+      "annee": "School year",
+      "bouton": "Confirm enrolment",
+      "erreur": "Unable to confirm enrolment. Please try again.",
+      "succes": {
+        "titre": "Enrolment confirmed!",
+        "description": "The enrolment has been successfully recorded. You can download the commitment letter below.",
+        "voirInscriptions": "View all my enrolments"
+      }
+    },
+    "navigation": {
+      "suivant": "Next",
+      "precedent": "Back",
+      "annuler": "Cancel"
+    }
+  },
+  "mesInscriptions": {
+    "titre": "My enrolments",
+    "erreur": "Unable to load your enrolments. Please try again.",
+    "aucune": "No enrolments recorded.",
+    "commencer": "Start a new enrolment →",
+    "reserveeLe": "Reserved on",
+    "confirmeeLe": "Confirmed on",
+    "telechargerLettre": "Download enrolment letter",
+    "lettreEnCours": "Downloading…",
+    "lettreErreur": "Download failed. Please try again.",
+    "statut": {
+      "RESERVEE":  "Reserved",
+      "CONFIRMEE": "Confirmed",
+      "ANNULEE":   "Cancelled"
     }
   }
 }
