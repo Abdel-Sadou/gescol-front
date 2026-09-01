@@ -47,6 +47,7 @@
     "bientotDisponible": "Bientôt disponible",
     "bonjour": "Bonjour,",
     "mesEnfants": "Mes enfants",
+    "mesInscriptions": "Mes inscriptions",
     "nouvelleInscription": "+ Nouvelle inscription",
     "deconnexion": "Déconnexion",
     "chargement": "Chargement de vos données...",
@@ -126,7 +127,8 @@
     "erreur": "Impossible de charger les données du versement. Veuillez réessayer.",
     "bouton": {
       "telecharger": "Télécharger le PDF officiel",
-      "enCours": "Téléchargement…"
+      "enCours": "Téléchargement…",
+      "erreur": "Échec du téléchargement. Veuillez réessayer."
     },
     "document": {
       "titre": "QUITTANCE DE PAIEMENT DE SCOLARITÉ",
@@ -155,6 +157,92 @@
         "verseAujourdhui": "Versé aujourd'hui",
         "resteAVerser": "Reste à verser après ce paiement"
       }
+    }
+  },
+  "inscription": {
+    "titre": "Nouvelle inscription",
+    "retour": "← Retour au tableau de bord",
+    "etape": {
+      "1": "Critères",
+      "2": "Modalités",
+      "3": "Réservation",
+      "4": "Informations",
+      "5": "Confirmation"
+    },
+    "criteres": {
+      "titre": "Critères d'inscription",
+      "description": "Lisez attentivement les critères avant de poursuivre votre demande d'inscription.",
+      "chargement": "Chargement des critères...",
+      "erreur": "Impossible de charger les critères d'inscription. Veuillez réessayer.",
+      "accepter": "J'ai lu et j'accepte les critères d'inscription"
+    },
+    "classes": {
+      "titre": "Choisissez une classe",
+      "description": "Sélectionnez la classe souhaitée pour votre enfant. Les frais de scolarité correspondants sont affichés.",
+      "chargement": "Chargement des classes disponibles...",
+      "erreur": "Impossible de charger la liste des classes. Veuillez réessayer.",
+      "francophone": "Filière francophone",
+      "anglophone": "Filière anglophone",
+      "selectionne": "Sélection :"
+    },
+    "reservation": {
+      "titre": "Réservation",
+      "description": "Saisissez le matricule de l'élève à inscrire dans cette classe.",
+      "matriculeLabel": "Matricule de l'élève",
+      "matriculePlaceholder": "Ex. : 2024-0042",
+      "reserver": "Réserver la place",
+      "succes": "Place réservée avec succès",
+      "erreur404": "Matricule inconnu. Vérifiez le numéro et réessayez.",
+      "erreur409": "Cet élève est déjà inscrit pour cette année scolaire.",
+      "erreur500": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "informations": {
+      "titre": "Informations parent",
+      "description": "Ces informations sont facultatives. Elles permettent à l'établissement de vous contacter facilement.",
+      "telephoneLabel": "Téléphone",
+      "emailLabel": "Adresse e-mail",
+      "fonctionLabel": "Profession / Fonction",
+      "localisationLabel": "Quartier / Ville",
+      "valider": "Enregistrer et continuer",
+      "passer": "Passer cette étape",
+      "erreur": "Impossible d'enregistrer les informations. Veuillez réessayer."
+    },
+    "confirmation": {
+      "titre": "Confirmation",
+      "description": "Vérifiez le récapitulatif ci-dessous avant de confirmer définitivement l'inscription.",
+      "recapitulatif": "Récapitulatif",
+      "eleve": "Élève",
+      "classe": "Classe",
+      "montant": "Frais de scolarité",
+      "annee": "Année scolaire",
+      "bouton": "Confirmer l'inscription",
+      "erreur": "Impossible de confirmer l'inscription. Veuillez réessayer.",
+      "succes": {
+        "titre": "Inscription confirmée !",
+        "description": "L'inscription a été enregistrée avec succès. Vous pouvez télécharger la lettre d'engagement ci-dessous.",
+        "voirInscriptions": "Voir toutes mes inscriptions"
+      }
+    },
+    "navigation": {
+      "suivant": "Suivant",
+      "precedent": "Précédent",
+      "annuler": "Annuler"
+    }
+  },
+  "mesInscriptions": {
+    "titre": "Mes inscriptions",
+    "erreur": "Impossible de charger vos inscriptions. Veuillez réessayer.",
+    "aucune": "Aucune inscription enregistrée.",
+    "commencer": "Démarrer une nouvelle inscription →",
+    "reserveeLe": "Réservée le",
+    "confirmeeLe": "Confirmée le",
+    "telechargerLettre": "Télécharger la lettre d'engagement",
+    "lettreEnCours": "Téléchargement…",
+    "lettreErreur": "Échec du téléchargement. Veuillez réessayer.",
+    "statut": {
+      "RESERVEE":  "Réservée",
+      "CONFIRMEE": "Confirmée",
+      "ANNULEE":   "Annulée"
     }
   }
 }

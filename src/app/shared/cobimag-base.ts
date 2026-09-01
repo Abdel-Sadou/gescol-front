@@ -24,11 +24,13 @@ export abstract class CobimagBase implements OnDestroy {
     private nav(path: string) {
         return (e?: Event) => { e?.preventDefault(); this.router.navigateByUrl(path); };
     }
-    goLanding   = this.nav('/vitrine');
-    goConnexion = this.nav('/connexion');
-    goParent    = this.nav('/parent');
-    goQuittance = this.nav('/parent/quittance');
-    goFiche     = this.nav('/app/fiche-eleve');
+    goLanding             = this.nav('/vitrine');
+    goConnexion           = this.nav('/connexion');
+    goParent              = this.nav('/parent');
+    goQuittance           = this.nav('/parent/quittance');
+    goFiche               = this.nav('/app/fiche-eleve');
+    goNouvelleInscription = this.nav('/parent/inscription/nouvelle');
+    goMesInscriptions     = this.nav('/parent/inscription/mes-inscriptions');
     noop        = (e?: Event) => { e?.preventDefault(); };
     goQuittanceDetail(versementId: string, eleveId: string, classeLibelle = '', e?: Event): void {
         e?.preventDefault();
