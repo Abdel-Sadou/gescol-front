@@ -69,10 +69,9 @@ Corps de réponse :
 
 ## Module 0 — Authentification (`/api/auth`)
 
-### ⚠️ Points critiques
-- Le champ identifiant dans `LoginRequest` est **`email`** (pas `username`).
-- Le mot de passe est **`motDePasse`** (pas `password`).
-- Le payload JWT utilise **`roles`** (tableau), pas `role` (string singulier).
+### ⚠️ Point critique identifié
+Le champ identifiant dans `LoginRequest` est **`email`** (pas `username`).
+Le mot de passe est **`motDePasse`** (pas `password`).
 
 ---
 
@@ -88,7 +87,7 @@ Corps de réponse :
 **Réponse 200** :
 | Champ | Type | Description |
 |-------|------|-------------|
-| `accessToken` | string | JWT d'accès (algorithme HS384) |
+| `accessToken` | string | JWT d'accès (durée configurable) |
 | `refreshToken` | string | JWT de rafraîchissement |
 | `tokenType` | string | Toujours `"Bearer"` |
 | `expiresIn` | number | Durée de validité de l'accessToken en secondes |
@@ -108,62 +107,6 @@ Corps de réponse :
 **Réponse 200** : identique à `/login`
 
 **Erreurs** : 401 (token expiré ou invalide)
-
----
-
-### Structure du payload JWT (claims décodés)
-
-Algorithme : **HS384** — clé lue depuis `app.jwt.secret` (`application-dev.yaml`).
-
-**Claims standards (JJWT)** :
-| Champ | Type | Valeur |
-|-------|------|--------|
-| `sub` | string | email de l'utilisateur |
-| `iat` | number (epoch s) | timestamp d'émission |
-| `exp` | number (epoch s) | timestamp d'expiration |
-
-**Claims custom** :
-| Champ | Type | Valeur |
-|-------|------|--------|
-| `type` | string | `"access"` ou `"refresh"` |
-| `roles` | string[] | ex. `["SUPER_ADMIN"]`, `["PARENT"]` — **toujours un tableau** |
-| `permissions` | string[] | ex. `["ELEVE_SUPPRIMER", "NOTES_VALIDER"]` — `[]` pour PARENT |
-| `utilisateurId` | UUID string | id de l'utilisateur |
-| `etablissementId` | UUID string | id de l'établissement actif (ADR-006) |
-| `personnelId` | UUID string \| absent | présent uniquement si l'utilisateur est lié à un Personnel |
-
-> **⚠️ Frontend** : lire `roles[0]` pour obtenir le rôle principal. Ne jamais lire
-> un champ `role` (singulier) — il n'existe pas dans le payload.
-
-> **⚠️ Frontend** : vérifier `type === "access"` avant d'utiliser un token pour les
-> appels API — ne jamais envoyer le `refreshToken` comme Bearer.
-
-**Exemples réels (smoke test)** :
-```json
-// SUPER_ADMIN
-{
-  "sub": "admin@gescol.local",
-  "type": "access",
-  "roles": ["SUPER_ADMIN"],
-  "permissions": ["ELEVE_SUPPRIMER", "NOTES_VALIDER", "QUOTAS_VALIDER", "QUOTAS_MODIFIER", "SCOLARITE_TAUX_MODIFIER"],
-  "utilisateurId": "e006ed4b-e95c-4819-9065-7fa116d41058",
-  "etablissementId": "22f62103-d6a8-46f8-84af-99619230135f",
-  "iat": 1788173613,
-  "exp": 1788174513
-}
-
-// PARENT
-{
-  "sub": "marie.martin@test.com",
-  "type": "access",
-  "roles": ["PARENT"],
-  "permissions": [],
-  "utilisateurId": "d5fa850d-69f2-4c67-99db-ed09dfbd6933",
-  "etablissementId": "22f62103-d6a8-46f8-84af-99619230135f",
-  "iat": 1788173614,
-  "exp": 1788174514
-}
-```
 
 ---
 
@@ -1316,6 +1259,21 @@ Les champs de `InscriptionParentRequest` sont : **`email`**, **`motDePasse`**, *
 #### `GET /api/parent/inscriptions/criteres`
 **Accès** : `PARENT`  
 **Réponse 200** : `{ "texteCriteres": "..." }`
+
+#### `GET /api/parent/inscriptions/classes-disponibles`
+**Accès** : `PARENT`  
+**Description** : Liste toutes les classes de l'établissement ayant un `TauxScolarite` configuré pour l'année scolaire courante (R11). Les classes sans taux ne sont pas retournées. Triées par sous-système (FRANCOPHONE en premier) puis par libellé.
+
+**Réponse 200** : `List<ClasseDisponibleResponse>`
+| Champ | Type | Description |
+|-------|------|-------------|
+| `classeId` | UUID | Identifiant de la classe |
+| `classeLibelle` | string | Libellé de la classe (ex. « Terminale A ») |
+| `sousSysteme` | `FRANCOPHONE` \| `ANGLOPHONE` | Sous-système d'enseignement |
+| `montant` | number | Montant des frais de scolarité (XAF) |
+| `anneeScolaire` | string | Année scolaire courante (format `YYYY-YYYY+1`) |
+
+**Erreurs** : 403 (rôle non PARENT)
 
 #### `GET /api/parent/inscriptions/modalites-paiement/{classeId}`
 **Accès** : `PARENT`  

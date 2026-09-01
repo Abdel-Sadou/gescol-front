@@ -35,7 +35,8 @@ import {
         </span>
       </a>
       <div style="display:flex; align-items:center; gap:10px; overflow-x:auto; flex-shrink:0;">
-        <span [title]="t('dashboard.bientotDisponible')" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13px; padding:9px 16px; border-radius:2px; white-space:nowrap; opacity:0.45; cursor:not-allowed;">{{ t('dashboard.nouvelleInscription') }}</span>
+        <a href="#" (click)="goMesInscriptions($event)" style="color:#5F6161; font-weight:600; font-size:13px; white-space:nowrap; padding:9px 4px; text-decoration:none;">{{ t('dashboard.mesInscriptions') }}</a>
+        <a href="#" (click)="goNouvelleInscription($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13px; padding:9px 16px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('dashboard.nouvelleInscription') }}</a>
         <a href="#" (click)="onDeconnexion($event)" style="color:#5F6161; font-weight:600; font-size:13px; white-space:nowrap; padding:9px 4px; text-decoration:none;">{{ t('dashboard.deconnexion') }}</a>
       </div>
     </div>
@@ -63,7 +64,7 @@ import {
       <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:40vh; gap:14px; text-align:center; padding:24px; background:#FFFFFF; border:1px solid #E7E7E5; border-radius:4px; max-width:480px; margin:0 auto;">
         <p style="font-size:15px; font-weight:700; color:#1c2a20; margin:0; font-family:'Lora',serif;">{{ t('dashboard.aucunEnfant.titre') }}</p>
         <p style="font-size:13.5px; color:#5F6161; margin:0; line-height:1.6;">{{ t('dashboard.aucunEnfant.description') }}</p>
-        <span [title]="t('dashboard.bientotDisponible')" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13.5px; padding:12px 22px; border-radius:2px; margin-top:6px; opacity:0.45; cursor:not-allowed;">{{ t('dashboard.aucunEnfant.cta') }}</span>
+        <a href="#" (click)="goNouvelleInscription($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13.5px; padding:12px 22px; border-radius:2px; margin-top:6px; text-decoration:none;">{{ t('dashboard.aucunEnfant.cta') }}</a>
       </div>
 
     } @else {
