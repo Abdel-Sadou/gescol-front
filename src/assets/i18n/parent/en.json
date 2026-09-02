@@ -77,6 +77,11 @@
       "francophone": "Francophone",
       "anglophone": "Anglophone"
     },
+    "inscription": {
+      "reservee": "Awaiting confirmation",
+      "annulee": "Cancelled",
+      "banniereReservee": "{{ prenom }}'s enrolment is awaiting confirmation — some information may be incomplete."
+    },
     "mention": {
       "tresBien": "Very good",
       "bien": "Good",

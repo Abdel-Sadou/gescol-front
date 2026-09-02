@@ -81,6 +81,11 @@ import {
             </div>
             <span style="font-weight:700; color:#1c2a20; font-size:14px;">{{child.nom}} {{child.prenom}}</span>
             <span style="font-size:12.5px; color:#5F6161;">{{child.classeLibelle}}</span>
+            @if (child.statutBadge) {
+              <span [style]="'display:inline-flex; align-self:flex-start; border-radius:20px; padding:3px 9px; font-size:10px; font-weight:700; background:'+child.statutBadge.bg+'; color:'+child.statutBadge.color+';'">
+                {{child.statutBadge.label}}
+              </span>
+            }
             <span [style]="'display:inline-flex; align-self:flex-start; align-items:center; gap:5px; border-radius:20px; padding:3px 9px; font-size:10.5px; font-weight:700; background:'+child.trackBg+'; color:'+child.trackColor+'; border:'+child.trackBorder+';'">{{child.trackLabel}}</span>
           </button>
         }
@@ -91,6 +96,16 @@ import {
           <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0; font-weight:700;">{{sel.nom}} {{sel.prenom}}</h2>
           <span style="font-size:13.5px; color:#5F6161;">{{sel.classeLibelle}}</span>
           <span [style]="'display:inline-flex; align-items:center; gap:5px; border-radius:20px; padding:4px 10px; font-size:11px; font-weight:700; background:'+sel.trackBg+'; color:'+sel.trackColor+'; border:'+sel.trackBorder+';'">{{sel.trackLabel}}</span>
+        </div>
+      }
+
+      <!-- ══ BANNIÈRE STATUT INSCRIPTION ══════════════════════════════════ -->
+      @if (selectedStatutInscription() === 'RESERVEE') {
+        <div style="display:flex; align-items:flex-start; gap:12px; background:#FDECE1; border:1px solid #F0C39E; border-radius:4px; padding:12px 18px; margin-bottom:18px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a4416" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.5" fill="#8a4416"/>
+          </svg>
+          <span style="font-size:13px; color:#8a4416; line-height:1.55;">{{ t('dashboard.inscription.banniereReservee', { prenom: selectedPrenom() }) }}</span>
         </div>
       }
 
@@ -324,6 +339,10 @@ export class ParentDashboard extends CobimagBase {
     readonly disciplineBg     = computed(() => this.disciplineStatus() === 'ras' ? '#EAF5EE' : '#FDECE1');
     readonly disciplineColor  = computed(() => this.disciplineStatus() === 'ras' ? '#008B47' : '#E8722C');
 
+    // ── Statut inscription de l'enfant sélectionné ───────────────────────
+    readonly selectedPrenom             = computed(() => this.selected()?.prenom ?? '');
+    readonly selectedStatutInscription  = computed(() => this.selected()?.statutInscription ?? null);
+
     // ── Données parent ─────────────────────────────────────────────────────
     parentDisplayName = computed(() => this.authService.currentUser()?.sub ?? '');
 
@@ -405,6 +424,12 @@ export class ParentDashboard extends CobimagBase {
         const isFr  = track === 'fr';
         const isSel = c.eleveId === this.selectedEleveId();
         const tl = (k: string) => this.transloco.translate('parent.dashboard.track.' + k);
+        const ti = (k: string) => this.transloco.translate('parent.dashboard.inscription.' + k);
+        const statutBadge = c.statutInscription === 'RESERVEE'
+            ? { bg: '#FDECE1', color: '#8a4416', label: ti('reservee') }
+            : c.statutInscription === 'ANNULEE'
+            ? { bg: '#F0F1EF', color: '#C0392B', label: ti('annulee') }
+            : null;
         return {
             ...c,
             trackLabel:  isFr ? tl('francophone') : tl('anglophone'),
@@ -413,6 +438,7 @@ export class ParentDashboard extends CobimagBase {
             trackBg:     isFr  ? '#008B47' : '#FFFFFF',
             trackColor:  isFr  ? '#FFFFFF' : '#008B47',
             trackBorder: isFr  ? 'none'    : '1.5px solid #008B47',
+            statutBadge,
         };
     }
 

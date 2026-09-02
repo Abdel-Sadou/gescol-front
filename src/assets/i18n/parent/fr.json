@@ -77,6 +77,11 @@
       "francophone": "Francophone",
       "anglophone": "Anglophone"
     },
+    "inscription": {
+      "reservee": "En attente de confirmation",
+      "annulee": "Annulée",
+      "banniereReservee": "L'inscription de {{ prenom }} est en attente de confirmation — certaines informations peuvent être incomplètes."
+    },
     "mention": {
       "tresBien": "Très bien",
       "bien": "Bien",
