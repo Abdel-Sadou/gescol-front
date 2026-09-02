@@ -8,6 +8,7 @@ export interface EnfantResponse {
     prenom: string;
     matricule: string;
     classeLibelle: string;
+    statutInscription: 'RESERVEE' | 'CONFIRMEE' | 'ANNULEE' | null;
 }
 
 export interface SoldeResponse {
