@@ -2,44 +2,155 @@
   "menu": {
     "tableauDeBord": "Dashboard",
     "eleves": {
-      "label": "Student Management",
+      "label": "Students",
       "liste": "Student list",
       "fiche": "Student record",
-      "inscriptions": "Registrations"
+      "nouveau": "New student"
+    },
+    "parametrage": {
+      "label": "Settings",
+      "classes": "Classes",
+      "trimestres": "Terms & sequences",
+      "tauxScolarite": "Tuition rates",
+      "quotasHoraires": "Teaching quotas",
+      "matieres": "Subjects",
+      "coefficients": "Coefficients",
+      "niveaux": "Levels",
+      "modelesEngagement": "Commitment letter templates"
+    },
+    "personnel": {
+      "label": "Staff",
+      "liste": "Staff list",
+      "nouveau": "New staff member"
+    },
+    "emploiDuTemps": {
+      "label": "Timetable",
+      "parClasse": "By class",
+      "parEnseignant": "By teacher",
+      "nouveauCreneau": "New time slot"
+    },
+    "resultats": {
+      "label": "Results",
+      "saisie": "Grade entry",
+      "validation": "Grade validation",
+      "bulletins": "Report cards"
+    },
+    "discipline": {
+      "label": "Discipline",
+      "sanctions": "Sanctions",
+      "bonsSortie": "Exit / entry passes",
+      "regles": "Escalation rules"
     },
     "finances": {
       "label": "Finances",
-      "scolarite": "Tuition",
-      "quittances": "Receipts",
-      "moratoires": "Payment plans"
+      "versements": "Payments",
+      "validationsBancaires": "Bank validations",
+      "moratoires": "Payment plans",
+      "alertes": "Late-payment alerts",
+      "etats": "Reports & statements"
     },
     "paie": {
       "label": "Payroll",
       "baremes": "Salary scales",
       "bulletins": "Pay slips"
     },
-    "personnel": "Staff",
-    "parametrage": {
-      "label": "Settings",
-      "classes": "Classes",
-      "taux": "Tuition rates",
-      "matieres": "Subjects",
-      "emploisDuTemps": "Timetables"
+    "cahierDeTexte": {
+      "label": "Class diary",
+      "maProgression": "My progress",
+      "consultation": "Consult by class",
+      "validation": "Validation & notes"
     },
-    "emploiDuTemps": "Timetable",
-    "resultats": {
-      "label": "Results",
-      "saisie": "Grade entry",
-      "bulletins": "Report cards"
-    },
-    "discipline": "Discipline",
-    "cahierDeTexte": "Class diary",
     "communication": {
       "label": "Communication",
       "actualites": "News",
-      "vitrine": "Website"
+      "calendrier": "School calendar",
+      "contenu": "Website content",
+      "equipe": "Teaching team"
     }
   },
+
+  "table": {
+    "actions": "Actions",
+    "voir": "View",
+    "modifier": "Edit",
+    "supprimer": "Delete",
+    "aucun": "No results found.",
+    "erreur": "Unable to load data. Please try again.",
+    "pageReport": "{first} to {last} of {totalRecords} results"
+  },
+
+  "deleteDialog": {
+    "titre": "Confirm deletion",
+    "message": "Are you sure you want to delete {{ label }}? This action cannot be undone.",
+    "annuler": "Cancel",
+    "confirmer": "Delete",
+    "erreurGenerale": "An error occurred. Please try again."
+  },
+
+  "eleves": {
+    "titre": "Student list",
+    "nouveau": "New student",
+    "filtres": {
+      "nom": "Last name",
+      "prenom": "First name",
+      "matricule": "Student ID",
+      "classe": "Class",
+      "rechercher": "Search",
+      "reinitialiser": "Reset"
+    },
+    "colonnes": {
+      "matricule": "Student ID",
+      "nom": "Last name",
+      "prenom": "First name",
+      "classe": "Class",
+      "sexe": "Gender",
+      "naissance": "Date of birth"
+    }
+  },
+
+  "eleveForm": {
+    "titreCreation": "New student",
+    "titreEdition": "Edit student",
+    "matriculeLabel": "Student ID",
+    "nom": "Last name",
+    "prenom": "First name",
+    "sexe": {
+      "label": "Gender",
+      "placeholder": "Choose",
+      "M": "Male",
+      "F": "Female"
+    },
+    "dateNaissance": "Date of birth",
+    "lieuNaissance": "Place of birth",
+    "classe": "Class",
+    "classePlaceholder": "Select a class",
+    "chargementClasses": "Loading classes...",
+    "sousSysteme": {
+      "label": "Sub-system",
+      "placeholder": "Choose (optional)",
+      "FRANCOPHONE": "Francophone",
+      "ANGLOPHONE": "Anglophone"
+    },
+    "groupeSanguin": "Blood type",
+    "groupeSanguinPlaceholder": "Choose (optional)",
+    "nomPere": "Father / Guardian name",
+    "nomMere": "Mother's name",
+    "quartier": "Neighbourhood",
+    "personneContact": "Emergency contact",
+    "telephoneContact": "Contact phone number",
+    "redoublant": "Repeating year",
+    "apteSport": "Fit for sport",
+    "annuler": "Cancel",
+    "creer": "Create student",
+    "modifier": "Save changes",
+    "erreurChargement": "Unable to load this student's data.",
+    "erreurEnregistrement": "An error occurred. Please try again.",
+    "validation": {
+      "requis": "This field is required.",
+      "dateRequise": "Date of birth is required."
+    }
+  },
+
   "fiche": {
     "titre": "COBIMAG Back-office",
     "sousTitre": "Student search & record",

@@ -2,44 +2,155 @@
   "menu": {
     "tableauDeBord": "Tableau de bord",
     "eleves": {
-      "label": "Gestion des élèves",
+      "label": "Élèves",
       "liste": "Liste des élèves",
       "fiche": "Fiche élève",
-      "inscriptions": "Inscriptions"
+      "nouveau": "Nouvel élève"
+    },
+    "parametrage": {
+      "label": "Paramétrage",
+      "classes": "Classes",
+      "trimestres": "Trimestres & séquences",
+      "tauxScolarite": "Taux de scolarité",
+      "quotasHoraires": "Quotas horaires",
+      "matieres": "Matières",
+      "coefficients": "Coefficients",
+      "niveaux": "Niveaux",
+      "modelesEngagement": "Modèles de lettre d'engagement"
+    },
+    "personnel": {
+      "label": "Personnel",
+      "liste": "Liste du personnel",
+      "nouveau": "Nouveau personnel"
+    },
+    "emploiDuTemps": {
+      "label": "Emploi du temps",
+      "parClasse": "Par classe",
+      "parEnseignant": "Par enseignant",
+      "nouveauCreneau": "Nouveau créneau"
+    },
+    "resultats": {
+      "label": "Résultats",
+      "saisie": "Saisie des notes",
+      "validation": "Validation des notes",
+      "bulletins": "Bulletins"
+    },
+    "discipline": {
+      "label": "Discipline",
+      "sanctions": "Sanctions",
+      "bonsSortie": "Bons de sortie / entrée",
+      "regles": "Règles d'escalade"
     },
     "finances": {
       "label": "Finances",
-      "scolarite": "Scolarité",
-      "quittances": "Quittances",
-      "moratoires": "Moratoires"
+      "versements": "Versements",
+      "validationsBancaires": "Validations bancaires",
+      "moratoires": "Moratoires",
+      "alertes": "Alertes de retard",
+      "etats": "États & rapports"
     },
     "paie": {
       "label": "Paie",
       "baremes": "Barèmes",
       "bulletins": "Bulletins de paie"
     },
-    "personnel": "Personnel",
-    "parametrage": {
-      "label": "Paramétrage",
-      "classes": "Classes",
-      "taux": "Taux de scolarité",
-      "matieres": "Matières",
-      "emploisDuTemps": "Emplois du temps"
+    "cahierDeTexte": {
+      "label": "Cahier de texte",
+      "maProgression": "Ma progression",
+      "consultation": "Consultation par classe",
+      "validation": "Validation & observations"
     },
-    "emploiDuTemps": "Emploi du temps",
-    "resultats": {
-      "label": "Résultats",
-      "saisie": "Saisie des notes",
-      "bulletins": "Bulletins"
-    },
-    "discipline": "Discipline",
-    "cahierDeTexte": "Cahier de texte",
     "communication": {
       "label": "Communication",
       "actualites": "Actualités",
-      "vitrine": "Vitrine"
+      "calendrier": "Calendrier scolaire",
+      "contenu": "Contenu du site",
+      "equipe": "Équipe pédagogique"
     }
   },
+
+  "table": {
+    "actions": "Actions",
+    "voir": "Voir",
+    "modifier": "Modifier",
+    "supprimer": "Supprimer",
+    "aucun": "Aucun résultat.",
+    "erreur": "Impossible de charger les données. Veuillez réessayer.",
+    "pageReport": "{first} à {last} sur {totalRecords} résultats"
+  },
+
+  "deleteDialog": {
+    "titre": "Confirmer la suppression",
+    "message": "Êtes-vous sûr de vouloir supprimer {{ label }} ? Cette action est irréversible.",
+    "annuler": "Annuler",
+    "confirmer": "Supprimer",
+    "erreurGenerale": "Une erreur est survenue. Veuillez réessayer."
+  },
+
+  "eleves": {
+    "titre": "Liste des élèves",
+    "nouveau": "Nouvel élève",
+    "filtres": {
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "matricule": "Matricule",
+      "classe": "Classe",
+      "rechercher": "Rechercher",
+      "reinitialiser": "Réinitialiser"
+    },
+    "colonnes": {
+      "matricule": "Matricule",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "classe": "Classe",
+      "sexe": "Sexe",
+      "naissance": "Date de naissance"
+    }
+  },
+
+  "eleveForm": {
+    "titreCreation": "Nouvel élève",
+    "titreEdition": "Modifier l'élève",
+    "matriculeLabel": "Matricule",
+    "nom": "Nom",
+    "prenom": "Prénom",
+    "sexe": {
+      "label": "Sexe",
+      "placeholder": "Choisir",
+      "M": "Masculin",
+      "F": "Féminin"
+    },
+    "dateNaissance": "Date de naissance",
+    "lieuNaissance": "Lieu de naissance",
+    "classe": "Classe",
+    "classePlaceholder": "Sélectionner une classe",
+    "chargementClasses": "Chargement des classes...",
+    "sousSysteme": {
+      "label": "Sous-système",
+      "placeholder": "Choisir (optionnel)",
+      "FRANCOPHONE": "Francophone",
+      "ANGLOPHONE": "Anglophone"
+    },
+    "groupeSanguin": "Groupe sanguin",
+    "groupeSanguinPlaceholder": "Choisir (optionnel)",
+    "nomPere": "Nom du père / tuteur",
+    "nomMere": "Nom de la mère",
+    "quartier": "Quartier",
+    "personneContact": "Personne à contacter",
+    "telephoneContact": "Téléphone du contact",
+    "redoublant": "Redoublant",
+    "apteSport": "Apte au sport",
+    "annuler": "Annuler",
+    "creer": "Créer l'élève",
+    "modifier": "Enregistrer les modifications",
+    "erreurChargement": "Impossible de charger les données de cet élève.",
+    "erreurEnregistrement": "Une erreur est survenue. Veuillez réessayer.",
+    "validation": {
+      "requis": "Ce champ est obligatoire.",
+      "dateRequise": "La date de naissance est obligatoire."
+    }
+  },
+
   "fiche": {
     "titre": "Back-office COBIMAG",
     "sousTitre": "Recherche & fiche élève",

@@ -84,17 +84,56 @@ export const appRoutes: Routes = [
 
             // Modules métier GESCOL — placeholders, écrans réels à venir
             { path: 'fiche-eleve', loadComponent: () => import('@/app/pages/app/fiche-eleve/fiche-eleve').then(c => c.FicheEleve), data: { breadcrumb: 'Fiche élève' } },
-            { path: 'eleves',           loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Élèves' } },
-            { path: 'inscriptions',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Inscriptions' } },
-            { path: 'finances',         loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Finances' } },
-            { path: 'paie',             loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Paie' } },
-            { path: 'personnel',        loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Personnel' } },
-            { path: 'parametrage',      loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Paramétrage' } },
-            { path: 'emploi-du-temps',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Emploi du temps' } },
-            { path: 'resultats',        loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Résultats' } },
-            { path: 'discipline',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Discipline' } },
-            { path: 'cahier-de-texte',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Cahier de texte' } },
-            { path: 'communication',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Communication' } },
+
+            // --- Élèves (F08) ---
+            { path: 'eleves',                loadComponent: () => import('@/app/pages/app/eleves/eleve-liste').then(c => c.EleveListe), data: { breadcrumb: 'Élèves' } },
+            { path: 'eleves/nouveau',        loadComponent: () => import('@/app/pages/app/eleves/eleve-form').then(c => c.EleveForm), data: { breadcrumb: 'Nouvel élève' } },
+            { path: 'eleves/:id/editer',     loadComponent: () => import('@/app/pages/app/eleves/eleve-form').then(c => c.EleveForm), data: { breadcrumb: 'Modifier élève' } },
+
+            // --- Modules métier — placeholders (F09-F16) ---
+            // Paramétrage
+            { path: 'parametrage/classes',            loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Classes' } },
+            { path: 'parametrage/trimestres',         loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Trimestres & séquences' } },
+            { path: 'parametrage/taux-scolarite',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Taux de scolarité' } },
+            { path: 'parametrage/quotas-horaires',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Quotas horaires' } },
+            { path: 'parametrage/matieres',           loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Matières' } },
+            { path: 'parametrage/coefficients',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Coefficients' } },
+            { path: 'parametrage/niveaux',            loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Niveaux' } },
+            { path: 'parametrage/modeles-engagement', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Modèles engagement' } },
+            // Personnel
+            { path: 'personnel',              loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Personnel' } },
+            { path: 'personnel/nouveau',      loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Nouveau personnel' } },
+            { path: 'personnel/:id/editer',   loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Modifier personnel' } },
+            // Emploi du temps
+            { path: 'emploi-du-temps/classe',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'EDT par classe' } },
+            { path: 'emploi-du-temps/enseignant', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'EDT par enseignant' } },
+            { path: 'emploi-du-temps/nouveau',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Nouveau créneau' } },
+            // Résultats
+            { path: 'resultats/saisie',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Saisie des notes' } },
+            { path: 'resultats/validation', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validation des notes' } },
+            { path: 'resultats/bulletins',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bulletins' } },
+            // Discipline
+            { path: 'discipline/sanctions', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Sanctions' } },
+            { path: 'discipline/bons-sortie', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bons de sortie' } },
+            { path: 'discipline/regles',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Règles escalade' } },
+            // Finances
+            { path: 'finances/versements',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Versements' } },
+            { path: 'finances/validations', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validations bancaires' } },
+            { path: 'finances/moratoires',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Moratoires' } },
+            { path: 'finances/alertes',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Alertes' } },
+            { path: 'finances/etats',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'États & rapports' } },
+            // Paie
+            { path: 'paie/baremes',   loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Barèmes' } },
+            { path: 'paie/bulletins', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bulletins de paie' } },
+            // Cahier de texte
+            { path: 'cahier-texte/saisie',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Ma progression' } },
+            { path: 'cahier-texte/consultation',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Consultation cahier' } },
+            { path: 'cahier-texte/validation',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validation cahier' } },
+            // Communication
+            { path: 'communication/actualites', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Actualités' } },
+            { path: 'communication/calendrier', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Calendrier scolaire' } },
+            { path: 'communication/contenu',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Contenu du site' } },
+            { path: 'communication/equipe',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Équipe pédagogique' } },
 
             // Pages de démo Poseidon conservées (sans lien dans le menu GESCOL)
             { path: 'uikit',       data: { breadcrumb: 'UI Kit' }, loadChildren: () => import('@/app/pages/uikit/uikit.routes') },
