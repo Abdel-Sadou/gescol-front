@@ -30,11 +30,11 @@ Authorization: Bearer <accessToken>
 Corps d'erreur (`ErrorResponse`) :
 ```json
 {
-  "timestamp": "2026-01-15T10:30:00Z",
-  "status": 409,
-  "code": "BUSINESS_RULE_VIOLATION",
-  "message": "...",
-  "path": "/api/..."
+    "timestamp": "2026-01-15T10:30:00Z",
+    "status": 409,
+    "code": "BUSINESS_RULE_VIOLATION",
+    "message": "...",
+    "path": "/api/..."
 }
 ```
 
@@ -44,11 +44,11 @@ Paramètres de requête : `page` (défaut 0), `size` (défaut selon endpoint), `
 Corps de réponse :
 ```json
 {
-  "content": [...],
-  "page": 0,
-  "size": 20,
-  "totalElements": 42,
-  "totalPages": 3
+    "content": [...],
+    "page": 0,
+    "size": 20,
+    "totalElements": 42,
+    "totalPages": 3
 }
 ```
 > **Note** : `GET /api/paie/baremes` retourne le type Spring `Page<>` natif qui
@@ -1224,13 +1224,14 @@ Les champs de `InscriptionParentRequest` sont : **`email`**, **`motDePasse`**, *
 **Accès** : `PARENT`
 
 **Réponse 200** : `List<EnfantResponse>`
-| Champ | Type |
-|-------|------|
-| `eleveId` | UUID |
-| `nom` | string |
-| `prenom` | string |
-| `matricule` | string |
-| `classeLibelle` | string |
+| Champ | Type | Description |
+|-------|------|-------------|
+| `eleveId` | UUID | |
+| `nom` | string | |
+| `prenom` | string | |
+| `matricule` | string | |
+| `classeLibelle` | string | |
+| `statutInscription` | `RESERVEE` \| `CONFIRMEE` \| `ANNULEE` \| null | Statut de l'inscription de l'élève pour l'année scolaire courante (R11). `null` si aucune inscription n'existe pour cette année. |
 
 ---
 
