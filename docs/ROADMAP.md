@@ -28,7 +28,12 @@ Vitrine publique et Espace Parent (compte, dashboard, quittances, workflow
 d'inscription 5 étapes, lettre d'engagement) sont maintenant entièrement
 fonctionnels, audités (F07) et corrigés (F07-correctifs). Prochaine étape
 naturelle : F08, démarrage de l'application interne (Poseidon/PrimeNG).
-| F08 | App interne — Élève CRUD complet (établit le pattern PrimeNG de référence : table + formulaire) | ⏳ À faire | F01 |
+
+| F08 | App interne — menu complet, composants réutilisables, module Élèves | ✅ Fait | F01 |
+
+| Backend-21 | Statut d'inscription dans GET /api/parent/mes-enfants | ✅ Fait | — |
+| F07ter | Affichage visuel réservé/confirmé sur le dashboard parent | ✅ Fait | Backend-21 |
+| F08 | App interne — Élève CRUD complet (établit le pattern PrimeNG de référence : table + formulaire) | ✅ Fait | F01 |
 | F09 | App interne — Paramétrage (classes, trimestres, taux, quotas, matières, coefficients, niveaux, modèles lettre) | ⏳ À faire | F08 |
 | F10 | App interne — Personnel (CRUD + désactivation R10) + Emploi du temps (vue calendrier, R4) | ⏳ À faire | F08 |
 | F11 | App interne — Résultats (saisie notes, validation R13/R21, bulletins) | ⏳ À faire | F08, F10 |
