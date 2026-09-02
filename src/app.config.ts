@@ -37,34 +37,34 @@ const CobimagPreset = definePreset(Aura, {
         colorScheme: {
             light: {
                 surface: {
-                    0:   'color-mix(in srgb, {primary.950}, white 100%)',
-                    50:  'color-mix(in srgb, {primary.950}, white 95%)',
-                    100: 'color-mix(in srgb, {primary.950}, white 90%)',
-                    200: 'color-mix(in srgb, {primary.950}, white 80%)',
-                    300: 'color-mix(in srgb, {primary.950}, white 70%)',
-                    400: 'color-mix(in srgb, {primary.950}, white 60%)',
-                    500: 'color-mix(in srgb, {primary.950}, white 50%)',
-                    600: 'color-mix(in srgb, {primary.950}, white 40%)',
-                    700: 'color-mix(in srgb, {primary.950}, white 30%)',
-                    800: 'color-mix(in srgb, {primary.950}, white 20%)',
-                    900: 'color-mix(in srgb, {primary.950}, white 10%)',
-                    950: 'color-mix(in srgb, {primary.950}, white 5%)'
+                    0:   '#ffffff',
+                    50:  '#fffdf8',
+                    100: '#fbf8f2',
+                    200: '#f4efe4',
+                    300: '#f1eadc',
+                    400: '#e9e1d2',
+                    500: '#e2dacb',
+                    600: '#d4c9b4',
+                    700: '#c0b09a',
+                    800: '#a09080',
+                    900: '#736a5c',
+                    950: '#4a3f34'
                 }
             },
             dark: {
                 surface: {
-                    0:   'color-mix(in srgb, var(--surface-ground), white 100%)',
-                    50:  'color-mix(in srgb, var(--surface-ground), white 95%)',
-                    100: 'color-mix(in srgb, var(--surface-ground), white 90%)',
-                    200: 'color-mix(in srgb, var(--surface-ground), white 80%)',
-                    300: 'color-mix(in srgb, var(--surface-ground), white 70%)',
-                    400: 'color-mix(in srgb, var(--surface-ground), white 60%)',
-                    500: 'color-mix(in srgb, var(--surface-ground), white 50%)',
-                    600: 'color-mix(in srgb, var(--surface-ground), white 40%)',
-                    700: 'color-mix(in srgb, var(--surface-ground), white 30%)',
-                    800: 'color-mix(in srgb, var(--surface-ground), white 20%)',
-                    900: 'color-mix(in srgb, var(--surface-ground), white 10%)',
-                    950: 'color-mix(in srgb, var(--surface-ground), white 5%)'
+                    0:   '#1a2b22',
+                    50:  '#1f3329',
+                    100: '#243c30',
+                    200: '#2e4a3a',
+                    300: '#3a5c48',
+                    400: '#476e56',
+                    500: '#547f64',
+                    600: '#6a9478',
+                    700: '#83ab91',
+                    800: '#a3c2ae',
+                    900: '#c6d9cc',
+                    950: '#e4eee7'
                 }
             }
         }

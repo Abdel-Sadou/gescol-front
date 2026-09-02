@@ -78,7 +78,7 @@ export const appRoutes: Routes = [
             { path: '', redirectTo: 'tableau-de-bord', pathMatch: 'full' },
             {
                 path: 'tableau-de-bord',
-                loadComponent: () => import('@/app/pages/dashboards/marketing/marketingdashboard').then(c => c.MarketingDashboard),
+                loadComponent: () => import('@/app/pages/app/dashboard/dashboard-home').then(c => c.DashboardHome),
                 data: { breadcrumb: 'Tableau de bord' }
             },
 

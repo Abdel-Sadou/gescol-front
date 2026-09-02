@@ -1,0 +1,61 @@
+/* =========================================================================
+   COBIMAG — jetons de design, direction « Institutionnel chaud »
+   Source unique de vérité pour les couleurs, typographies, rayons, ombres.
+   Importer ce fichier dans layout.scss via @use './variables/_cobimag'.
+   ========================================================================= */
+:root {
+    /* --- Marque --------------------------------------------------------- */
+    --color-primary:        #008b47;
+    --color-primary-dark:   #173d2a;
+    --color-primary-deep:   #1f5c3d;
+    --color-primary-soft:   #eaf3ed;
+    --color-primary-border: #b9cfc1;
+
+    --color-accent:        #e8722c;
+    --color-accent-dark:   #b65b1e;
+    --color-accent-deep:   #8a4416;
+    --color-accent-soft:   #fff6ee;
+    --color-accent-border: #f2d9c2;
+    --color-accent-light:  #f7b489;
+
+    --color-danger:      #c0392b;
+    --color-danger-soft: #fbedeb;
+
+    /* --- Surfaces (fond papier) ----------------------------------------- */
+    --color-canvas:         #fbf8f2;
+    --color-surface:        #fffdf8;
+    --color-surface-sunken: #f4efe4;
+    --color-surface-alt:    #f1eadc;
+
+    /* --- Texte ---------------------------------------------------------- */
+    --color-text:             #173d2a;
+    --color-text-body:        #2e3b32;
+    --color-text-muted:       #736a5c;
+    --color-text-on-dark:     rgba(255, 255, 255, 0.72);
+    --color-text-on-dark-muted: rgba(255, 255, 255, 0.6);
+
+    /* --- Bordures ------------------------------------------------------- */
+    --color-border:          #e9e1d2;
+    --color-border-strong:   #e2dacb;
+    --color-border-field:    #e4dac7;
+    --color-border-on-dark:  rgba(255, 255, 255, 0.10);
+
+    /* --- Typographie ---------------------------------------------------- */
+    --font-serif: 'Lora', Georgia, serif;
+    --font-sans:  'Work Sans', system-ui, sans-serif;
+
+    /* --- Rayons --------------------------------------------------------- */
+    --radius-sm:   7px;
+    --radius-md:   12px;
+    --radius-lg:   14px;
+    --radius-pill: 24px;
+    --radius-full: 50%;
+
+    /* --- Ombres --------------------------------------------------------- */
+    --shadow-card:  0 2px 10px -4px rgba(23, 61, 42, 0.12);
+    --shadow-shell: 0 24px 60px -30px rgba(31, 92, 61, 0.40);
+
+    /* --- Géométrie de la coque ----------------------------------------- */
+    --shell-sidebar-width: 266px;
+    --shell-topbar-height: 74px;
+}
