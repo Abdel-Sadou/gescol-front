@@ -151,6 +151,10 @@
     }
   },
 
+  "topbar": {
+    "seDeconnecter": "Se déconnecter"
+  },
+
   "fiche": {
     "titre": "Back-office COBIMAG",
     "sousTitre": "Recherche & fiche élève",
