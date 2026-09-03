@@ -151,6 +151,10 @@
     }
   },
 
+  "topbar": {
+    "seDeconnecter": "Sign out"
+  },
+
   "fiche": {
     "titre": "COBIMAG Back-office",
     "sousTitre": "Student search & record",

@@ -2,6 +2,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    ElementRef,
+    HostListener,
     computed,
     inject,
     signal,
@@ -127,12 +129,33 @@ interface NavGroup { label: string; items: NavItem[]; }
 
                         <span class="topbar__divider" aria-hidden="true"></span>
 
-                        <div class="profile">
-                            <span class="profile__avatar">{{ userInitials() }}</span>
-                            <span class="profile__text">
-                                <span class="profile__name">{{ userSub() }}</span>
-                                <span class="profile__role">{{ userRole() }}</span>
-                            </span>
+                        <div class="profile" [class.is-open]="profileMenuOpen()">
+                            <button
+                                type="button"
+                                class="profile__trigger"
+                                (click)="toggleProfileMenu($event)"
+                                [attr.aria-expanded]="profileMenuOpen()"
+                                aria-haspopup="true"
+                            >
+                                <span class="profile__avatar">{{ userInitials() }}</span>
+                                <span class="profile__text">
+                                    <span class="profile__name">{{ userSub() }}</span>
+                                    <span class="profile__role">{{ userRole() }}</span>
+                                </span>
+                            </button>
+                            @if (profileMenuOpen()) {
+                                <div class="profile-menu" role="menu">
+                                    <button
+                                        type="button"
+                                        class="profile-menu__item profile-menu__item--danger"
+                                        role="menuitem"
+                                        (click)="logout()"
+                                    >
+                                        <cob-icon [path]="signOutIcon" [size]="14" />
+                                        {{ logoutLabel() }}
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
                 </header>
@@ -476,6 +499,58 @@ interface NavGroup { label: string; items: NavItem[]; }
             color: var(--color-text-muted);
         }
 
+        .profile { position: relative; }
+
+        .profile__trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 6px;
+            font-family: inherit;
+            text-align: left;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: background 0.12s;
+        }
+
+        .profile__trigger:hover { background: var(--color-surface-sunken); }
+
+        .profile-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 180px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border-strong);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            z-index: 200;
+            overflow: hidden;
+        }
+
+        .profile-menu__item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 14px;
+            width: 100%;
+            font-family: inherit;
+            font-size: 13px;
+            text-align: left;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: var(--color-text-body);
+            transition: background 0.12s;
+        }
+
+        .profile-menu__item:hover { background: var(--color-surface-sunken); }
+
+        .profile-menu__item--danger { color: var(--color-danger); }
+        .profile-menu__item--danger:hover { background: var(--color-danger-soft); }
+
         /* ── Contenu ─────────────────────────────────────────────────────────── */
         .content {
             flex: 1;
@@ -560,8 +635,10 @@ export class AppLayout {
     private readonly authService = inject(AuthService);
     private readonly langService = inject(LanguageService);
     private readonly transloco   = inject(TranslocoService);
+    private readonly elRef       = inject(ElementRef);
 
     readonly sidebarOverlayOpen = signal(false);
+    readonly profileMenuOpen    = signal(false);
 
     private readonly _pageTitle = signal('Tableau de bord');
     readonly pageTitle = this._pageTitle.asReadonly();
@@ -590,10 +667,16 @@ export class AppLayout {
         return this.buildNav(this.authService.role());
     });
 
-    readonly searchIcon = ICONS['search'];
-    readonly bellIcon   = ICONS['bell'];
-    readonly menuIcon   = ICONS['menu'];
-    readonly xIcon      = ICONS['x'];
+    readonly logoutLabel = computed(() => {
+        this.activeLang();
+        return this.t('topbar.seDeconnecter');
+    });
+
+    readonly searchIcon  = ICONS['search'];
+    readonly bellIcon    = ICONS['bell'];
+    readonly menuIcon    = ICONS['menu'];
+    readonly xIcon       = ICONS['x'];
+    readonly signOutIcon = ICONS['signOut'];
 
     constructor() {
         this.router.events.pipe(
@@ -607,9 +690,26 @@ export class AppLayout {
         });
     }
 
+    @HostListener('document:click', ['$event'])
+    onDocClick(e: MouseEvent): void {
+        if (this.profileMenuOpen() && !this.elRef.nativeElement.contains(e.target)) {
+            this.profileMenuOpen.set(false);
+        }
+    }
+
     toggleSidebar(): void { this.sidebarOverlayOpen.update(v => !v); }
     closeSidebar():  void { this.sidebarOverlayOpen.set(false); }
     setLang(lang: Lang): void { this.langService.setLang(lang); }
+
+    toggleProfileMenu(e: MouseEvent): void {
+        e.stopPropagation();
+        this.profileMenuOpen.update(v => !v);
+    }
+
+    logout(): void {
+        this.profileMenuOpen.set(false);
+        this.authService.logout();
+    }
 
     private t(key: string): string {
         return this.transloco.translate(`app.${key}`);
