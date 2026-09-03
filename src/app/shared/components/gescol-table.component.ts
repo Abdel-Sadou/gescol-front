@@ -29,19 +29,18 @@ export interface GescolLoadEvent {
     imports: [CommonModule, TableModule, ButtonModule, TooltipModule, MessageModule, TranslocoModule, DatePipe],
     template: `
         <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
-            @if (state === 'loading') {
-                <div class="flex justify-center items-center py-10">
-                    <i class="pi pi-spin pi-spinner" style="font-size:2rem;color:var(--p-primary-color)"></i>
-                </div>
-            } @else if (state === 'error') {
+            @if (state === 'error') {
                 <div class="p-4">
                     <p-message severity="error" [text]="t('table.erreur')"></p-message>
                 </div>
             } @else {
+                <!-- La table est toujours rendue : onLazyLoad déclenche le premier chargement.
+                     [loading] affiche l'overlay PrimeNG sans supprimer le DOM. -->
                 <p-table
                     #dt
                     [value]="rows"
                     [lazy]="true"
+                    [loading]="state === 'loading'"
                     [paginator]="true"
                     [rows]="pageSize"
                     [totalRecords]="total"

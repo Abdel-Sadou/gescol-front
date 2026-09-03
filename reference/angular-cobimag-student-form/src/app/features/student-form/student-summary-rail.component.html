@@ -1,0 +1,98 @@
+<!-- Fiche en construction : vérifier d'un regard qu'on saisit le bon élève -->
+<section class="preview" aria-labelledby="preview-title">
+  <p class="preview__kicker" id="preview-title">Fiche en construction</p>
+
+  <div class="preview__identity">
+    <div class="preview__photo" aria-hidden="true">
+      <span>PHOTO</span>
+    </div>
+    <div class="preview__names">
+      <p class="preview__name">{{ displayName() }}</p>
+      <p class="preview__matricule">Matricule attribué à la création</p>
+    </div>
+  </div>
+
+  <div class="preview__tags">
+    @if (sexLabel()) {
+      <span class="tag tag--neutral">{{ sexLabel() }}</span>
+    }
+    @if (subsystem(); as sub) {
+      <span class="tag tag--subsystem">{{ sub.value }} · {{ sub.name }}</span>
+    } @else {
+      <span class="tag tag--pending">Sous-système à définir</span>
+    }
+    @if (draft().classe) {
+      <span class="tag tag--neutral">{{ draft().classe }}</span>
+    } @else {
+      <span class="tag tag--pending">Classe à définir</span>
+    }
+    @if (draft().redoublant) {
+      <span class="tag tag--neutral">Redoublant</span>
+    }
+  </div>
+</section>
+
+<!-- Contrôle des champs obligatoires : savoir où l'on en est sans soumettre -->
+<section class="check" aria-labelledby="check-title">
+  <header class="check__head">
+    <h3 class="check__title" id="check-title">Champs obligatoires</h3>
+    <p class="check__count">{{ completedCount() }} / {{ requiredCount() }}</p>
+  </header>
+
+  <p-progressbar
+    [value]="progress()"
+    [showValue]="false"
+    styleClass="check__bar"
+    [attr.aria-label]="completedCount() + ' champs sur ' + requiredCount() + ' renseignés'"
+  />
+
+  <ul class="check__list">
+    @for (row of checklist(); track row.label) {
+      <li class="check__row" [class.check__row--done]="row.done">
+        <span class="check__mark" [class.check__mark--done]="row.done" aria-hidden="true">
+          @if (row.done) {
+            <i class="pi pi-check"></i>
+          }
+        </span>
+        <span class="check__label">{{ row.label }}</span>
+      </li>
+    }
+  </ul>
+</section>
+
+<!-- Avertissement contextuel : la conséquence, pas juste l'erreur -->
+@if (blockingLabel(); as blocking) {
+  <p-message severity="warn" styleClass="warn">
+    <div class="warn__body">
+      <p class="warn__title">{{ blocking }} non renseignée</p>
+      <p class="warn__text">
+        L'élève ne pourra pas être affecté à un emploi du temps avant que la classe soit choisie.
+      </p>
+    </div>
+  </p-message>
+}
+
+<div class="actions">
+  <p-button
+    label="Créer l'élève"
+    icon="pi pi-check"
+    [disabled]="!canSubmit()"
+    [loading]="saving()"
+    styleClass="actions__primary"
+    (onClick)="create.emit()"
+  />
+  <div class="actions__secondary">
+    <p-button
+      label="Brouillon"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="saveDraft.emit()"
+    />
+    <p-button
+      label="Annuler"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="cancel.emit()"
+    />
+  </div>
+</div>

@@ -31,10 +31,13 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
     imports: [RouterModule, IconComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <!-- ── Overlay backdrop (mobile) ────────────────────────────────────── -->
-        @if (sidebarOverlayOpen()) {
-            <div class="overlay-backdrop" (click)="closeSidebar()" aria-hidden="true"></div>
-        }
+        <!-- FIX 4 : backdrop toujours dans le DOM, fondu via opacity -->
+        <div
+            class="overlay-backdrop"
+            [class.is-visible]="sidebarOverlayOpen()"
+            (click)="closeSidebar()"
+            aria-hidden="true"
+        ></div>
 
         <div class="shell">
             <!-- ── Sidebar ─────────────────────────────────────────────────── -->
@@ -58,7 +61,6 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                             }
                             @for (entry of group.entries; track entry.kind === 'item' ? entry.routerLink : entry.label) {
                                 @if (entry.kind === 'item') {
-                                    <!-- Lien direct -->
                                     <a
                                         class="nav__item"
                                         [routerLink]="entry.routerLink"
@@ -73,29 +75,35 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                                 } @else {
                                     <!-- Section accordéon -->
                                     <div class="nav__section-wrap">
+                                        <!-- FIX 5 : aria-expanded présent -->
                                         <button
                                             type="button"
                                             class="nav__section-hd"
                                             [class.is-expanded]="isSectionExpanded(entry.label)"
                                             [class.is-active]="isSectionActive(entry)"
+                                            [attr.aria-expanded]="isSectionExpanded(entry.label)"
                                             (click)="handleSectionClick(entry)"
                                             [title]="entry.label"
                                         >
                                             <i [class]="entry.icon" class="nav__section-icon" aria-hidden="true"></i>
                                             <span class="nav__section-label">{{ entry.label }}</span>
+                                            <!-- FIX 2 : chevron CSS pur, plus de › unicode -->
                                             <span
                                                 class="nav__section-arrow"
                                                 [class.is-rotated]="isSectionExpanded(entry.label)"
                                                 aria-hidden="true"
-                                            >›</span>
+                                            ></span>
                                         </button>
 
-                                        @if (isSectionExpanded(entry.label)) {
-                                            <div class="nav__children" role="list">
+                                        <!-- FIX 1 : toujours dans le DOM, animé via grid-template-rows -->
+                                        <div
+                                            class="nav__children"
+                                            [class.is-open]="isSectionExpanded(entry.label)"
+                                        >
+                                            <div class="nav__children-inner">
                                                 @for (child of entry.children; track child.routerLink) {
                                                     <a
                                                         class="nav__child"
-                                                        role="listitem"
                                                         [routerLink]="child.routerLink"
                                                         routerLinkActive="nav__child--active"
                                                         [routerLinkActiveOptions]="{ exact: false }"
@@ -104,7 +112,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                                                     >{{ child.label }}</a>
                                                 }
                                             </div>
-                                        }
+                                        </div>
                                     </div>
                                 }
                             }
@@ -130,7 +138,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                 </div>
             </aside>
 
-            <!-- ── Main : topbar + contenu ─────────────────────────────────── -->
+            <!-- ── Main ────────────────────────────────────────────────────── -->
             <div class="main">
                 <header class="topbar">
                     <button type="button" class="burger" (click)="toggleSidebar()" aria-label="Ouvrir le menu">
@@ -200,13 +208,21 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             background: var(--color-canvas);
         }
 
-        /* ── Backdrop ───────────────────────────────────────────────────────── */
+        /* ── FIX 4 : Backdrop avec fondu opacity ────────────────────────────── */
         .overlay-backdrop {
             position: fixed;
             inset: 0;
             z-index: 99;
             background: rgba(23, 61, 42, 0.45);
-            backdrop-filter: blur(1px);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s ease;
+        }
+
+        .overlay-backdrop.is-visible {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* ── Sidebar ────────────────────────────────────────────────────────── */
@@ -220,7 +236,14 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             color: var(--color-text-on-dark);
             overflow-y: auto;
             overflow-x: hidden;
+            /* FIX 7 : scrollbar discrète */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.14) transparent;
         }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 2px; }
 
         /* ── Marque ─────────────────────────────────────────────────────────── */
         .brand {
@@ -290,7 +313,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             color: var(--color-text-on-dark-muted);
         }
 
-        /* Lien direct */
+        /* Lien direct ── FIX 3 : border-color dans transition */
         .nav__item {
             display: flex;
             align-items: center;
@@ -302,12 +325,13 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             border-left: 3px solid transparent;
             text-decoration: none;
             white-space: nowrap;
-            transition: background 0.15s, color 0.15s;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
 
         .nav__item i { font-size: 15px; flex-shrink: 0; }
 
-        .nav__item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+        /* FIX 6 : hover 0.06 → 0.09 */
+        .nav__item:hover { background: rgba(255,255,255,0.09); color: #fff; }
 
         .nav__item--active {
             background: rgba(232, 114, 44, 0.16);
@@ -317,7 +341,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
 
         .nav__item--active:hover { background: rgba(232, 114, 44, 0.22); }
 
-        /* Section accordéon ── en-tête */
+        /* Section accordéon ── en-tête ── FIX 3 : border-color dans transition */
         .nav__section-hd {
             display: flex;
             align-items: center;
@@ -334,10 +358,10 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             text-align: left;
             cursor: pointer;
             white-space: nowrap;
-            transition: background 0.15s, color 0.15s;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
 
-        .nav__section-hd:hover { background: rgba(255,255,255,0.06); color: #fff; }
+        .nav__section-hd:hover { background: rgba(255,255,255,0.09); color: #fff; }
 
         .nav__section-hd.is-active {
             color: rgba(255,255,255,0.92);
@@ -347,21 +371,43 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         .nav__section-hd.is-expanded { color: #fff; }
 
         .nav__section-icon { font-size: 15px; flex-shrink: 0; }
-
         .nav__section-label { flex: 1; }
 
+        /* FIX 2 : chevron CSS pur (border-trick), remplace › */
         .nav__section-arrow {
-            font-size: 12px;
-            opacity: 0.6;
-            transition: transform 0.2s ease;
-            display: inline-block;
+            flex-shrink: 0;
+            width: 5px;
+            height: 5px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(-45deg);   /* → pointe à droite (fermé) */
+            opacity: 0.5;
+            transition: transform 0.2s ease, opacity 0.15s ease;
+            margin-right: 3px;
         }
 
-        .nav__section-arrow.is-rotated { transform: rotate(90deg); opacity: 1; }
+        .nav__section-arrow.is-rotated {
+            transform: rotate(45deg);    /* ↓ pointe en bas (ouvert) */
+            opacity: 0.9;
+        }
 
-        /* Section accordéon ── sous-items */
-        .nav__children { padding-bottom: 4px; }
+        /* FIX 1 : accordéon animé via grid-template-rows ────────────────────── */
+        .nav__children {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.22s ease;
+        }
 
+        .nav__children.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        /* Le wrapper interne masque le débordement pendant l'animation */
+        .nav__children-inner { overflow: hidden; padding-bottom: 0; }
+
+        .nav__children.is-open .nav__children-inner { padding-bottom: 4px; }
+
+        /* Sous-items ── FIX 3 : border-color dans transition */
         .nav__child {
             display: block;
             padding: 7px 22px 7px 52px;
@@ -373,10 +419,11 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: background 0.12s, color 0.12s;
+            transition: background 0.12s, color 0.12s, border-color 0.12s;
         }
 
-        .nav__child:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        /* FIX 6 : hover 0.05 → 0.08 */
+        .nav__child:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
         .nav__child--active {
             background: rgba(232, 114, 44, 0.14);
@@ -415,9 +462,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         }
 
         .lang__pill--overlap { margin-left: -8px; }
-
         .lang__pill--on { background: var(--color-accent); border-color: var(--color-accent); color: #fff; z-index: 1; }
-
         .lang__year { font-size: 11px; color: var(--color-text-on-dark-muted); }
 
         /* ── Main ───────────────────────────────────────────────────────────── */
@@ -446,7 +491,6 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         }
 
         .burger:hover { background: var(--color-surface-sunken); color: var(--color-text); }
-
         .topbar__heading { min-width: 0; }
 
         .topbar__title {
@@ -472,6 +516,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             border: 1px solid var(--color-border-field);
             border-radius: var(--radius-pill);
             cursor: text;
+            transition: border-color 0.15s;
         }
 
         .search:focus-within { border-color: var(--color-primary); }
@@ -489,7 +534,6 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         }
 
         .search__input::placeholder { color: var(--color-text-muted); }
-
         .topbar__actions { margin-left: auto; display: flex; align-items: center; gap: 16px; }
 
         .notif {
@@ -501,6 +545,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             border: 0;
             cursor: pointer;
             border-radius: var(--radius-sm);
+            transition: color 0.12s;
         }
 
         .notif:hover { color: var(--color-text); }
@@ -603,30 +648,33 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         @media (max-width: 1080px) {
             .sidebar { width: 78px; }
 
-            .brand__text, .nav__group-label, .nav__item span,
-            .nav__section-label, .nav__section-arrow,
-            .lang__year, .brand__tagline { display: none; }
+            /* FIX 8 : display: revert → valeurs explicites */
+            .brand__text, .nav__group-label, .lang__year, .brand__tagline { display: none; }
+            .nav__item span   { display: none; }
+            .nav__section-label { display: none; }
+            .nav__section-arrow { display: none; }
 
             .brand, .lang { justify-content: center; padding-inline: 0; }
 
-            /* Liens directs centrés, active à droite */
             .nav__item {
                 justify-content: center;
                 padding-inline: 0;
                 border-left-width: 0;
                 border-right: 3px solid transparent;
+                transition: background 0.15s, color 0.15s, border-color 0.15s;
             }
-            .nav__item--active { border-right-color: var(--color-accent); }
+            .nav__item--active { border-right-color: var(--color-accent); border-left-color: transparent; }
 
-            /* Sections : icône centrée, active à droite, pas de children */
             .nav__section-hd {
                 justify-content: center;
                 padding-inline: 0;
                 border-left-width: 0;
                 border-right: 3px solid transparent;
             }
-            .nav__section-hd.is-active { border-right-color: rgba(232, 114, 44, 0.7); }
-            .nav__children { display: none; }
+            .nav__section-hd.is-active { border-right-color: rgba(232, 114, 44, 0.7); border-left-color: transparent; }
+
+            /* Children masqués en mode icônes */
+            .nav__children { grid-template-rows: 0fr !important; pointer-events: none; }
         }
 
         /* ── Mobile ≤ 767 px : overlay pleine largeur ───────────────────────── */
@@ -643,10 +691,17 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
 
             .sidebar.is-open { transform: translateX(0); box-shadow: var(--shadow-shell); }
 
-            /* Restaurer tous les textes masqués à 1080 px */
-            .brand__text, .nav__group-label, .nav__item span,
-            .nav__section-label, .nav__section-arrow,
-            .lang__year, .brand__tagline { display: revert; }
+            /* FIX 8 : restauration explicite de chaque propriété */
+            .brand__text, .nav__group-label, .lang__year, .brand__tagline { display: flex; }
+            .brand__text  { flex-direction: column; }
+            .nav__group-label, .lang__year, .brand__tagline { display: block; }
+            .nav__item span   { display: inline; }
+            .nav__section-label { display: block; }
+            .nav__section-arrow { display: inline-block; }
+
+            /* Children ré-activés (override 1080px) */
+            .nav__children { pointer-events: auto; }
+            .nav__children.is-open { grid-template-rows: 1fr; }
 
             .brand  { padding: 0 22px 24px; justify-content: flex-start; }
             .lang   { padding: 16px 22px;   justify-content: flex-start; }
@@ -665,8 +720,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                 border-right: 0;
                 border-left: 3px solid transparent;
             }
-            .nav__section-hd.is-active { border-left-color: rgba(232, 114, 44, 0.5); }
-            .nav__children { display: block; }
+            .nav__section-hd.is-active { border-left-color: rgba(232, 114, 44, 0.5); border-right-color: transparent; }
 
             .burger { display: flex; }
             .search, .profile__text, .topbar__divider { display: none; }
@@ -690,7 +744,7 @@ export class AppLayout {
     private readonly _pageTitle  = signal('Tableau de bord');
     private readonly _currentUrl = signal('');
 
-    readonly pageTitle  = this._pageTitle.asReadonly();
+    readonly pageTitle   = this._pageTitle.asReadonly();
     readonly currentLang = this.langService.currentLang;
     readonly schoolYear  = '2025/2026'; // TODO(API): depuis EtablissementService
 
@@ -748,16 +802,13 @@ export class AppLayout {
         }
     }
 
-    // ── État de la sidebar ──────────────────────────────────────────────────
     toggleSidebar(): void { this.sidebarOverlayOpen.update(v => !v); }
     closeSidebar():  void { this.sidebarOverlayOpen.set(false); }
     setLang(lang: Lang): void { this.langService.setLang(lang); }
 
-    // ── Profil ──────────────────────────────────────────────────────────────
     toggleProfileMenu(e: MouseEvent): void { e.stopPropagation(); this.profileMenuOpen.update(v => !v); }
     logout(): void { this.profileMenuOpen.set(false); this.authService.logout(); }
 
-    // ── Sections accordéon ──────────────────────────────────────────────────
     protected isSectionExpanded(label: string): boolean {
         return this.expandedSections().has(label);
     }
@@ -770,7 +821,6 @@ export class AppLayout {
     protected handleSectionClick(entry: NavSection): void {
         const w = window.innerWidth;
         if (w > 767 && w <= 1080) {
-            // Mode icônes : naviguer directement vers le premier enfant
             void this.router.navigate([entry.firstRoute]);
             this.closeSidebar();
         } else {
@@ -800,7 +850,6 @@ export class AppLayout {
         return this.transloco.translate(`app.${key}`);
     }
 
-    // ── Constructeurs de nœuds (helpers locaux) ─────────────────────────────
     private item(label: string, icon: string, routerLink: string): NavItem {
         return { kind: 'item', label, icon, routerLink };
     }
@@ -809,7 +858,6 @@ export class AppLayout {
         return { kind: 'section', label, icon, children, firstRoute: children[0]?.routerLink ?? '' };
     }
 
-    // ── Construction du menu complet selon PAGES_ET_NAVIGATION.md §1 ────────
     private buildNav(role: Role | null): NavGroup[] {
         if (!role) return [];
 
@@ -821,7 +869,6 @@ export class AppLayout {
         // ── Scolarité ────────────────────────────────────────────────────────
         const scolEntries: NavEntry[] = [];
 
-        // Élèves [SUPER_ADMIN, SECRETARIAT, ECONOMAT (lecture), ENSEIGNANT (lecture)]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENSEIGNANT'].includes(role)) {
             const ch: NavItem[] = [this.item(this.t('menu.eleves.liste'), '', '/app/eleves')];
             if (['SUPER_ADMIN', 'SECRETARIAT'].includes(role)) {
@@ -831,7 +878,6 @@ export class AppLayout {
             scolEntries.push(this.section(this.t('menu.eleves.label'), 'pi pi-users', ch));
         }
 
-        // Emploi du temps [SUPER_ADMIN, SECRETARIAT, ENSEIGNANT (lecture propre)]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ENSEIGNANT'].includes(role)) {
             const ch: NavItem[] = [
                 this.item(this.t('menu.emploiDuTemps.parClasse'),     '', '/app/emploi-du-temps/classe'),
@@ -843,7 +889,6 @@ export class AppLayout {
             scolEntries.push(this.section(this.t('menu.emploiDuTemps.label'), 'pi pi-calendar', ch));
         }
 
-        // Résultats [ENSEIGNANT, SUPER_ADMIN, SECRETARIAT (lecture)]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ENSEIGNANT'].includes(role)) {
             const ch: NavItem[] = [];
             if (['SUPER_ADMIN', 'ENSEIGNANT'].includes(role)) {
@@ -856,7 +901,6 @@ export class AppLayout {
             scolEntries.push(this.section(this.t('menu.resultats.label'), 'pi pi-chart-bar', ch));
         }
 
-        // Discipline [ENSEIGNANT, SECRETARIAT, SUPER_ADMIN]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ENSEIGNANT'].includes(role)) {
             const ch: NavItem[] = [this.item(this.t('menu.discipline.sanctions'), '', '/app/discipline/sanctions')];
             if (['SUPER_ADMIN', 'SECRETARIAT'].includes(role)) {
@@ -868,7 +912,6 @@ export class AppLayout {
             scolEntries.push(this.section(this.t('menu.discipline.label'), 'pi pi-ban', ch));
         }
 
-        // Cahier de texte [ENSEIGNANT, SUPER_ADMIN, SECRETARIAT (consultation)]
         if (['SUPER_ADMIN', 'ENSEIGNANT', 'SECRETARIAT'].includes(role)) {
             const ch: NavItem[] = [];
             if (['SUPER_ADMIN', 'ENSEIGNANT'].includes(role)) {
@@ -884,11 +927,10 @@ export class AppLayout {
         // ── Finances ─────────────────────────────────────────────────────────
         const finEntries: NavEntry[] = [];
 
-        // Finances [ECONOMAT, SUPER_ADMIN, SECRETARIAT (lecture limitée)]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT'].includes(role)) {
             const ch: NavItem[] = [];
             if (['SUPER_ADMIN', 'ECONOMAT'].includes(role)) {
-                ch.push(this.item(this.t('menu.finances.versements'),         '', '/app/finances/versements'));
+                ch.push(this.item(this.t('menu.finances.versements'),          '', '/app/finances/versements'));
                 ch.push(this.item(this.t('menu.finances.validationsBancaires'), '', '/app/finances/validations'));
             }
             ch.push(this.item(this.t('menu.finances.moratoires'), '', '/app/finances/moratoires'));
@@ -899,7 +941,6 @@ export class AppLayout {
             finEntries.push(this.section(this.t('menu.finances.label'), 'pi pi-wallet', ch));
         }
 
-        // Paie [ECONOMAT, SUPER_ADMIN — jamais SECRETARIAT]
         if (['SUPER_ADMIN', 'ECONOMAT'].includes(role)) {
             const ch: NavItem[] = [];
             if (role === 'SUPER_ADMIN') {
@@ -912,7 +953,6 @@ export class AppLayout {
         // ── Administration ────────────────────────────────────────────────────
         const admEntries: NavEntry[] = [];
 
-        // Personnel [SUPER_ADMIN, SECRETARIAT, ECONOMAT (lecture)]
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT'].includes(role)) {
             const ch: NavItem[] = [this.item(this.t('menu.personnel.liste'), '', '/app/personnel')];
             if (['SUPER_ADMIN', 'SECRETARIAT'].includes(role)) {
@@ -921,7 +961,6 @@ export class AppLayout {
             admEntries.push(this.section(this.t('menu.personnel.label'), 'pi pi-id-card', ch));
         }
 
-        // Paramétrage [SUPER_ADMIN principalement]
         if (role === 'SUPER_ADMIN') {
             admEntries.push(this.section(this.t('menu.parametrage.label'), 'pi pi-cog', [
                 this.item(this.t('menu.parametrage.classes'),           '', '/app/parametrage/classes'),
@@ -935,7 +974,6 @@ export class AppLayout {
             ]));
         }
 
-        // Communication [SUPER_ADMIN, COMMUNICATION]
         if (['SUPER_ADMIN', 'COMMUNICATION'].includes(role)) {
             admEntries.push(this.section(this.t('menu.communication.label'), 'pi pi-megaphone', [
                 this.item(this.t('menu.communication.actualites'), '', '/app/communication/actualites'),

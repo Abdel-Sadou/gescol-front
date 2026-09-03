@@ -116,21 +116,24 @@
     "prenom": "Prénom",
     "sexe": {
       "label": "Sexe",
-      "placeholder": "Choisir",
-      "M": "Masculin",
-      "F": "Féminin"
+      "M": "M",
+      "F": "F"
     },
     "dateNaissance": "Date de naissance",
     "lieuNaissance": "Lieu de naissance",
     "classe": "Classe",
     "classePlaceholder": "Sélectionner une classe",
-    "chargementClasses": "Chargement des classes...",
+    "chargementClasses": "Chargement des classes…",
     "sousSysteme": {
       "label": "Sous-système",
-      "placeholder": "Choisir (optionnel)",
       "FRANCOPHONE": "Francophone",
       "ANGLOPHONE": "Anglophone"
     },
+    "sousSystemeRange": {
+      "FRANCOPHONE": "6ème → Terminale",
+      "ANGLOPHONE": "Form 1 → Upper Sixth"
+    },
+    "sousSystemeHelp": "Choisissez d'abord un sous-système.",
     "groupeSanguin": "Groupe sanguin",
     "groupeSanguinPlaceholder": "Choisir (optionnel)",
     "nomPere": "Nom du père / tuteur",
@@ -138,21 +141,220 @@
     "quartier": "Quartier",
     "personneContact": "Personne à contacter",
     "telephoneContact": "Téléphone du contact",
-    "redoublant": "Redoublant",
-    "apteSport": "Apte au sport",
+    "redoublant": {
+      "titre": "Élève redoublant",
+      "hint": "Reprend la même classe cette année."
+    },
+    "apteAuSport": {
+      "titre": "Apte à la pratique sportive",
+      "hint": "Cocher uniquement si le certificat médical est au dossier."
+    },
     "annuler": "Annuler",
+    "brouillon": "Brouillon",
+    "brouillonSauvegarde": "Brouillon enregistré à {{time}}",
     "creer": "Créer l'élève",
-    "modifier": "Enregistrer les modifications",
+    "modifier": "Enregistrer",
     "erreurChargement": "Impossible de charger les données de cet élève.",
     "erreurEnregistrement": "Une erreur est survenue. Veuillez réessayer.",
-    "validation": {
-      "requis": "Ce champ est obligatoire.",
-      "dateRequise": "La date de naissance est obligatoire."
+    "sections": {
+      "identite": "Identité",
+      "identiteHint": "tel que porté sur l'acte de naissance",
+      "affectation": "Affectation scolaire",
+      "filiation": "Filiation et personne à contacter"
+    },
+    "rail": {
+      "ficheEnConstruction": "FICHE EN CONSTRUCTION",
+      "ficheEleve": "FICHE DE L'ÉLÈVE",
+      "nouvelEleve": "Nouvel élève",
+      "nomInconnu": "Élève en cours de saisie",
+      "matriculeNote": "Matricule attribué à la création",
+      "champsObligatoires": "Champs obligatoires",
+      "sousSystemePending": "Sous-système à définir",
+      "classePending": "Classe à définir",
+      "warningNonRenseigne": "non renseigné(e)",
+      "warningText": "L'élève ne pourra pas être affecté avant que tous les champs obligatoires soient renseignés."
     }
   },
 
   "topbar": {
     "seDeconnecter": "Se déconnecter"
+  },
+
+  "parametrage": {
+    "erreurEnregistrement": "Une erreur est survenue. Veuillez réessayer.",
+    "commun": {
+      "requis": "Ce champ est obligatoire.",
+      "annuler": "Annuler",
+      "creer": "Créer",
+      "modifier": "Enregistrer"
+    },
+    "sousSysteme": {
+      "FRANCOPHONE": "Francophone",
+      "ANGLOPHONE": "Anglophone"
+    },
+    "niveaux": {
+      "titre": "Niveaux scolaires",
+      "nouveau": "Nouveau niveau",
+      "form": {
+        "titreCreation": "Nouveau niveau",
+        "titreEdition": "Modifier le niveau",
+        "libelle": "Libellé",
+        "sousSysteme": "Sous-système",
+        "ordre": "Ordre d'affichage"
+      },
+      "cols": {
+        "libelle": "Libellé",
+        "sousSysteme": "Sous-système",
+        "ordre": "Ordre"
+      }
+    },
+    "matieres": {
+      "titre": "Matières",
+      "nouveau": "Nouvelle matière",
+      "form": {
+        "titreCreation": "Nouvelle matière",
+        "titreEdition": "Modifier la matière",
+        "libelle": "Libellé",
+        "sousSysteme": "Sous-système"
+      },
+      "cols": {
+        "libelle": "Libellé",
+        "sousSysteme": "Sous-système"
+      }
+    },
+    "classes": {
+      "titre": "Classes",
+      "nouveau": "Nouvelle classe",
+      "form": {
+        "titreCreation": "Nouvelle classe",
+        "titreEdition": "Modifier la classe",
+        "libelle": "Libellé",
+        "sousSysteme": "Sous-système",
+        "anneeScolaire": "Année scolaire",
+        "niveauId": "Niveau (optionnel)",
+        "niveauPlaceholder": "Aucun niveau",
+        "niveauHelp": "Regroupe la classe sous un degré scolaire (ex. 6ème, Terminale). Optionnel — ne modifie pas les coefficients ni les quotas horaires, configurés par classe."
+      },
+      "professeurPrincipal": {
+        "titre": "Désigner professeur principal",
+        "personnelId": "Enseignant",
+        "personnelPlaceholder": "Sélectionner un enseignant"
+      },
+      "cols": {
+        "libelle": "Libellé",
+        "niveau": "Niveau",
+        "sousSysteme": "Sous-système",
+        "anneeScolaire": "Année scolaire"
+      }
+    },
+    "trimestres": {
+      "titre": "Trimestres & séquences",
+      "nouveau": "Nouveau trimestre",
+      "form": {
+        "titreCreation": "Nouveau trimestre",
+        "titreEdition": "Modifier le trimestre",
+        "libelle": "Libellé",
+        "anneeScolaire": "Année scolaire",
+        "dateDebut": "Date de début",
+        "dateFin": "Date de fin"
+      },
+      "cols": {
+        "libelle": "Libellé",
+        "anneeScolaire": "Année scolaire",
+        "dateDebut": "Début",
+        "dateFin": "Fin"
+      },
+      "sequences": {
+        "titre": "Séquences",
+        "nouveau": "Nouvelle séquence",
+        "form": {
+          "titreCreation": "Nouvelle séquence",
+          "titreEdition": "Modifier la séquence",
+          "libelle": "Libellé",
+          "dateDebut": "Date de début",
+          "dateFin": "Date de fin"
+        },
+        "cols": {
+          "libelle": "Libellé",
+          "dateDebut": "Début",
+          "dateFin": "Fin"
+        }
+      }
+    },
+    "tauxScolarite": {
+      "titre": "Taux de scolarité",
+      "nouveau": "Nouveau taux",
+      "form": {
+        "titreCreation": "Nouveau taux",
+        "titreEdition": "Modifier le taux",
+        "classeId": "Classe",
+        "classePlaceholder": "Sélectionner une classe",
+        "montant": "Montant (FCFA)",
+        "anneeScolaire": "Année scolaire"
+      },
+      "cols": {
+        "classe": "Classe",
+        "montant": "Montant (FCFA)",
+        "anneeScolaire": "Année scolaire"
+      }
+    },
+    "quotasHoraires": {
+      "titre": "Quotas horaires",
+      "nouveau": "Nouveau quota",
+      "form": {
+        "titreCreation": "Nouveau quota",
+        "titreEdition": "Modifier le quota",
+        "matiereId": "Matière",
+        "matierePlaceholder": "Sélectionner une matière",
+        "classeId": "Classe",
+        "classePlaceholder": "Sélectionner une classe",
+        "heuresParSemaine": "Heures par semaine"
+      },
+      "cols": {
+        "matiere": "Matière",
+        "classe": "Classe",
+        "heuresParSemaine": "H/semaine"
+      }
+    },
+    "coefficients": {
+      "titre": "Coefficients",
+      "nouveau": "Nouveau coefficient",
+      "form": {
+        "titreCreation": "Nouveau coefficient",
+        "titreEdition": "Modifier le coefficient",
+        "matiereId": "Matière",
+        "matierePlaceholder": "Sélectionner une matière",
+        "classeId": "Classe",
+        "classePlaceholder": "Sélectionner une classe",
+        "valeur": "Valeur"
+      },
+      "cols": {
+        "matiere": "Matière",
+        "classe": "Classe",
+        "valeur": "Coefficient"
+      }
+    },
+    "modelesEngagement": {
+      "titre": "Modèles de lettre d'engagement",
+      "nouveau": "Nouveau modèle",
+      "annuler": "Annuler",
+      "creer": "Créer le modèle",
+      "modifier": "Enregistrer",
+      "erreurChargement": "Impossible de charger ce modèle.",
+      "erreurEnregistrement": "Une erreur est survenue. Veuillez réessayer.",
+      "form": {
+        "titreCreation": "Nouveau modèle",
+        "titreEdition": "Modifier le modèle",
+        "libelle": "Intitulé du modèle",
+        "contenu": "Contenu du modèle",
+        "variables": "Variables disponibles",
+        "variablesHint": "Insérez ces balises dans le texte — elles seront remplacées à la génération."
+      },
+      "cols": {
+        "libelle": "Intitulé",
+        "extrait": "Aperçu"
+      }
+    }
   },
 
   "fiche": {
