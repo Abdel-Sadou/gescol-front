@@ -91,15 +91,17 @@ export const appRoutes: Routes = [
             { path: 'eleves/:id/editer',     loadComponent: () => import('@/app/pages/app/eleves/eleve-form').then(c => c.EleveForm), data: { breadcrumb: 'Modifier élève' } },
 
             // --- Modules métier — placeholders (F09-F16) ---
-            // Paramétrage
-            { path: 'parametrage/classes',            loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Classes' } },
-            { path: 'parametrage/trimestres',         loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Trimestres & séquences' } },
-            { path: 'parametrage/taux-scolarite',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Taux de scolarité' } },
-            { path: 'parametrage/quotas-horaires',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Quotas horaires' } },
-            { path: 'parametrage/matieres',           loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Matières' } },
-            { path: 'parametrage/coefficients',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Coefficients' } },
-            { path: 'parametrage/niveaux',            loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Niveaux' } },
-            { path: 'parametrage/modeles-engagement', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Modèles engagement' } },
+            // Paramétrage (F09)
+            { path: 'parametrage/classes',         loadComponent: () => import('@/app/pages/app/parametrage/classes/classes-liste').then(c => c.ClassesListe),                        data: { breadcrumb: 'Classes' } },
+            { path: 'parametrage/trimestres',      loadComponent: () => import('@/app/pages/app/parametrage/trimestres/trimestres-liste').then(c => c.TrimestresListe),              data: { breadcrumb: 'Trimestres & séquences' } },
+            { path: 'parametrage/taux-scolarite',  loadComponent: () => import('@/app/pages/app/parametrage/taux-scolarite/taux-scolarite-liste').then(c => c.TauxScolariteListe),  data: { breadcrumb: 'Taux de scolarité' } },
+            { path: 'parametrage/quotas-horaires', loadComponent: () => import('@/app/pages/app/parametrage/quotas-horaires/quotas-horaires-liste').then(c => c.QuotasHorairesListe), data: { breadcrumb: 'Quotas horaires' } },
+            { path: 'parametrage/matieres',        loadComponent: () => import('@/app/pages/app/parametrage/matieres/matieres-liste').then(c => c.MatieresListe),                    data: { breadcrumb: 'Matières' } },
+            { path: 'parametrage/coefficients',    loadComponent: () => import('@/app/pages/app/parametrage/coefficients/coefficients-liste').then(c => c.CoefficientsListe),        data: { breadcrumb: 'Coefficients' } },
+            { path: 'parametrage/niveaux',         loadComponent: () => import('@/app/pages/app/parametrage/niveaux/niveaux-liste').then(c => c.NiveauxListe),                        data: { breadcrumb: 'Niveaux' } },
+            { path: 'parametrage/modeles-engagement',         loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modeles-engagement-liste').then(c => c.ModelesEngagementListe), data: { breadcrumb: 'Modèles engagement' } },
+            { path: 'parametrage/modeles-engagement/nouveau', loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modele-engagement-form').then(c => c.ModeleEngagementForm),    data: { breadcrumb: 'Nouveau modèle' } },
+            { path: 'parametrage/modeles-engagement/:id/editer', loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modele-engagement-form').then(c => c.ModeleEngagementForm), data: { breadcrumb: 'Modifier modèle' } },
             // Personnel
             { path: 'personnel',              loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Personnel' } },
             { path: 'personnel/nouveau',      loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Nouveau personnel' } },

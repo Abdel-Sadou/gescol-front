@@ -116,21 +116,24 @@
     "prenom": "First name",
     "sexe": {
       "label": "Gender",
-      "placeholder": "Choose",
-      "M": "Male",
-      "F": "Female"
+      "M": "M",
+      "F": "F"
     },
     "dateNaissance": "Date of birth",
     "lieuNaissance": "Place of birth",
     "classe": "Class",
     "classePlaceholder": "Select a class",
-    "chargementClasses": "Loading classes...",
+    "chargementClasses": "Loading classes…",
     "sousSysteme": {
       "label": "Sub-system",
-      "placeholder": "Choose (optional)",
       "FRANCOPHONE": "Francophone",
       "ANGLOPHONE": "Anglophone"
     },
+    "sousSystemeRange": {
+      "FRANCOPHONE": "Form 6 → Upper Sixth (FR)",
+      "ANGLOPHONE": "Form 1 → Upper Sixth"
+    },
+    "sousSystemeHelp": "Please select a sub-system first.",
     "groupeSanguin": "Blood type",
     "groupeSanguinPlaceholder": "Choose (optional)",
     "nomPere": "Father / Guardian name",
@@ -138,21 +141,220 @@
     "quartier": "Neighbourhood",
     "personneContact": "Emergency contact",
     "telephoneContact": "Contact phone number",
-    "redoublant": "Repeating year",
-    "apteSport": "Fit for sport",
+    "redoublant": {
+      "titre": "Repeating year",
+      "hint": "Student is repeating the same class this year."
+    },
+    "apteAuSport": {
+      "titre": "Fit for physical activity",
+      "hint": "Tick only if a medical certificate is on file."
+    },
     "annuler": "Cancel",
+    "brouillon": "Save draft",
+    "brouillonSauvegarde": "Draft saved at {{time}}",
     "creer": "Create student",
-    "modifier": "Save changes",
+    "modifier": "Save",
     "erreurChargement": "Unable to load this student's data.",
     "erreurEnregistrement": "An error occurred. Please try again.",
-    "validation": {
-      "requis": "This field is required.",
-      "dateRequise": "Date of birth is required."
+    "sections": {
+      "identite": "Identity",
+      "identiteHint": "as shown on the birth certificate",
+      "affectation": "School placement",
+      "filiation": "Family & emergency contact"
+    },
+    "rail": {
+      "ficheEnConstruction": "RECORD IN PROGRESS",
+      "ficheEleve": "STUDENT RECORD",
+      "nouvelEleve": "New student",
+      "nomInconnu": "Student being entered",
+      "matriculeNote": "ID assigned at creation",
+      "champsObligatoires": "Required fields",
+      "sousSystemePending": "Sub-system to define",
+      "classePending": "Class to define",
+      "warningNonRenseigne": "not filled in",
+      "warningText": "The student cannot be assigned to a timetable until all required fields are completed."
     }
   },
 
   "topbar": {
     "seDeconnecter": "Sign out"
+  },
+
+  "parametrage": {
+    "erreurEnregistrement": "An error occurred. Please try again.",
+    "commun": {
+      "requis": "This field is required.",
+      "annuler": "Cancel",
+      "creer": "Create",
+      "modifier": "Save"
+    },
+    "sousSysteme": {
+      "FRANCOPHONE": "Francophone",
+      "ANGLOPHONE": "Anglophone"
+    },
+    "niveaux": {
+      "titre": "School levels",
+      "nouveau": "New level",
+      "form": {
+        "titreCreation": "New level",
+        "titreEdition": "Edit level",
+        "libelle": "Name",
+        "sousSysteme": "Sub-system",
+        "ordre": "Display order"
+      },
+      "cols": {
+        "libelle": "Name",
+        "sousSysteme": "Sub-system",
+        "ordre": "Order"
+      }
+    },
+    "matieres": {
+      "titre": "Subjects",
+      "nouveau": "New subject",
+      "form": {
+        "titreCreation": "New subject",
+        "titreEdition": "Edit subject",
+        "libelle": "Name",
+        "sousSysteme": "Sub-system"
+      },
+      "cols": {
+        "libelle": "Name",
+        "sousSysteme": "Sub-system"
+      }
+    },
+    "classes": {
+      "titre": "Classes",
+      "nouveau": "New class",
+      "form": {
+        "titreCreation": "New class",
+        "titreEdition": "Edit class",
+        "libelle": "Name",
+        "sousSysteme": "Sub-system",
+        "anneeScolaire": "School year",
+        "niveauId": "Level (optional)",
+        "niveauPlaceholder": "No level",
+        "niveauHelp": "Groups the class under a school grade level (e.g. Year 7, Upper Sixth). Optional — does not affect coefficients or time quotas, which are configured per class."
+      },
+      "professeurPrincipal": {
+        "titre": "Assign homeroom teacher",
+        "personnelId": "Teacher",
+        "personnelPlaceholder": "Select a teacher"
+      },
+      "cols": {
+        "libelle": "Name",
+        "niveau": "Level",
+        "sousSysteme": "Sub-system",
+        "anneeScolaire": "School year"
+      }
+    },
+    "trimestres": {
+      "titre": "Terms & sequences",
+      "nouveau": "New term",
+      "form": {
+        "titreCreation": "New term",
+        "titreEdition": "Edit term",
+        "libelle": "Name",
+        "anneeScolaire": "School year",
+        "dateDebut": "Start date",
+        "dateFin": "End date"
+      },
+      "cols": {
+        "libelle": "Name",
+        "anneeScolaire": "School year",
+        "dateDebut": "Start",
+        "dateFin": "End"
+      },
+      "sequences": {
+        "titre": "Sequences",
+        "nouveau": "New sequence",
+        "form": {
+          "titreCreation": "New sequence",
+          "titreEdition": "Edit sequence",
+          "libelle": "Name",
+          "dateDebut": "Start date",
+          "dateFin": "End date"
+        },
+        "cols": {
+          "libelle": "Name",
+          "dateDebut": "Start",
+          "dateFin": "End"
+        }
+      }
+    },
+    "tauxScolarite": {
+      "titre": "Tuition rates",
+      "nouveau": "New rate",
+      "form": {
+        "titreCreation": "New rate",
+        "titreEdition": "Edit rate",
+        "classeId": "Class",
+        "classePlaceholder": "Select a class",
+        "montant": "Amount (XAF)",
+        "anneeScolaire": "School year"
+      },
+      "cols": {
+        "classe": "Class",
+        "montant": "Amount (XAF)",
+        "anneeScolaire": "School year"
+      }
+    },
+    "quotasHoraires": {
+      "titre": "Teaching quotas",
+      "nouveau": "New quota",
+      "form": {
+        "titreCreation": "New quota",
+        "titreEdition": "Edit quota",
+        "matiereId": "Subject",
+        "matierePlaceholder": "Select a subject",
+        "classeId": "Class",
+        "classePlaceholder": "Select a class",
+        "heuresParSemaine": "Hours per week"
+      },
+      "cols": {
+        "matiere": "Subject",
+        "classe": "Class",
+        "heuresParSemaine": "H/week"
+      }
+    },
+    "coefficients": {
+      "titre": "Coefficients",
+      "nouveau": "New coefficient",
+      "form": {
+        "titreCreation": "New coefficient",
+        "titreEdition": "Edit coefficient",
+        "matiereId": "Subject",
+        "matierePlaceholder": "Select a subject",
+        "classeId": "Class",
+        "classePlaceholder": "Select a class",
+        "valeur": "Value"
+      },
+      "cols": {
+        "matiere": "Subject",
+        "classe": "Class",
+        "valeur": "Coefficient"
+      }
+    },
+    "modelesEngagement": {
+      "titre": "Commitment letter templates",
+      "nouveau": "New template",
+      "annuler": "Cancel",
+      "creer": "Create template",
+      "modifier": "Save",
+      "erreurChargement": "Unable to load this template.",
+      "erreurEnregistrement": "An error occurred. Please try again.",
+      "form": {
+        "titreCreation": "New template",
+        "titreEdition": "Edit template",
+        "libelle": "Template name",
+        "contenu": "Template content",
+        "variables": "Available variables",
+        "variablesHint": "Insert these tags into the text — they will be replaced at generation time."
+      },
+      "cols": {
+        "libelle": "Name",
+        "extrait": "Preview"
+      }
+    }
   },
 
   "fiche": {

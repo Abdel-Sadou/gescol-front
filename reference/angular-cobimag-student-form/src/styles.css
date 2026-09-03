@@ -1,0 +1,123 @@
+/* =========================================================================
+   COBIMAG — jetons de design, direction « Institutionnel chaud ».
+   Source unique de vérité. Aucune valeur hexadécimale dans les composants.
+   ========================================================================= */
+:root {
+  /* --- Marque ---------------------------------------------------------- */
+  --color-primary: #008b47;
+  --color-primary-600: #00733b;
+  --color-primary-deep: #1f5c3d;
+  --color-primary-dark: #173d2a;
+  --color-primary-soft: #eaf3ed;
+  --color-primary-border: #b9cfc1;
+  --color-primary-soft-ring: rgb(0 139 71 / 0.28);
+
+  --color-accent: #e8722c;
+  --color-accent-deep: #8a4416;
+  --color-accent-text: #7a5a3e;
+  --color-accent-soft: #fff6ee;
+  --color-accent-border: #f2d9c2;
+  --color-accent-light: #f7b489;
+
+  --color-danger: #c0392b;
+
+  /* --- Surfaces (fond papier) ------------------------------------------ */
+  --color-canvas: #fbf8f2;
+  --color-surface: #fffdf8;
+  --color-surface-sunken: #f4efe4;
+  --color-surface-muted: #f7f4ec;
+  --color-field-bg: #ffffff;
+  --color-track: #efe7d9;
+
+  /* --- Texte (tous ≥ 4.5:1 sur leur fond) ------------------------------ */
+  --color-text: #173d2a;
+  --color-text-body: #2e3b32;
+  --color-text-muted: #736a5c;
+  --color-text-quiet: #5c6b60;
+  --color-text-secondary-btn: #5c5344;
+  --color-placeholder: #7a7264;
+  --color-on-dark: rgb(255 255 255 / 0.72);
+  --color-on-dark-muted: rgb(255 255 255 / 0.62);
+
+  /* --- Bordures -------------------------------------------------------- */
+  --color-border: #e9e1d2;
+  --color-border-strong: #e2dacb;
+  --color-border-field: #d8cfbc;
+  --color-border-quiet: #c4baa6;
+  --color-border-on-dark: rgb(255 255 255 / 0.35);
+
+  /* --- Typographie ----------------------------------------------------- */
+  --font-serif: 'Lora', Georgia, serif;
+  --font-sans: 'Work Sans', system-ui, sans-serif;
+
+  /* --- Rayons / ombres ------------------------------------------------- */
+  --radius-sm: 7px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-full: 50%;
+  --shadow-card: 0 2px 10px -4px rgb(23 61 42 / 0.12);
+  --shadow-frame: 0 24px 60px -30px rgb(31 92 61 / 0.4);
+
+  /* --- Cible tactile minimale ------------------------------------------ */
+  --tap-target: 44px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100dvh; }
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-text-body);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================================
+   Surcharges PrimeNG — dans une couche nommée, jamais en ::ng-deep dispersé.
+   ========================================================================= */
+@layer cobimag {
+  /* Les libellés de champ ne sont jamais pâles. */
+  .p-inputtext::placeholder { color: var(--color-placeholder); }
+
+  /* Choix binaires : segmenté plutôt que menu déroulant. */
+  .p-selectbutton .p-togglebutton {
+    font-weight: 600;
+    color: var(--color-placeholder);
+    min-height: var(--tap-target);
+  }
+  .p-selectbutton .p-togglebutton-checked {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* Toute action garde une cible tactile confortable. */
+  .p-button { min-height: var(--tap-target); }
+
+  /* Champ validé : bordure verte. Champ bloquant : bordure orange. */
+  .field-ok .p-inputtext,
+  .field-ok .p-select,
+  .field-ok .p-datepicker-input {
+    border-color: var(--color-primary-border);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .field-blocking .p-select,
+  .field-blocking .p-inputtext,
+  .field-blocking .p-datepicker-input {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-deep);
+  }
+  .field-blocking .p-select-label,
+  .field-blocking .p-select-dropdown-icon { color: var(--color-accent-deep); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

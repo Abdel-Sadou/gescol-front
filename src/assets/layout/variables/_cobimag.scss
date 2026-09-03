@@ -11,6 +11,12 @@
     --color-primary-soft:   #eaf3ed;
     --color-primary-border: #b9cfc1;
 
+    /* --- Champs de saisie ---------------------------------------------- */
+    --color-field-bg:          #ffffff;          /* fond blanc net sur card chaude */
+    --color-placeholder:       #a09080;          /* gris chaud discret */
+    --color-primary-soft-ring: rgba(0, 139, 71, 0.25); /* halo de focus vert */
+    --color-track:             #e9e1d2;          /* piste de la barre de progression */
+
     --color-accent:        #e8722c;
     --color-accent-dark:   #b65b1e;
     --color-accent-deep:   #8a4416;

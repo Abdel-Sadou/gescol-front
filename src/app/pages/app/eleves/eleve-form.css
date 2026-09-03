@@ -1,0 +1,366 @@
+/* =========================================================================
+   Formulaire élève — "Nouvel élève" / "Modifier l'élève"
+   Layout deux colonnes : saisie dense sectionnée + rail récapitulatif fixe.
+   Tokens : PrimeNG (--p-*) + branding dynamique (--color-accent).
+   Aucune couleur de marque codée en dur.
+   ========================================================================= */
+
+:host {
+    container-type: inline-size;
+    display: block;
+}
+
+/* ── Disposition : formulaire + rail ── */
+.ef-frame {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+}
+
+.ef-form {
+    flex: 1;
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.ef-rail {
+    width: 312px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 22px;
+}
+
+/* ── En-tête du formulaire ── */
+.ef-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.ef-title {
+    margin: 0;
+    font-family: Lora, Georgia, serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.ef-stamp {
+    margin: 0 0 0 auto;
+    font-size: 12px;
+    color: var(--color-accent);
+}
+
+/* ── Corps du formulaire ── */
+.ef-body {
+    padding: 22px 24px;
+}
+
+/* ── En-tête de section ── */
+.ef-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.ef-section:not(:first-child) {
+    margin-top: 28px;
+}
+
+.ef-section__num {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Lora, Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--p-primary-700);
+    background: var(--p-primary-50);
+    border-radius: 50%;
+}
+
+.ef-section__title {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.ef-section__hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+.ef-section__rule {
+    flex: 1;
+    min-width: 20px;
+    height: 1px;
+    background: var(--color-border);
+}
+
+/* ── Rangées ── */
+.ef-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+/* ── Champs ── */
+.ef-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* La largeur suit le contenu attendu, pas la grille. */
+.ef-field--wide   { flex: 2 1 200px; }
+.ef-field--medium { flex: 1 1 150px; }
+.ef-field--date   { flex: 1 1 180px; }
+.ef-field--phone  { flex: 0 1 180px; }
+.ef-field--narrow { flex: 1 1 130px; }
+.ef-field--tiny   { flex: 0 1 116px; }
+
+.ef-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--color-text-body);
+}
+
+.ef-req { color: var(--color-danger); }
+
+.ef-help {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+/* ── État validé : bordure verte ── */
+:host ::ng-deep .ef-ok .p-inputtext,
+:host ::ng-deep .ef-ok .p-select,
+:host ::ng-deep .ef-ok .p-datepicker-input {
+    border-color: var(--p-primary-200);
+    font-weight: 600;
+}
+
+/* ── Champ bloquant (premier obligatoire manquant) : orange ── */
+:host ::ng-deep .ef-blocking .p-inputtext,
+:host ::ng-deep .ef-blocking .p-select,
+:host ::ng-deep .ef-blocking .p-datepicker-input {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+}
+
+:host ::ng-deep .ef-blocking .p-select-label,
+:host ::ng-deep .ef-blocking .p-select-dropdown-icon {
+    color: var(--color-accent-deep);
+}
+
+/* ── PrimeNG : inputs pleine largeur dans un champ ── */
+:host ::ng-deep .ef-field .p-inputtext,
+:host ::ng-deep .ef-field .p-select,
+:host ::ng-deep .ef-field .p-datepicker,
+:host ::ng-deep .ef-field .p-datepicker-input,
+:host ::ng-deep .ef-field .p-selectbutton {
+    width: 100%;
+}
+
+:host ::ng-deep .ef-field .p-selectbutton .p-togglebutton {
+    flex: 1;
+    min-height: 44px;
+    font-weight: 600;
+}
+
+/* ── Cases à cocher contextuelles ── */
+.ef-toggle {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 13px;
+    margin-bottom: 14px;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ef-toggle--inline {
+    flex: 1 1 240px;
+    align-self: flex-end;
+    margin-bottom: 0;
+}
+
+.ef-toggle__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ef-toggle__title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.ef-toggle__hint {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+}
+
+/* ── Cards sous-système FR / EN ── */
+.ef-subsystem {
+    margin: 0 0 14px;
+    padding: 0;
+    border: 0;
+}
+
+.ef-subsystem__options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 9px;
+}
+
+.ef-subsystem__card {
+    flex: 1 1 210px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 44px;
+    padding: 12px 14px;
+    font-family: inherit;
+    text-align: left;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 9px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ef-subsystem__card:hover {
+    border-color: var(--p-primary-200);
+}
+
+.ef-subsystem__card--on {
+    background: var(--p-primary-50);
+    border: 1.5px solid var(--p-primary-700);
+}
+
+.ef-subsystem__pill {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    border: 2px solid var(--color-border-strong);
+    border-radius: 50%;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.ef-subsystem__card--on .ef-subsystem__pill {
+    color: #fff;
+    background: var(--p-primary-700);
+    border-color: var(--p-primary-700);
+}
+
+.ef-subsystem__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ef-subsystem__name {
+    font-family: Lora, Georgia, serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+
+.ef-subsystem__card--on .ef-subsystem__name {
+    color: var(--color-text);
+}
+
+.ef-subsystem__meta {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+.ef-subsystem__check {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--p-primary-700);
+}
+
+/* ── Matricule en édition ── */
+.ef-matricule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin-bottom: 6px;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border);
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.ef-matricule__label { color: var(--color-text-muted); font-weight: 500; }
+.ef-matricule__value { color: var(--color-text); font-weight: 700; }
+
+/* ── Container queries — responsive ── */
+
+/* Le rail passe au-dessus du formulaire en bandeau horizontal. */
+@container (max-width: 1080px) {
+    .ef-frame {
+        flex-direction: column;
+    }
+
+    .ef-rail {
+        position: static;
+        width: 100%;
+        order: -1;
+    }
+}
+
+@container (max-width: 720px) {
+    .ef-body {
+        padding: 16px;
+    }
+
+    .ef-head {
+        padding: 12px 16px;
+    }
+
+    /* Un champ par ligne sur mobile. */
+    .ef-field--wide,
+    .ef-field--medium,
+    .ef-field--date,
+    .ef-field--phone,
+    .ef-field--narrow,
+    .ef-field--tiny {
+        flex: 1 1 100%;
+    }
+
+    .ef-toggle--inline {
+        flex: 1 1 100%;
+        align-self: stretch;
+    }
+}
