@@ -30,6 +30,24 @@ const CobimagPreset = definePreset(Aura, {
             900: '#003d1f',
             950: '#001f10'
         },
+        formField: {
+            borderRadius:            'var(--radius-sm)',
+            background:              'var(--color-field-bg)',
+            disabledBackground:      'var(--color-surface-sunken)',
+            borderColor:             'var(--color-border-field)',
+            hoverBorderColor:        'var(--color-primary-border)',
+            focusBorderColor:        'var(--color-primary)',
+            color:                   'var(--color-text-body)',
+            disabledColor:           'var(--color-text-muted)',
+            placeholderColor:        'var(--color-placeholder)',
+            invalidPlaceholderColor: 'var(--color-placeholder)',
+            focusRing: {
+                width:  '2px',
+                style:  'solid',
+                color:  'var(--color-primary-soft-ring)',
+                offset: '1px',
+            },
+        },
         overlay: {
             modal:   { borderRadius: '1.5rem' },
             popover: { borderRadius: '10px' }
@@ -49,7 +67,29 @@ const CobimagPreset = definePreset(Aura, {
                     800: '#a09080',
                     900: '#736a5c',
                     950: '#4a3f34'
-                }
+                },
+                /* Surbrillance : cercle plein vert pour la date du jour et la sélection */
+                highlight: {
+                    background:      '{primary.500}',
+                    focusBackground: '{primary.600}',
+                    color:           '#ffffff',
+                    focusColor:      '#ffffff',
+                },
+                /* Fond chaud pour tous les overlays (Select, DatePicker, etc.) */
+                content: {
+                    background:      'var(--color-surface)',
+                    hoverBackground: 'var(--color-surface-sunken)',
+                    borderColor:     'var(--color-border)',
+                    color:           'var(--color-text-body)',
+                    hoverColor:      'var(--color-text)',
+                },
+                /* Couleurs de texte par défaut des composants */
+                text: {
+                    color:           'var(--color-text-body)',
+                    hoverColor:      'var(--color-text)',
+                    mutedColor:      'var(--color-text-muted)',
+                    hoverMutedColor: 'var(--color-text)',
+                },
             },
             dark: {
                 surface: {

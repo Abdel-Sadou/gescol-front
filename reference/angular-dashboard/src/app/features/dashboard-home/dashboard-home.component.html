@@ -1,0 +1,158 @@
+<div class="grid">
+  <!-- ─────────────────── Élèves inscrits ─────────────────── -->
+  <section class="card card--enrolment" aria-labelledby="enrolment-title">
+    <header class="card__head">
+      <div>
+        <h2 class="card__title" id="enrolment-title">Élèves inscrits</h2>
+        <p class="card__hint">Répartition par sous-système</p>
+      </div>
+      <span class="chip chip--success">+{{ enrolment.weeklyIntake }} cette semaine</span>
+    </header>
+
+    <p class="metric">
+      <span class="metric__value">{{ enrolment.total | number: '1.0-0' }}</span>
+      <span class="metric__unit">
+        élèves sur {{ enrolment.capacity | number: '1.0-0' }} places
+      </span>
+    </p>
+
+    <div class="split" role="img"
+         [attr.aria-label]="
+           enrolment.francophone.share + '% francophone, ' +
+           enrolment.anglophone.share + '% anglophone'">
+      <span class="split__part split__part--fr" [style.width.%]="enrolment.francophone.share"></span>
+      <span class="split__part split__part--en" [style.width.%]="enrolment.anglophone.share"></span>
+    </div>
+
+    <div class="legend">
+      <div class="legend__item">
+        <span class="legend__pill legend__pill--fr">{{ enrolment.francophone.shortLabel }}</span>
+        <div>
+          <p class="legend__count">{{ enrolment.francophone.count | number: '1.0-0' }}</p>
+          <p class="legend__label">
+            {{ enrolment.francophone.label }} · {{ enrolment.francophone.share }} %
+          </p>
+        </div>
+      </div>
+
+      <div class="legend__item">
+        <span class="legend__pill legend__pill--en">{{ enrolment.anglophone.shortLabel }}</span>
+        <div>
+          <p class="legend__count">{{ enrolment.anglophone.count | number: '1.0-0' }}</p>
+          <p class="legend__label">
+            {{ enrolment.anglophone.label }} · {{ enrolment.anglophone.share }} %
+          </p>
+        </div>
+      </div>
+
+      <div class="spark" aria-hidden="true">
+        @for (height of enrolment.trend; track $index) {
+          <span
+            class="spark__bar"
+            [class.spark__bar--current]="isCurrentPeriod($index)"
+            [style.height.%]="height"
+          ></span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────── Recouvrement scolarité ─────────────────── -->
+  <section class="card card--collection" aria-labelledby="collection-title">
+    <header class="card__head">
+      <div>
+        <h2 class="card__title card__title--on-dark" id="collection-title">
+          Recouvrement scolarité
+        </h2>
+        <p class="card__hint card__hint--on-dark">{{ collection.deadlineLabel }}</p>
+      </div>
+      <span class="chip chip--warning">{{ collection.deltaLabel }}</span>
+    </header>
+
+    <p class="metric metric--on-dark">
+      <span class="metric__value">{{ collection.rate }}</span>
+      <span class="metric__percent">%</span>
+    </p>
+
+    <div class="gauge">
+      <span class="gauge__fill" [style.width.%]="collection.rate"></span>
+    </div>
+
+    <dl class="ledger">
+      <div class="ledger__row">
+        <dt>Encaissé</dt>
+        <dd>{{ collection.collected | number: '1.0-0' }} FCFA</dd>
+      </div>
+      <div class="ledger__row">
+        <dt>Attendu</dt>
+        <dd>{{ collection.expected | number: '1.0-0' }} FCFA</dd>
+      </div>
+      <div class="ledger__row ledger__row--flagged">
+        <dt>Reste à recouvrer</dt>
+        <dd>{{ collection.outstanding | number: '1.0-0' }} FCFA</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ─────────────────── Dernières activités ─────────────────── -->
+  <section class="card card--activities" aria-labelledby="activities-title">
+    <header class="card__head card__head--tight">
+      <h2 class="card__title" id="activities-title">Dernières activités</h2>
+      <a class="card__action" href="#">Journal complet</a>
+    </header>
+
+    <ul class="feed">
+      @for (activity of activities; track activity.text) {
+        <li class="feed__item">
+          <span class="feed__icon" [class]="toneClass(activity.tone)">
+            <cob-icon [path]="activity.icon" [size]="14" [strokeWidth]="2" />
+          </span>
+          <div class="feed__body">
+            <p class="feed__text">{{ activity.text }}</p>
+            <p class="feed__meta">{{ activity.meta }}</p>
+          </div>
+          <time class="feed__time">{{ activity.time }}</time>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- ─────────────────── Alertes + calendrier ─────────────────── -->
+  <div class="stack">
+    <section class="card card--alerts" aria-labelledby="alerts-title">
+      <header class="card__head card__head--tight">
+        <h2 class="card__title card__title--accent" id="alerts-title">Alertes en attente</h2>
+        <span class="counter">{{ pendingAlertCount }}</span>
+      </header>
+
+      <ul class="alerts">
+        @for (alert of alerts; track alert.label) {
+          <li class="alerts__row">
+            <span class="alerts__dot" [class]="toneClass(alert.tone)" aria-hidden="true"></span>
+            <span class="alerts__label">{{ alert.label }}</span>
+            <span class="alerts__count">{{ alert.count }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="card card--events" aria-labelledby="events-title">
+      <h2 class="card__title card__title--spaced" id="events-title">Prochains événements</h2>
+
+      <ul class="events">
+        @for (event of events; track event.title) {
+          <li class="events__item">
+            <span class="events__date">
+              <span class="events__day">{{ event.day }}</span>
+              <span class="events__month">{{ event.month }}</span>
+            </span>
+            <div>
+              <p class="events__title">{{ event.title }}</p>
+              <p class="events__meta">{{ event.meta }}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  </div>
+</div>

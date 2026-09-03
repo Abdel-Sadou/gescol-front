@@ -30,11 +30,22 @@ fonctionnels, audités (F07) et corrigés (F07-correctifs). Prochaine étape
 naturelle : F08, démarrage de l'application interne (Poseidon/PrimeNG).
 
 | F08 | App interne — menu complet, composants réutilisables, module Élèves | ✅ Fait | F01 |
+| F08bis | Intégration habillage "Institutionnel chaud" (AppShell + Dashboard réel) | ✅ Fait (correctif déconnexion/polices en cours) | F08 |
+
+## Endpoints backend à prévoir plus tard (données réelles du dashboard)
+
+Identifiés par F08bis, pas encore demandés au backend :
+- `GET /api/dashboard/effectifs` — total élèves, capacité, tendance
+- `GET /api/dashboard/recouvrement` — taux et montants de recouvrement scolarité
+- `GET /api/dashboard/activites-recentes?limit=5` — fil d'activité multi-modules
+
+À traiter dans un prompt dédié une fois qu'on décide de brancher les vraies
+données du tableau de bord (après F09+ probablement, pas prioritaire).
 
 | Backend-21 | Statut d'inscription dans GET /api/parent/mes-enfants | ✅ Fait | — |
 | F07ter | Affichage visuel réservé/confirmé sur le dashboard parent | ✅ Fait | Backend-21 |
-| F08 | App interne — Élève CRUD complet (établit le pattern PrimeNG de référence : table + formulaire) | ✅ Fait | F01 |
-| F09 | App interne — Paramétrage (classes, trimestres, taux, quotas, matières, coefficients, niveaux, modèles lettre) | ⏳ À faire | F08 |
+| F08 | App interne — Élève CRUD complet (établit le pattern PrimeNG de référence : table + formulaire) | ⏳ À faire | F01 |
+| F09 | App interne — Paramétrage (classes, trimestres, taux, quotas, matières, coefficients, niveaux, modèles lettre) | ✅ Fait | F08 |
 | F10 | App interne — Personnel (CRUD + désactivation R10) + Emploi du temps (vue calendrier, R4) | ⏳ À faire | F08 |
 | F11 | App interne — Résultats (saisie notes, validation R13/R21, bulletins) | ⏳ À faire | F08, F10 |
 | F12 | App interne — Discipline (sanctions, bons de sortie, règles R5/R15) | ⏳ À faire | F08 |

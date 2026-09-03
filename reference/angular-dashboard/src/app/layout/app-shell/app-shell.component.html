@@ -1,0 +1,97 @@
+<div class="shell">
+  <!-- ─────────────────────────── Sidebar ─────────────────────────── -->
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="COBIMAG — accueil">
+      <img class="brand__logo" src="assets/logo-cobimag.png" alt="" width="40" height="40" />
+      <span class="brand__text">
+        <span class="brand__name">COBIMAG</span>
+        <span class="brand__tagline">Gestion scolaire</span>
+      </span>
+    </a>
+
+    <hr class="sidebar__rule" />
+
+    <nav class="nav" aria-label="Navigation principale">
+      @for (group of navGroups; track group.label) {
+        <div class="nav__group">
+          <p class="nav__group-label">{{ group.label }}</p>
+          @for (item of group.items; track item.label) {
+            <a class="nav__item" [class.nav__item--active]="item.active" href="#">
+              <cob-icon [path]="item.icon" />
+              <span>{{ item.label }}</span>
+            </a>
+          }
+        </div>
+      }
+    </nav>
+
+    <!-- Sélecteur de sous-système : identité bilingue, pas un simple switch i18n -->
+    <div class="lang">
+      <div class="lang__pills" role="group" aria-label="Sous-système">
+        <button
+          type="button"
+          class="lang__pill"
+          [class.lang__pill--on]="lang() === 'FR'"
+          [attr.aria-pressed]="lang() === 'FR'"
+          (click)="setLang('FR')"
+        >
+          FR
+        </button>
+        <button
+          type="button"
+          class="lang__pill lang__pill--overlap"
+          [class.lang__pill--on]="lang() === 'EN'"
+          [attr.aria-pressed]="lang() === 'EN'"
+          (click)="setLang('EN')"
+        >
+          EN
+        </button>
+      </div>
+      <span class="lang__year">Année {{ schoolYear }}</span>
+    </div>
+  </aside>
+
+  <!-- ───────────────────── Barre du haut + contenu ───────────────────── -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar__heading">
+        <h1 class="topbar__title">{{ pageTitle() }}</h1>
+        <p class="topbar__subtitle">{{ pageSubtitle() }}</p>
+      </div>
+
+      <label class="search">
+        <cob-icon [path]="searchIcon" [size]="15" [strokeWidth]="2" class="search__icon" />
+        <input
+          class="search__input"
+          type="search"
+          placeholder="Rechercher un élève, une classe…"
+          aria-label="Rechercher"
+        />
+      </label>
+
+      <div class="topbar__actions">
+        <button type="button" class="notif" aria-label="Notifications">
+          <cob-icon [path]="bellIcon" [size]="19" />
+          @if (notificationCount > 0) {
+            <span class="notif__badge">{{ notificationCount }}</span>
+          }
+        </button>
+
+        <span class="topbar__divider" aria-hidden="true"></span>
+
+        <button type="button" class="profile">
+          <span class="profile__avatar">{{ user.initials }}</span>
+          <span class="profile__text">
+            <span class="profile__name">{{ user.name }}</span>
+            <span class="profile__role">{{ user.role }}</span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Zone de contenu générique : accueille n'importe quel écran -->
+    <main class="content">
+      <ng-content />
+    </main>
+  </div>
+</div>

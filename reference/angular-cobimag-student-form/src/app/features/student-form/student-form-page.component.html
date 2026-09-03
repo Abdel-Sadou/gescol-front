@@ -1,0 +1,294 @@
+<div class="frame">
+  <!-- ─────────────────────── Colonne de saisie ─────────────────────── -->
+  <form class="form" (ngSubmit)="onSubmit()" novalidate>
+    <header class="form__head">
+      <p-button
+        icon="pi pi-arrow-left"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        ariaLabel="Retour à la liste des élèves"
+      />
+      <h1 class="form__title">Nouvel élève</h1>
+      @if (draftSavedAt(); as stamp) {
+        <p class="form__stamp">Brouillon enregistré à {{ stamp }}</p>
+      }
+    </header>
+
+    <div class="form__body">
+      <!-- ── 1. Identité ── -->
+      <div class="section">
+        <span class="section__num" aria-hidden="true">1</span>
+        <h2 class="section__title">Identité de l'élève</h2>
+        <span class="section__hint">tel que porté sur l'acte de naissance</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="row">
+        <label class="field field--wide" [class]="fieldState('nom')">
+          <span class="field__label">Nom <span class="field__req">*</span></span>
+          <input
+            pInputText
+            type="text"
+            placeholder="NKOA"
+            autocomplete="family-name"
+            [ngModel]="draft().nom"
+            (ngModelChange)="patch('nom', $event)"
+            name="nom"
+          />
+        </label>
+
+        <label class="field field--wide" [class]="fieldState('prenom')">
+          <span class="field__label">Prénom <span class="field__req">*</span></span>
+          <input
+            pInputText
+            type="text"
+            placeholder="Kevin"
+            autocomplete="given-name"
+            [ngModel]="draft().prenom"
+            (ngModelChange)="patch('prenom', $event)"
+            name="prenom"
+          />
+        </label>
+
+        <div class="field field--narrow">
+          <span class="field__label" id="sexe-label">Sexe <span class="field__req">*</span></span>
+          <!-- Segmenté plutôt qu'un menu déroulant : deux options seulement -->
+          <p-selectbutton
+            [options]="sexChoices"
+            optionLabel="label"
+            optionValue="value"
+            [allowEmpty]="false"
+            [ngModel]="draft().sexe"
+            (ngModelChange)="patch('sexe', $event)"
+            name="sexe"
+            ariaLabelledBy="sexe-label"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field field--date" [class]="fieldState('dateNaissance')" [class.field-blocking]="blockingState('dateNaissance')">
+          <span class="field__label">Date de naissance <span class="field__req">*</span></span>
+          <p-datepicker
+            [ngModel]="draft().dateNaissance"
+            (ngModelChange)="patch('dateNaissance', $event)"
+            name="dateNaissance"
+            dateFormat="dd/mm/yy"
+            placeholder="jj / mm / aaaa"
+            [showIcon]="true"
+            iconDisplay="input"
+            appendTo="body"
+          />
+        </div>
+
+        <label class="field field--wide">
+          <span class="field__label">Lieu de naissance</span>
+          <input
+            pInputText
+            type="text"
+            placeholder="Yaoundé"
+            [ngModel]="draft().lieuNaissance"
+            (ngModelChange)="patch('lieuNaissance', $event)"
+            name="lieuNaissance"
+          />
+        </label>
+
+        <div class="field field--tiny">
+          <span class="field__label">Groupe sanguin</span>
+          <p-select
+            [options]="bloodGroups"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="O+"
+            [ngModel]="draft().groupeSanguin"
+            (ngModelChange)="patch('groupeSanguin', $event)"
+            name="groupeSanguin"
+            appendTo="body"
+          />
+        </div>
+      </div>
+
+      <!-- La case énonce sa conséquence, pas seulement son intitulé -->
+      <label class="toggle">
+        <p-checkbox
+          [binary]="true"
+          [ngModel]="draft().apteAuSport"
+          (ngModelChange)="patch('apteAuSport', $event)"
+          name="apteAuSport"
+          inputId="apteAuSport"
+        />
+        <span class="toggle__text">
+          <span class="toggle__title">Apte à la pratique sportive</span>
+          <span class="toggle__hint">Cocher uniquement si le certificat médical est au dossier.</span>
+        </span>
+      </label>
+
+      <!-- ── 2. Affectation ── -->
+      <div class="section">
+        <span class="section__num" aria-hidden="true">2</span>
+        <h2 class="section__title">Affectation scolaire</h2>
+        <span class="section__hint">année {{ schoolYear }}</span>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
+
+      <!-- Le bilinguisme est l'identité de l'école : choix explicite, pas une liste -->
+      <fieldset class="subsystem">
+        <legend class="field__label">Sous-système <span class="field__req">*</span></legend>
+        <div class="subsystem__options">
+          @for (sub of subsystems; track sub.value) {
+            <button
+              type="button"
+              class="subsystem__card"
+              [class.subsystem__card--on]="draft().sousSysteme === sub.value"
+              [attr.aria-pressed]="draft().sousSysteme === sub.value"
+              (click)="selectSubsystem(sub.value)"
+            >
+              <span class="subsystem__pill">{{ sub.value }}</span>
+              <span class="subsystem__text">
+                <span class="subsystem__name">{{ sub.name }}</span>
+                <span class="subsystem__meta">{{ sub.range }} · {{ sub.exams }}</span>
+              </span>
+              @if (draft().sousSysteme === sub.value) {
+                <i class="pi pi-check subsystem__check" aria-hidden="true"></i>
+              }
+            </button>
+          }
+        </div>
+      </fieldset>
+
+      <div class="row">
+        <div
+          class="field field--wide"
+          [class]="fieldState('classe')"
+          [class.field-blocking]="blockingState('classe')"
+        >
+          <span class="field__label">Classe <span class="field__req">*</span></span>
+          <p-select
+            [options]="classOptions()"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Sélectionner une classe"
+            [disabled]="classOptions().length === 0"
+            [ngModel]="draft().classe"
+            (ngModelChange)="patch('classe', $event)"
+            name="classe"
+            appendTo="body"
+          />
+          @if (classOptions().length === 0) {
+            <span class="field__help">Choisir d'abord un sous-système.</span>
+          }
+        </div>
+
+        <label class="toggle toggle--inline">
+          <p-checkbox
+            [binary]="true"
+            [ngModel]="draft().redoublant"
+            (ngModelChange)="patch('redoublant', $event)"
+            name="redoublant"
+            inputId="redoublant"
+          />
+          <span class="toggle__text">
+            <span class="toggle__title">Élève redoublant</span>
+            <span class="toggle__hint">Reprend la même classe cette année.</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- ── 3. Filiation ── -->
+      <div class="section">
+        <span class="section__num" aria-hidden="true">3</span>
+        <h2 class="section__title">Filiation et personne à contacter</h2>
+        <span class="section__rule" aria-hidden="true"></span>
+      </div>
+
+      <div class="row">
+        <label class="field field--wide">
+          <span class="field__label">Nom du père ou tuteur</span>
+          <input
+            pInputText
+            type="text"
+            placeholder="M. Paul NKOA"
+            [ngModel]="draft().nomPere"
+            (ngModelChange)="patch('nomPere', $event)"
+            name="nomPere"
+          />
+        </label>
+
+        <label class="field field--wide">
+          <span class="field__label">Nom de la mère</span>
+          <input
+            pInputText
+            type="text"
+            placeholder="Mme Julie NKOA"
+            [ngModel]="draft().nomMere"
+            (ngModelChange)="patch('nomMere', $event)"
+            name="nomMere"
+          />
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="field field--medium">
+          <span class="field__label">Quartier</span>
+          <input
+            pInputText
+            type="text"
+            placeholder="Nkolbisson"
+            [ngModel]="draft().quartier"
+            (ngModelChange)="patch('quartier', $event)"
+            name="quartier"
+          />
+        </label>
+
+        <label
+          class="field field--wide"
+          [class]="fieldState('personneContact')"
+          [class.field-blocking]="blockingState('personneContact')"
+        >
+          <span class="field__label">Personne à contacter <span class="field__req">*</span></span>
+          <input
+            pInputText
+            type="text"
+            placeholder="M. Paul NKOA"
+            [ngModel]="draft().personneContact"
+            (ngModelChange)="patch('personneContact', $event)"
+            name="personneContact"
+          />
+        </label>
+
+        <label class="field field--phone">
+          <span class="field__label">Téléphone</span>
+          <input
+            pInputText
+            type="tel"
+            inputmode="tel"
+            placeholder="+237 6 99 12 34 56"
+            autocomplete="tel"
+            [ngModel]="draft().telephoneContact"
+            (ngModelChange)="patch('telephoneContact', $event)"
+            name="telephoneContact"
+          />
+        </label>
+      </div>
+    </div>
+  </form>
+
+  <!-- ─────────────────────── Rail récapitulatif ─────────────────────── -->
+  <aside class="rail">
+    <cob-student-summary-rail
+      [draft]="draft()"
+      [subsystem]="subsystem()"
+      [checklist]="checklist()"
+      [completedCount]="completedCount()"
+      [requiredCount]="requiredCount"
+      [progress]="progress()"
+      [canSubmit]="canSubmit()"
+      [blockingLabel]="blockingLabel()"
+      [saving]="saving()"
+      (create)="onSubmit()"
+      (saveDraft)="onSaveDraft()"
+      (cancel)="onCancel()"
+    />
+  </aside>
+</div>

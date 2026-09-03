@@ -78,7 +78,11 @@
 
 @layer components {
     .card {
-        @apply rounded-2xl lg:rounded-3xl p-4 lg:p-6 bg-[var(--surface-card)] shadow-[0px_10px_10px_-8px_rgba(18,18,23,0.02),0px_2px_2px_-1.5px_rgba(18,18,23,0.02),0px_1px_1px_-0.5px_rgba(18,18,23,0.02),0px_0px_0px_1px_rgba(18,18,23,0.02)];
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-card);
     }
     .landing-container {
         @apply px-6 w-full max-w-[62rem] md:max-w-[70rem] xl:max-w-[85rem] mx-auto;

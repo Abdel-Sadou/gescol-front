@@ -1,0 +1,364 @@
+:host {
+  display: block;
+  container-type: inline-size;
+  padding: 26px;
+  background: var(--color-canvas);
+  min-height: 100dvh;
+}
+
+/* Deux colonnes : saisie fluide, rail fixe. */
+.frame {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ───────────────────────── Colonne de saisie ───────────────────────── */
+.form {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.form__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.form__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.form__stamp {
+  margin: 0 0 0 auto;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.form__body {
+  padding: 22px 24px;
+}
+
+/* ───────────────────────── En-tête de section ───────────────────────── */
+.section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.section:not(:first-child) {
+  margin-top: 26px;
+}
+
+.section__num {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-full);
+}
+
+.section__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.section__hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.section__rule {
+  flex: 1;
+  min-width: 20px;
+  height: 1px;
+  background: var(--color-track);
+}
+
+/* ───────────────────────── Champs ───────────────────────── */
+.row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* La largeur suit la longueur du contenu attendu, jamais l'inverse. */
+.field--wide { flex: 2 1 200px; }
+.field--medium { flex: 1 1 150px; }
+.field--date { flex: 1 1 180px; }
+.field--phone { flex: 0 1 180px; }
+.field--narrow { flex: 1 1 130px; }
+.field--tiny { flex: 0 1 116px; }
+
+.field__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.field__req {
+  color: var(--color-danger);
+}
+
+.field__help {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* Les composants PrimeNG occupent toute la largeur de leur champ. */
+:host ::ng-deep .field .p-inputtext,
+:host ::ng-deep .field .p-select,
+:host ::ng-deep .field .p-datepicker,
+:host ::ng-deep .field .p-datepicker-input,
+:host ::ng-deep .field .p-selectbutton {
+  width: 100%;
+}
+
+:host ::ng-deep .field .p-selectbutton .p-togglebutton {
+  flex: 1;
+}
+
+/* ───────────────────────── Cases à cocher ───────────────────────── */
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 13px;
+  margin-bottom: 14px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-track);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.toggle--inline {
+  flex: 1 1 240px;
+  align-self: flex-end;
+  margin-bottom: 0;
+}
+
+.toggle__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.toggle__title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.toggle__hint {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+}
+
+/* ───────────────────────── Sous-système FR / EN ───────────────────────── */
+.subsystem {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+.subsystem__options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+}
+
+.subsystem__card {
+  flex: 1 1 210px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: var(--tap-target);
+  padding: 12px 14px;
+  font-family: inherit;
+  text-align: left;
+  background: var(--color-field-bg);
+  border: 1px solid var(--color-border-field);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.subsystem__card:hover {
+  border-color: var(--color-primary-border);
+}
+
+.subsystem__card--on {
+  background: var(--color-primary-soft);
+  border: 1.5px solid var(--color-primary-deep);
+}
+
+.subsystem__pill {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border-quiet);
+  border-radius: var(--radius-full);
+}
+
+.subsystem__card--on .subsystem__pill {
+  color: #fff;
+  background: var(--color-primary-deep);
+  border-color: var(--color-primary-deep);
+}
+
+.subsystem__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.subsystem__name {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-secondary-btn);
+}
+
+.subsystem__card--on .subsystem__name {
+  color: var(--color-text);
+}
+
+.subsystem__meta {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.subsystem__card--on .subsystem__meta {
+  color: var(--color-text-quiet);
+}
+
+.subsystem__check {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary-deep);
+}
+
+/* ───────────────────────── Rail ───────────────────────── */
+.rail {
+  width: 312px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 26px;
+}
+
+/* =========================================================================
+   Adaptatif — container queries : le composant réagit à SA largeur, pas à
+   celle de la fenêtre (la sidebar de la coque peut se replier).
+   ========================================================================= */
+
+/* Le rail passe au-dessus du formulaire et devient un bandeau horizontal. */
+@container (max-width: 1080px) {
+  .frame {
+    flex-direction: column;
+  }
+
+  .rail {
+    position: static;
+    width: 100%;
+    order: -1;
+  }
+
+  :host ::ng-deep .rail cob-student-summary-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  /* Les actions restent atteignables sans remonter. */
+  :host ::ng-deep .rail .actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  :host ::ng-deep .rail .actions__secondary {
+    flex: 1;
+  }
+
+  :host ::ng-deep .rail .actions__primary {
+    flex: 1;
+  }
+}
+
+@container (max-width: 720px) {
+  :host {
+    padding: 16px;
+  }
+
+  .form__body {
+    padding: 18px 16px;
+  }
+
+  .form__head {
+    padding: 12px 16px;
+  }
+
+  :host ::ng-deep .rail cob-student-summary-rail {
+    grid-template-columns: 1fr;
+  }
+
+  /* Un champ par ligne : plus de largeurs concurrentes sur mobile. */
+  .field--wide,
+  .field--medium,
+  .field--date,
+  .field--phone,
+  .field--narrow,
+  .field--tiny {
+    flex: 1 1 100%;
+  }
+
+  .toggle--inline {
+    flex: 1 1 100%;
+    align-self: stretch;
+  }
+
+  :host ::ng-deep .rail .actions {
+    flex-direction: column;
+  }
+}
