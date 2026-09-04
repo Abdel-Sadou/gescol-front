@@ -2,7 +2,9 @@ import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@a
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@/app/core/services/auth.service';
+import { EleveService } from '@/app/core/services/eleve.service';
 import { ButtonModule } from 'primeng/button';
+import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-confirm-dialog.component';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, map, switchMap, catchError, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
@@ -46,7 +48,7 @@ type DetailState =
     selector: 'app-fiche-eleve',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslocoDirective, ButtonModule],
+    imports: [TranslocoDirective, ButtonModule, DeleteConfirmDialogComponent],
     template: `
 <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
 <div class="card" style="line-height:1.5;">
@@ -171,9 +173,11 @@ type DetailState =
           <button pButton icon="pi pi-print" [label]="t('fiche.bouton.imprimer')"
             [disabled]="true" [title]="'Impression à venir'"
             class="p-button-outlined p-button-secondary"></button>
-          <button pButton icon="pi pi-trash" [label]="t('fiche.bouton.supprimer')"
-            [disabled]="true" [title]="t('fiche.bouton.suppressionInfo')"
-            class="p-button-outlined p-button-danger"></button>
+          @if (canEdit()) {
+            <button pButton icon="pi pi-trash" [label]="t('fiche.bouton.supprimer')"
+              class="p-button-outlined p-button-danger"
+              (click)="onDeleteRequest(eleve)"></button>
+          }
         </div>
       </div>
 
@@ -181,14 +185,26 @@ type DetailState =
       <div style="text-align:center; padding:60px 20px; color:var(--color-text-muted); font-size:14px;">{{ t('fiche.aucuneSelection') }}</div>
     }
   </main>
+
+  <gescol-delete-confirm-dialog
+      [(visible)]="deleteVisible"
+      [itemLabel]="deleteLabel"
+      [deleteFn]="deleteFn"
+      (deleted)="onDeleted()">
+  </gescol-delete-confirm-dialog>
 </div>
 </ng-container>
     `
 })
 export class FicheEleve {
-    private http        = inject(HttpClient);
-    private router      = inject(Router);
-    private authService = inject(AuthService);
+    private http         = inject(HttpClient);
+    private router       = inject(Router);
+    private authService  = inject(AuthService);
+    private eleveService = inject(EleveService);
+
+    deleteVisible = false;
+    deleteLabel   = '';
+    deleteFn: () => any = () => {};
 
     // ── Recherche ─────────────────────────────────────────────────────────
     readonly query           = signal('');
@@ -276,6 +292,19 @@ export class FicheEleve {
         e.preventDefault();
         const id = this.selectedId();
         if (id) this.router.navigate(['/app/eleves', id, 'editer']);
+    }
+
+    onDeleteRequest(eleve: { nom: string; prenom: string }): void {
+        const id = this.selectedId();
+        if (!id) return;
+        this.deleteLabel = `${eleve.prenom} ${eleve.nom}`;
+        this.deleteFn = () => this.eleveService.supprimer(id);
+        this.deleteVisible = true;
+    }
+
+    onDeleted(): void {
+        this.deleteVisible = false;
+        this.router.navigate(['/app/eleves']);
     }
 
     onQueryChange(e: Event): void {
