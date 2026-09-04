@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '@/app/core/services/auth.service';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, map, switchMap, catchError, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
@@ -158,9 +159,11 @@ type DetailState =
         }
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="#" (click)="noop($event)" style="border:1.5px solid #008B47; color:#008B47; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; text-decoration:none;">{{ t('fiche.bouton.modifier') }}</a>
-          <a href="#" (click)="noop($event)" style="background:#008B47; color:#FFFFFF; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; text-decoration:none;">{{ t('fiche.bouton.versement') }}</a>
-          <a href="#" (click)="noop($event)" style="border:1.5px solid #5F6161; color:#5F6161; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; text-decoration:none;">{{ t('fiche.bouton.imprimer') }}</a>
+          @if (canEdit()) {
+            <a href="#" (click)="goEditer($event)" style="border:1.5px solid var(--color-primary); color:var(--color-primary); font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; text-decoration:none;">{{ t('fiche.bouton.modifier') }}</a>
+          }
+          <span title="Module finances à venir" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.versement') }}</span>
+          <span title="Impression à venir" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.imprimer') }}</span>
           <span [title]="t('fiche.bouton.suppressionInfo')" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.supprimer') }}</span>
         </div>
       </div>
@@ -174,7 +177,9 @@ type DetailState =
     `
 })
 export class FicheEleve {
-    private http = inject(HttpClient);
+    private http        = inject(HttpClient);
+    private router      = inject(Router);
+    private authService = inject(AuthService);
 
     // ── Recherche ─────────────────────────────────────────────────────────
     readonly query           = signal('');
@@ -252,7 +257,17 @@ export class FicheEleve {
         return s.kind === 'found' ? this.decorate(s.eleve, s.solde) : null;
     });
 
-    readonly noop = (e?: Event) => e?.preventDefault();
+    readonly noop    = (e?: Event) => e?.preventDefault();
+    readonly canEdit = computed(() => {
+        const r = this.authService.role();
+        return r === 'SUPER_ADMIN' || r === 'SECRETARIAT';
+    });
+
+    goEditer(e: Event): void {
+        e.preventDefault();
+        const id = this.selectedId();
+        if (id) this.router.navigate(['/app/eleves', id, 'editer']);
+    }
 
     onQueryChange(e: Event): void {
         const val = (e.target as HTMLInputElement).value;
