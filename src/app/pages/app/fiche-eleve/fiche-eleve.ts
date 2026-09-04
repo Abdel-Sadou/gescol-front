@@ -1,11 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, map, switchMap, catchError, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { AuthService } from '@/app/core/services/auth.service';
-import { CobimagBase } from '@/app/shared/cobimag-base';
 import { formatXAF } from '@/app/data/parent.data';
 
 // Zone App interne — PrimeNG autorisé mais on conserve le CSS propre ici pour ce composant.
@@ -44,39 +42,22 @@ type DetailState =
 @Component({
     selector: 'app-fiche-eleve',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TranslocoDirective],
     template: `
 <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
-<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#F7F8F6; min-height:100vh; line-height:1.5;">
+<div class="card" style="line-height:1.5;">
 
-  <header style="background:#FFFFFF; border-bottom:1px solid #E7E7E5;">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:16px; flex-wrap:wrap;">
-      <div style="display:flex; align-items:center; gap:10px; min-width:0; overflow:hidden;">
-        <img src="assets/logo-cobimag.png" [attr.width]="logoFicheSize" [attr.height]="logoFicheSize" alt="Logo" style="flex-shrink:0; border-radius:50%; object-fit:cover;">
-        <span style="display:flex; flex-direction:column; line-height:1.2; min-width:0;">
-          <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ t('fiche.titre') }}</span>
-          @if (showSubtitle) {
-            <span style="font-size:11px; color:#5F6161; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ t('fiche.sousTitre') }}</span>
-          }
-        </span>
-      </div>
-      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-        <a href="#" (click)="goLanding($event)" style="color:#5F6161; font-size:12px; text-decoration:none;">{{ t('fiche.retour') }}</a>
-        @if (currentUserName()) {
-          <span style="font-size:13px; font-weight:600; color:#1c2a20;">{{ currentUserName() }}</span>
-        }
-      </div>
-    </div>
-  </header>
+  <h2 class="text-xl font-semibold mb-4">{{ t('fiche.titre') }}</h2>
 
-  <main style="max-width:1040px; margin:0 auto; padding:24px 20px 64px;">
+  <main style="max-width:900px;">
     <div [style]="'position:relative; margin-bottom:' + (showSuggestions() ? '4px' : '24px') + ';'">
       <input type="text" [value]="query()" (input)="onQueryChange($event)" (focus)="onFocus()" (blur)="onBlur()"
         [placeholder]="t('fiche.recherche.placeholder')"
-        style="width:100%; font-family:'Work Sans',sans-serif; font-size:15px; padding:14px 16px; border:1.5px solid #C9CBC9; border-radius:3px; color:#1c2a20; box-sizing:border-box;">
+        style="width:100%; font-size:15px; padding:14px 16px; border:1.5px solid var(--color-border-field); border-radius:var(--radius-sm); color:var(--color-text-body); background:var(--color-field-bg); box-sizing:border-box; outline:none;">
 
       @if (showSuggestions()) {
-        <div style="position:absolute; top:calc(100% + 4px); left:0; right:0; background:#FFFFFF; border:1px solid #E7E7E5; border-radius:3px; box-shadow:0 4px 14px rgba(0,0,0,0.1); z-index:10; overflow:hidden;">
+        <div style="position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-sm); box-shadow:0 4px 14px rgba(0,0,0,0.1); z-index:10; overflow:hidden;">
           @if (isSearching()) {
             <div style="padding:12px 14px; font-size:13px; color:#5F6161; display:flex; align-items:center; gap:8px;">
               <div style="width:14px; height:14px; border-radius:50%; border:2px solid #E7E7E5; border-top-color:#008B47; flex-shrink:0;"></div>
@@ -184,16 +165,15 @@ type DetailState =
       </div>
 
     } @else if (detail().kind === 'none') {
-      <div style="text-align:center; padding:60px 20px; color:#5F6161; font-size:14px;">{{ t('fiche.aucuneSelection') }}</div>
+      <div style="text-align:center; padding:60px 20px; color:var(--color-text-muted); font-size:14px;">{{ t('fiche.aucuneSelection') }}</div>
     }
   </main>
 </div>
 </ng-container>
     `
 })
-export class FicheEleve extends CobimagBase {
-    private http        = inject(HttpClient);
-    private authService = inject(AuthService);
+export class FicheEleve {
+    private http = inject(HttpClient);
 
     // ── Recherche ─────────────────────────────────────────────────────────
     // Sans initialValue → Signal<SearchState | undefined>; undefined = état initial avant la 1ère émission
@@ -269,7 +249,7 @@ export class FicheEleve extends CobimagBase {
         return s.kind === 'found' ? this.decorate(s.eleve, s.solde) : null;
     });
 
-    readonly currentUserName = computed(() => this.authService.currentUser()?.sub ?? '');
+    readonly noop = (e?: Event) => e?.preventDefault();
 
     onQueryChange(e: Event): void {
         const val = (e.target as HTMLInputElement).value;
