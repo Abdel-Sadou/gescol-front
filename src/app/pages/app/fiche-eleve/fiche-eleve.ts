@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@a
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@/app/core/services/auth.service';
+import { ButtonModule } from 'primeng/button';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, map, switchMap, catchError, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
@@ -45,12 +46,12 @@ type DetailState =
     selector: 'app-fiche-eleve',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslocoDirective],
+    imports: [TranslocoDirective, ButtonModule],
     template: `
 <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
 <div class="card" style="line-height:1.5;">
 
-  <h2 class="text-xl font-semibold mb-4">{{ t('fiche.titre') }}</h2>
+  <h2 class="text-xl font-semibold mb-4">{{ t('menu.eleves.fiche') }}</h2>
 
   <main style="max-width:900px;">
     <div [style]="'position:relative; margin-bottom:' + (showSuggestions() ? '4px' : '24px') + ';'">
@@ -158,13 +159,21 @@ type DetailState =
           </div>
         }
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="flex gap-2 flex-wrap mt-4">
           @if (canEdit()) {
-            <a href="#" (click)="goEditer($event)" style="border:1.5px solid var(--color-primary); color:var(--color-primary); font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; text-decoration:none;">{{ t('fiche.bouton.modifier') }}</a>
+            <button pButton icon="pi pi-pencil" [label]="t('fiche.bouton.modifier')"
+              class="p-button-outlined p-button-success"
+              (click)="goEditer($event)"></button>
           }
-          <span title="Module finances à venir" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.versement') }}</span>
-          <span title="Impression à venir" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.imprimer') }}</span>
-          <span [title]="t('fiche.bouton.suppressionInfo')" style="border:1.5px solid #E7E7E5; color:#B7B8B7; font-weight:700; font-size:13.5px; padding:11px 18px; border-radius:2px; cursor:not-allowed; background:#F7F8F6;">{{ t('fiche.bouton.supprimer') }}</span>
+          <button pButton icon="pi pi-wallet" [label]="t('fiche.bouton.versement')"
+            [disabled]="true" [title]="'Module finances à venir'"
+            class="p-button-success"></button>
+          <button pButton icon="pi pi-print" [label]="t('fiche.bouton.imprimer')"
+            [disabled]="true" [title]="'Impression à venir'"
+            class="p-button-outlined p-button-secondary"></button>
+          <button pButton icon="pi pi-trash" [label]="t('fiche.bouton.supprimer')"
+            [disabled]="true" [title]="t('fiche.bouton.suppressionInfo')"
+            class="p-button-outlined p-button-danger"></button>
         </div>
       </div>
 
