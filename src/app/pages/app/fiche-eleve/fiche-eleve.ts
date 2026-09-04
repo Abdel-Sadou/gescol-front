@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, map, switchMap, catchError, distinctUntilChanged, startWith } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
@@ -176,9 +177,13 @@ export class FicheEleve {
     private http = inject(HttpClient);
 
     // ── Recherche ─────────────────────────────────────────────────────────
-    // Sans initialValue → Signal<SearchState | undefined>; undefined = état initial avant la 1ère émission
     readonly query           = signal('');
     readonly showSuggestions = signal(false);
+
+    // Pré-sélection depuis le query param ?id= (navigation depuis la liste)
+    readonly selectedId = signal<string | null>(
+        inject(ActivatedRoute).snapshot.queryParamMap.get('id')
+    );
 
     private readonly searchRaw = toSignal<SearchState>(
         toObservable(this.query).pipe(
@@ -221,8 +226,6 @@ export class FicheEleve {
     readonly searchError = computed(() => this.searchRaw()?.kind === 'error');
 
     // ── Détail élève sélectionné ──────────────────────────────────────────
-    readonly selectedId = signal<string | null>(null);
-
     // Sans initialValue → Signal<DetailState | undefined>; undefined = rien sélectionné encore
     private readonly detailRaw = toSignal<DetailState>(
         toObservable(this.selectedId).pipe(
