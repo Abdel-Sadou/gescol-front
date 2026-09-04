@@ -132,7 +132,7 @@ export class EleveListe {
     }
 
     onView(row: EleveResponse): void {
-        this.router.navigate(['/app/fiche-eleve']);
+        this.router.navigate(['/app/fiche-eleve'], { queryParams: { id: row.id } });
     }
 
     onEdit(row: EleveResponse): void {
