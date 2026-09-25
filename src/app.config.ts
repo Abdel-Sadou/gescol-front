@@ -10,6 +10,7 @@ import { EtablissementService } from '@/app/core/services/etablissement.service'
 import { LanguageService } from '@/app/core/services/language.service';
 import { TranslocoHttpLoader } from '@/app/core/transloco-loader';
 import { authInterceptor } from '@/app/core/interceptors/auth.interceptor';
+import { DASHBOARD_USE_MOCK } from '@/app/features/dashboard/services/dashboard-api.service';
 
 // Palette COBIMAG initiale (#008B47) — valeur de bootstrap codée en dur.
 // EtablissementService.load() appelle updatePreset() dès que l'API répond
@@ -144,6 +145,7 @@ export const appConfig: ApplicationConfig = {
             useFactory: initApp,
             deps: [EtablissementService, LanguageService],
             multi: true
-        }
+        },
+        { provide: DASHBOARD_USE_MOCK, useValue: false }
     ]
 };

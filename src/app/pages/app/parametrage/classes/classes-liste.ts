@@ -34,19 +34,26 @@ interface SelectOption { value: string; label: string; }
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
         <div class="card">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.classes.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-users mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.classes.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.classes.nouveau')"
                         class="p-button-success" (click)="openCreate()"></button>
                 }
             </div>
-            <!-- showView repurposé pour "Désigner professeur principal" côté SUPER_ADMIN/SECRETARIAT -->
+            @if (successMsg()) {
+                <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
+            }
             <gescol-table #tableRef
                 [columns]="columns(t)"
                 [data]="data()"
                 [showView]="canWrite()"
                 [showEdit]="canWrite()"
                 [showDelete]="canWrite()"
+                [tooltipView]="t('parametrage.classes.professeurPrincipal.btnTooltip')"
+                iconView="pi pi-user-edit"
                 (load)="onLoad($event)"
                 (view)="openPpDialog($event)"
                 (edit)="openEdit($event)"
@@ -164,6 +171,7 @@ export class ClassesListe implements OnInit {
     readonly selectedItem  = signal<ClasseResponse | null>(null);
     readonly saving        = signal(false);
     readonly saveError     = signal<string | null>(null);
+    readonly successMsg    = signal<string | null>(null);
 
     readonly ppDialogVisible = signal(false);
     readonly ppTargetId      = signal<string | null>(null);
@@ -178,10 +186,10 @@ export class ClassesListe implements OnInit {
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    canWrite = () => {
+    readonly canWrite = computed(() => {
         const r = this.authService.role();
         return r === 'SUPER_ADMIN' || r === 'SECRETARIAT';
-    };
+    });
 
     readonly form = this.fb.group({
         libelle:      ['', Validators.required],
@@ -273,7 +281,13 @@ export class ClassesListe implements OnInit {
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierClasse(item.id, req) : this.svc.creerClasse(req);
         req$.subscribe({
-            next: () => { this.saving.set(false); this.dialogVisible.set(false); this.tableRef?.resetPage(); },
+            next: () => {
+                this.saving.set(false);
+                this.dialogVisible.set(false);
+                this.tableRef?.resetPage();
+                this.successMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.successMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.saving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;
@@ -300,7 +314,13 @@ export class ClassesListe implements OnInit {
         this.ppSaving.set(true);
         this.ppError.set(null);
         this.svc.designerProfesseurPrincipal(id, { personnelId: this.ppForm.getRawValue().personnelId! }).subscribe({
-            next: () => { this.ppSaving.set(false); this.ppDialogVisible.set(false); this.tableRef?.resetPage(); },
+            next: () => {
+                this.ppSaving.set(false);
+                this.ppDialogVisible.set(false);
+                this.tableRef?.resetPage();
+                this.successMsg.set(this.transloco.translate('app.parametrage.commun.successPP'));
+                setTimeout(() => this.successMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.ppSaving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

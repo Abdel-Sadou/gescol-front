@@ -102,40 +102,45 @@ export const appRoutes: Routes = [
             { path: 'parametrage/modeles-engagement',         loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modeles-engagement-liste').then(c => c.ModelesEngagementListe), data: { breadcrumb: 'Modèles engagement' } },
             { path: 'parametrage/modeles-engagement/nouveau', loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modele-engagement-form').then(c => c.ModeleEngagementForm),    data: { breadcrumb: 'Nouveau modèle' } },
             { path: 'parametrage/modeles-engagement/:id/editer', loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modele-engagement-form').then(c => c.ModeleEngagementForm), data: { breadcrumb: 'Modifier modèle' } },
-            // Personnel
-            { path: 'personnel',              loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Personnel' } },
-            { path: 'personnel/nouveau',      loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Nouveau personnel' } },
-            { path: 'personnel/:id/editer',   loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Modifier personnel' } },
-            // Emploi du temps
-            { path: 'emploi-du-temps/classe',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'EDT par classe' } },
-            { path: 'emploi-du-temps/enseignant', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'EDT par enseignant' } },
-            { path: 'emploi-du-temps/nouveau',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Nouveau créneau' } },
-            // Résultats
-            { path: 'resultats/saisie',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Saisie des notes' } },
-            { path: 'resultats/validation', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validation des notes' } },
-            { path: 'resultats/bulletins',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bulletins' } },
+            // Personnel (F10)
+            { path: 'personnel',            loadComponent: () => import('@/app/pages/app/personnel/personnel-liste').then(c => c.PersonnelListe), data: { breadcrumb: 'Personnel' } },
+            { path: 'personnel/nouveau',    loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),   data: { breadcrumb: 'Nouveau personnel' } },
+            { path: 'personnel/:id/editer', loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),   data: { breadcrumb: 'Modifier personnel' } },
+            // Emploi du temps (F10)
+            { path: 'emploi-du-temps/classe',     loadComponent: () => import('@/app/pages/app/emploi-du-temps/emploi-du-temps-classe').then(c => c.EmploiDuTempsClasse),       data: { breadcrumb: 'EDT par classe' } },
+            { path: 'emploi-du-temps/enseignant', loadComponent: () => import('@/app/pages/app/emploi-du-temps/emploi-du-temps-enseignant').then(c => c.EmploiDuTempsEnseignant), data: { breadcrumb: 'EDT par enseignant' } },
+            { path: 'emploi-du-temps/nouveau',    loadComponent: () => import('@/app/pages/app/emploi-du-temps/creneau-form').then(c => c.CreneauForm),                          data: { breadcrumb: 'Nouveau créneau' } },
+            // Résultats (F11)
+            { path: 'resultats/saisie',     loadComponent: () => import('@/app/pages/app/resultats/saisie-notes').then(c => c.SaisieNotes),         data: { breadcrumb: 'Saisie des notes' } },
+            { path: 'resultats/validation', loadComponent: () => import('@/app/pages/app/resultats/validation-notes').then(c => c.ValidationNotes), data: { breadcrumb: 'Validation des notes' } },
+            { path: 'resultats/bulletins',  loadComponent: () => import('@/app/pages/app/resultats/bulletins').then(c => c.Bulletins),               data: { breadcrumb: 'Bulletins' } },
             // Discipline
-            { path: 'discipline/sanctions', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Sanctions' } },
-            { path: 'discipline/bons-sortie', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bons de sortie' } },
-            { path: 'discipline/regles',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Règles escalade' } },
-            // Finances
-            { path: 'finances/versements',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Versements' } },
-            { path: 'finances/validations', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validations bancaires' } },
-            { path: 'finances/moratoires',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Moratoires' } },
-            { path: 'finances/alertes',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Alertes' } },
-            { path: 'finances/etats',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'États & rapports' } },
-            // Paie
-            { path: 'paie/baremes',   loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Barèmes' } },
-            { path: 'paie/bulletins', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Bulletins de paie' } },
+            { path: 'discipline/sanctions',  loadComponent: () => import('@/app/pages/app/discipline/sanctions').then(c => c.Sanctions),           data: { breadcrumb: 'Sanctions' } },
+            { path: 'discipline/bons-sortie',loadComponent: () => import('@/app/pages/app/discipline/bons-sortie').then(c => c.BonsSortie),         data: { breadcrumb: 'Bons de sortie' } },
+            { path: 'discipline/regles',     loadComponent: () => import('@/app/pages/app/discipline/regles-escalade').then(c => c.ReglesEscalade), data: { breadcrumb: 'Règles escalade' } },
+            // Finances (F13)
+            { path: 'finances/versements',  loadComponent: () => import('@/app/pages/app/finances/versements').then(c => c.Versements),                    data: { breadcrumb: 'Versements' } },
+            { path: 'finances/validations', loadComponent: () => import('@/app/pages/app/finances/validations-bancaires').then(c => c.ValidationsBancaires), data: { breadcrumb: 'Validations bancaires' } },
+            { path: 'finances/moratoires',  loadComponent: () => import('@/app/pages/app/finances/moratoires').then(c => c.Moratoires),                    data: { breadcrumb: 'Moratoires' } },
+            { path: 'finances/alertes',     loadComponent: () => import('@/app/pages/app/finances/alertes').then(c => c.Alertes),                          data: { breadcrumb: 'Alertes' } },
+            { path: 'finances/etats',       loadComponent: () => import('@/app/pages/app/finances/etats').then(c => c.Etats),                              data: { breadcrumb: 'États & rapports' } },
+            // Paie (F14) — SUPER_ADMIN + ECONOMAT uniquement (jamais SECRETARIAT)
+            { path: 'paie/baremes',   canActivate: [roleGuard(['SUPER_ADMIN', 'ECONOMAT'])], loadComponent: () => import('@/app/pages/app/paie/baremes').then(c => c.Baremes),         data: { breadcrumb: 'Barèmes' } },
+            { path: 'paie/bulletins', canActivate: [roleGuard(['SUPER_ADMIN', 'ECONOMAT'])], loadComponent: () => import('@/app/pages/app/paie/bulletins').then(c => c.BulletinsPaie), data: { breadcrumb: 'Bulletins de paie' } },
             // Cahier de texte
             { path: 'cahier-texte/saisie',       loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Ma progression' } },
             { path: 'cahier-texte/consultation',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Consultation cahier' } },
             { path: 'cahier-texte/validation',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validation cahier' } },
-            // Communication
-            { path: 'communication/actualites', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Actualités' } },
-            { path: 'communication/calendrier', loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Calendrier scolaire' } },
-            { path: 'communication/contenu',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Contenu du site' } },
-            { path: 'communication/equipe',     loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Équipe pédagogique' } },
+            // Administration (F17) — SUPER_ADMIN uniquement
+            { path: 'administration/comptes', canActivate: [roleGuard(['SUPER_ADMIN'])], loadComponent: () => import('@/app/pages/app/administration/comptes/comptes-liste').then(c => c.ComptesListe), data: { breadcrumb: 'Comptes utilisateurs' } },
+
+            // Communication (F16) — SUPER_ADMIN + COMMUNICATION
+            { path: 'communication/actualites',           canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/actualites-liste').then(c => c.ActualitesListe), data: { breadcrumb: 'Actualités' } },
+            { path: 'communication/actualites/nouvelle',  canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/actualite-form').then(c => c.ActualiteForm),       data: { breadcrumb: 'Nouvelle actualité' } },
+            { path: 'communication/actualites/:id/editer',canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/actualite-form').then(c => c.ActualiteForm),       data: { breadcrumb: 'Modifier actualité' } },
+            { path: 'communication/calendrier',           canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/calendrier').then(c => c.Calendrier),              data: { breadcrumb: 'Calendrier scolaire' } },
+            { path: 'communication/contenu',              canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/contenu-vitrine').then(c => c.ContenuVitrine),     data: { breadcrumb: 'Contenu du site' } },
+            { path: 'communication/equipe',               canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/equipe-pedagogique').then(c => c.EquipePedagogique), data: { breadcrumb: 'Équipe pédagogique' } },
 
             // Pages de démo Poseidon conservées (sans lien dans le menu GESCOL)
             { path: 'uikit',       data: { breadcrumb: 'UI Kit' }, loadChildren: () => import('@/app/pages/uikit/uikit.routes') },
@@ -169,6 +174,7 @@ export const appRoutes: Routes = [
         ]
     },
 
+    { path: '403', loadComponent: () => import('@/app/pages/erreur/acces-refuse').then(c => c.AccesRefuse) },
     { path: 'notfound', component: Notfound },
     { path: '**', redirectTo: '/notfound' }
 ];

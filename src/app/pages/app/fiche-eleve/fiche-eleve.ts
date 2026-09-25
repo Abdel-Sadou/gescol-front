@@ -53,7 +53,10 @@ type DetailState =
 <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
 <div class="card" style="line-height:1.5;">
 
-  <h2 class="text-xl font-semibold mb-4">{{ t('menu.eleves.fiche') }}</h2>
+  <h2 class="text-xl font-semibold mb-4">
+    <i class="pi pi-id-card mr-2" style="color:var(--color-primary)"></i>
+    {{ t('menu.eleves.fiche') }}
+  </h2>
 
   <main style="max-width:900px;">
     <div [style]="'position:relative; margin-bottom:' + (showSuggestions() ? '4px' : '24px') + ';'">

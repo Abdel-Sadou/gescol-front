@@ -27,12 +27,18 @@ import { PageResponse } from '@/app/core/services/eleve.service';
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
         <div class="card">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.matieres.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-book mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.matieres.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.matieres.nouveau')"
                         class="p-button-success" (click)="openCreate()"></button>
                 }
             </div>
+            @if (successMsg()) {
+                <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
+            }
             <gescol-table #tableRef
                 [columns]="columns(t)"
                 [data]="data()"
@@ -98,12 +104,13 @@ export class MatieresListe {
     readonly selectedItem  = signal<MatiereResponse | null>(null);
     readonly saving        = signal(false);
     readonly saveError     = signal<string | null>(null);
+    readonly successMsg    = signal<string | null>(null);
 
     deleteVisible = false;
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    canWrite = () => this.authService.role() === 'SUPER_ADMIN';
+    readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
     readonly form = this.fb.group({
         libelle:     ['', Validators.required],
@@ -159,7 +166,13 @@ export class MatieresListe {
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierMatiere(item.id, req) : this.svc.creerMatiere(req);
         req$.subscribe({
-            next: () => { this.saving.set(false); this.dialogVisible.set(false); this.tableRef?.resetPage(); },
+            next: () => {
+                this.saving.set(false);
+                this.dialogVisible.set(false);
+                this.tableRef?.resetPage();
+                this.successMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.successMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.saving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

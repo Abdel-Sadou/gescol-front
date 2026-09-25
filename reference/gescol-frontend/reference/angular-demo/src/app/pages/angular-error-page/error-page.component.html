@@ -1,0 +1,194 @@
+@if (isSession()) {
+  <!-- ─────────────── Session expirée : reconnexion sur place ─────────────── -->
+  <div class="session">
+    <div class="session__card" role="dialog" aria-labelledby="err-title">
+      <div class="session__user">
+        <div class="session__avatar">
+          {{ userInitials() }}
+          <span class="session__clock" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" />
+            </svg>
+          </span>
+        </div>
+        <div>
+          <p class="session__name">{{ userName() }}</p>
+          <p class="session__login">{{ userRole() }} · {{ userLogin() }}</p>
+        </div>
+      </div>
+
+      <h1 class="title title--session" id="err-title">{{ config().titleFr }}</h1>
+      <p class="subtitle subtitle--plain" lang="en">{{ config().titleEn }}</p>
+      <p class="body">Par sécurité, la session se ferme après {{ idleMinutes() }} minutes d'inactivité.</p>
+
+      @if (draftKept()) {
+        <p class="kept">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 12.5 9 17.5 20 6.5" />
+          </svg>
+          Votre saisie en cours a été conservée en brouillon.
+        </p>
+      }
+
+      <label class="field">
+        <span class="field__label">Mot de passe</span>
+        <input class="field__input" type="password" autocomplete="current-password" placeholder="••••••••" />
+      </label>
+
+      <button type="button" class="btn btn--primary btn--block" (click)="emit(config().primary.id)">
+        {{ config().primary.label }}
+      </button>
+      @if (config().secondary; as sec) {
+        <button type="button" class="link-btn" (click)="emit(sec.id)">{{ sec.label }}</button>
+      }
+    </div>
+  </div>
+} @else {
+  <!-- ─────────────── Gabarit commun : cachet + texte + actions ─────────────── -->
+  <div class="page">
+    <header class="bar">
+      <img class="bar__logo" [src]="logoSrc()" alt="" width="32" height="32" />
+      <span class="bar__name">COBIMAG</span>
+      @if (kind() === 'offline') {
+        <span class="bar__status"><span class="bar__dot"></span>Hors ligne</span>
+      } @else if (showHeaderUser()) {
+        <span class="bar__user">{{ userName() }} · {{ userRole() }}</span>
+      }
+    </header>
+
+    <main class="main">
+      <div class="stamp" [class]="'stamp--' + config().tone" aria-hidden="true">
+        <div class="stamp__inner">
+          @switch (kind()) {
+            @case ('forbidden') {
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3" />
+              </svg>
+              <span class="stamp__code stamp__code--sm">{{ config().code }}</span>
+              <span class="stamp__label">{{ config().stampLabel }}</span>
+            }
+            @case ('maintenance') {
+              <span class="stamp__label">{{ config().stampLabel }}</span>
+              <span class="stamp__code stamp__code--time">{{ returnTime() }}</span>
+              <span class="stamp__label">AUJOURD'HUI</span>
+            }
+            @case ('offline') {
+              <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2.5 8.5a14 14 0 0 1 19 0M5.5 12a9.5 9.5 0 0 1 13 0M8.5 15.5a5 5 0 0 1 7 0M12 19h.01M3 3l18 18" />
+              </svg>
+              <span class="stamp__label">{{ config().stampLabel }}</span>
+            }
+            @default {
+              <span class="stamp__code">{{ config().code }}</span>
+              <span class="stamp__label">{{ config().stampLabel }}</span>
+            }
+          }
+        </div>
+      </div>
+
+      <section class="content" aria-labelledby="err-title">
+        <h1 class="title" id="err-title">{{ config().titleFr }}</h1>
+        <p class="subtitle" lang="en"><span class="en-pill" aria-hidden="true">EN</span>{{ config().titleEn }}</p>
+
+        @switch (kind()) {
+          @case ('not-found') {
+            <p class="body">Le lien est peut-être ancien, ou la fiche a été archivée à la fin de l'année scolaire précédente.</p>
+            @if (requestedPath(); as path) {
+              <p class="path">{{ path }}</p>
+            }
+          }
+          @case ('forbidden') {
+            <p class="body">
+              <strong>{{ feature() }}</strong> relève de la {{ requiredRole() }}. Votre profil actuel ne donne pas accès à cette fonction.
+            </p>
+            <dl class="roles">
+              <div class="roles__cell">
+                <dt>Votre profil</dt>
+                <dd>{{ userRole() }}</dd>
+              </div>
+              <div class="roles__cell">
+                <dt>Profil requis</dt>
+                <dd>{{ requiredRole() }}</dd>
+              </div>
+            </dl>
+          }
+          @case ('server-error') {
+            <p class="body">
+              Ce n'est pas de votre fait.
+              @if (failedOperation(); as op) {
+                {{ op }} n'a <strong>pas été enregistré</strong> — vous pouvez réessayer sans risque de doublon.
+              }
+            </p>
+            <div class="ref">
+              <span class="ref__label">Référence à communiquer au support</span>
+              <span class="ref__code">{{ errorRef() }}</span>
+              <button type="button" class="ref__copy" (click)="emit('copy-ref')">Copier</button>
+            </div>
+          }
+          @case ('maintenance') {
+            <p class="body">{{ maintenanceReason() }} Les données saisies avant l'interruption sont en sécurité.</p>
+            <ol class="steps">
+              @for (step of maintenanceSteps(); track step.label) {
+                <li class="steps__item" [class]="'steps__item--' + step.state">
+                  <span class="steps__mark" aria-hidden="true">
+                    @if (step.state === 'done') {
+                      <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9 17.5 20 6.5" /></svg>
+                    } @else if (step.state === 'current') {
+                      <span class="steps__dot"></span>
+                    }
+                  </span>
+                  <span class="steps__label">{{ step.label }}</span>
+                  <span class="steps__time">{{ step.time }}</span>
+                </li>
+              }
+            </ol>
+          }
+          @case ('offline') {
+            <p class="body">Continuez à travailler : les saisies ci-dessous seront envoyées automatiquement au retour du réseau.</p>
+            @if (pendingItems().length > 0) {
+              <ul class="pending">
+                @for (item of pendingItems(); track item.label) {
+                  <li class="pending__row">
+                    <span class="pending__label">{{ item.label }}</span>
+                    <span class="pending__tag">En attente</span>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        }
+
+        <div class="actions">
+          <button type="button" class="btn btn--primary" (click)="emit(config().primary.id)">
+            {{ config().primary.label }}
+          </button>
+          @if (config().secondary; as sec) {
+            <button type="button" class="btn btn--secondary" (click)="emit(sec.id)">{{ sec.label }}</button>
+          }
+          @if (kind() === 'offline' && retryInSeconds() !== null) {
+            <span class="actions__note">Nouvel essai dans {{ retryInSeconds() }} s</span>
+          }
+        </div>
+
+        @switch (kind()) {
+          @case ('not-found') {
+            @if (frequentLinks().length > 0) {
+              <nav class="links" aria-label="Pages souvent consultées">
+                <span class="links__label">Souvent consultés :</span>
+                @for (link of frequentLinks(); track link.href) {
+                  <a class="links__item" [href]="link.href">{{ link.label }}</a>
+                }
+              </nav>
+            }
+          }
+          @case ('forbidden') {
+            <p class="note">La demande est transmise {{ approver() }}, qui vous répond dans l'application.</p>
+          }
+          @case ('maintenance') {
+            <p class="note">Urgence administrative : <strong>{{ emergencyPhone() }}</strong></p>
+          }
+        }
+      </section>
+    </main>
+  </div>
+}

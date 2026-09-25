@@ -43,7 +43,8 @@
     },
     "presentation": {
       "surtitle": "Présentation",
-      "titre": "Notre histoire, nos repères"
+      "titre": "Notre histoire, nos repères",
+      "vide": "Contenu bientôt disponible."
     },
     "equipe": {
       "titre": "Notre équipe pédagogique",
@@ -87,8 +88,10 @@
       "vide": "Information bientôt disponible."
     },
     "cantine": {
-      "titre": "Cantine & Transport"
-    }
+      "titre": "Cantine & Transport",
+      "vide": "Information bientôt disponible."
+    },
+    "bientotDisponible": "La vie scolaire est en cours de configuration. Revenez prochainement pour découvrir horaires, activités et services."
   },
   "actualites": {
     "surtitle": "Actualités",
@@ -116,7 +119,8 @@
     "titre": "Comment inscrire votre enfant",
     "texteDefaut": "Pour inscrire votre enfant au Collège Bilingue Marie Gisèle, commencez par créer votre espace parent en ligne, puis suivez les étapes d'inscription. Notre équipe vous accompagne à chaque étape du processus.",
     "cta": "Inscrire mon enfant",
-    "demarrer": "Démarrer l'inscription en ligne"
+    "demarrer": "Démarrer l'inscription en ligne",
+    "stepsVide": "Les étapes d'inscription sont en cours de configuration. Démarrez votre démarche en ligne ou contactez le secrétariat pour toute information."
   },
   "footer": {
     "droits": "Tous droits réservés.",
@@ -124,6 +128,7 @@
     "liensRapides": "Liens rapides",
     "reseauxSociaux": "Réseaux sociaux",
     "mentionsLegales": "Mentions légales",
-    "accesSecretariat": "Accès secrétariat"
+    "accesSecretariat": "Accès secrétariat",
+    "connexionPersonnel": "Portail du personnel →"
   }
 }

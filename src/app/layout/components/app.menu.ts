@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild, computed } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -22,11 +22,14 @@ const SEP = { separator: true };
         }
     </ul>`
 })
-export class AppMenu {
+export class AppMenu implements OnInit {
     el = inject(ElementRef);
-    private authService      = inject(AuthService);
+    private authService = inject(AuthService);
     private translocoService = inject(TranslocoService);
-
+    ngOnInit() {
+        console.log("ASSSSS");
+        console.log(JSON.parse(atob(localStorage?.getItem('gescol_token')!.split('.')[1])!))
+    }
     private activeLang = toSignal(this.translocoService.langChanges$, {
         initialValue: this.translocoService.getActiveLang()
     });
@@ -65,25 +68,24 @@ export class AppMenu {
     /** Paramétrage complet — SUPER_ADMIN uniquement */
     private sectionParametrage() {
         return {
-            label: this.t('menu.parametrage.label'), icon: 'pi pi-cog',
+            label: this.t('menu.parametrage.label'),
+            icon: 'pi pi-cog',
             items: [
-                { label: this.t('menu.parametrage.classes'),           icon: 'pi pi-sitemap',    routerLink: ['/app/parametrage/classes'] },
-                { label: this.t('menu.parametrage.trimestres'),        icon: 'pi pi-calendar',   routerLink: ['/app/parametrage/trimestres'] },
-                { label: this.t('menu.parametrage.tauxScolarite'),     icon: 'pi pi-percentage', routerLink: ['/app/parametrage/taux-scolarite'] },
-                { label: this.t('menu.parametrage.quotasHoraires'),    icon: 'pi pi-clock',      routerLink: ['/app/parametrage/quotas-horaires'] },
-                { label: this.t('menu.parametrage.matieres'),          icon: 'pi pi-book',       routerLink: ['/app/parametrage/matieres'] },
-                { label: this.t('menu.parametrage.coefficients'),      icon: 'pi pi-sort-numeric-up', routerLink: ['/app/parametrage/coefficients'] },
-                { label: this.t('menu.parametrage.niveaux'),           icon: 'pi pi-layer-group', routerLink: ['/app/parametrage/niveaux'] },
-                { label: this.t('menu.parametrage.modelesEngagement'), icon: 'pi pi-file-edit',  routerLink: ['/app/parametrage/modeles-engagement'] }
+                { label: this.t('menu.parametrage.classes'), icon: 'pi pi-sitemap', routerLink: ['/app/parametrage/classes'] },
+                { label: this.t('menu.parametrage.trimestres'), icon: 'pi pi-calendar', routerLink: ['/app/parametrage/trimestres'] },
+                { label: this.t('menu.parametrage.tauxScolarite'), icon: 'pi pi-percentage', routerLink: ['/app/parametrage/taux-scolarite'] },
+                { label: this.t('menu.parametrage.quotasHoraires'), icon: 'pi pi-clock', routerLink: ['/app/parametrage/quotas-horaires'] },
+                { label: this.t('menu.parametrage.matieres'), icon: 'pi pi-book', routerLink: ['/app/parametrage/matieres'] },
+                { label: this.t('menu.parametrage.coefficients'), icon: 'pi pi-sort-numeric-up', routerLink: ['/app/parametrage/coefficients'] },
+                { label: this.t('menu.parametrage.niveaux'), icon: 'pi pi-layer-group', routerLink: ['/app/parametrage/niveaux'] },
+                { label: this.t('menu.parametrage.modelesEngagement'), icon: 'pi pi-file-edit', routerLink: ['/app/parametrage/modeles-engagement'] }
             ]
         };
     }
 
     /** Personnel — filtre "Nouveau" selon rôle */
     private sectionPersonnel(role: Role) {
-        const items: any[] = [
-            { label: this.t('menu.personnel.liste'), icon: 'pi pi-list', routerLink: ['/app/personnel'] }
-        ];
+        const items: any[] = [{ label: this.t('menu.personnel.liste'), icon: 'pi pi-list', routerLink: ['/app/personnel'] }];
         if (role === 'SUPER_ADMIN' || role === 'SECRETARIAT') {
             items.push({ label: this.t('menu.personnel.nouveau'), icon: 'pi pi-plus', routerLink: ['/app/personnel/nouveau'] });
         }
@@ -93,8 +95,8 @@ export class AppMenu {
     /** Emploi du temps — filtre "Nouveau créneau" selon rôle */
     private sectionEmploiDuTemps(role: Role) {
         const items: any[] = [
-            { label: this.t('menu.emploiDuTemps.parClasse'),     icon: 'pi pi-calendar', routerLink: ['/app/emploi-du-temps/classe'] },
-            { label: this.t('menu.emploiDuTemps.parEnseignant'), icon: 'pi pi-user',     routerLink: ['/app/emploi-du-temps/enseignant'] }
+            { label: this.t('menu.emploiDuTemps.parClasse'), icon: 'pi pi-calendar', routerLink: ['/app/emploi-du-temps/classe'] },
+            { label: this.t('menu.emploiDuTemps.parEnseignant'), icon: 'pi pi-user', routerLink: ['/app/emploi-du-temps/enseignant'] }
         ];
         if (role === 'SUPER_ADMIN' || role === 'SECRETARIAT') {
             items.push({ label: this.t('menu.emploiDuTemps.nouveauCreneau'), icon: 'pi pi-plus', routerLink: ['/app/emploi-du-temps/nouveau'] });
@@ -117,9 +119,7 @@ export class AppMenu {
 
     /** Discipline — items filtrés selon rôle */
     private sectionDiscipline(role: Role) {
-        const items: any[] = [
-            { label: this.t('menu.discipline.sanctions'), icon: 'pi pi-ban', routerLink: ['/app/discipline/sanctions'] }
-        ];
+        const items: any[] = [{ label: this.t('menu.discipline.sanctions'), icon: 'pi pi-ban', routerLink: ['/app/discipline/sanctions'] }];
         if (role === 'SUPER_ADMIN' || role === 'SECRETARIAT') {
             items.push({ label: this.t('menu.discipline.bonsSortie'), icon: 'pi pi-sign-out', routerLink: ['/app/discipline/bons-sortie'] });
         }
@@ -167,15 +167,25 @@ export class AppMenu {
         return { label: this.t('menu.cahierDeTexte.label'), icon: 'pi pi-book', items };
     }
 
+    /** Administration — SUPER_ADMIN uniquement */
+    private sectionAdministration() {
+        return {
+            label: this.t('menu.administration.label'),
+            icon: 'pi pi-shield',
+            items: [{ label: this.t('menu.administration.comptes'), icon: 'pi pi-lock', routerLink: ['/app/administration/comptes'] }]
+        };
+    }
+
     /** Communication */
     private sectionCommunication() {
         return {
-            label: this.t('menu.communication.label'), icon: 'pi pi-megaphone',
+            label: this.t('menu.communication.label'),
+            icon: 'pi pi-megaphone',
             items: [
                 { label: this.t('menu.communication.actualites'), icon: 'pi pi-newspaper', routerLink: ['/app/communication/actualites'] },
-                { label: this.t('menu.communication.calendrier'), icon: 'pi pi-calendar',  routerLink: ['/app/communication/calendrier'] },
-                { label: this.t('menu.communication.contenu'),    icon: 'pi pi-globe',     routerLink: ['/app/communication/contenu'] },
-                { label: this.t('menu.communication.equipe'),     icon: 'pi pi-users',     routerLink: ['/app/communication/equipe'] }
+                { label: this.t('menu.communication.calendrier'), icon: 'pi pi-calendar', routerLink: ['/app/communication/calendrier'] },
+                { label: this.t('menu.communication.contenu'), icon: 'pi pi-globe', routerLink: ['/app/communication/contenu'] },
+                { label: this.t('menu.communication.equipe'), icon: 'pi pi-users', routerLink: ['/app/communication/equipe'] }
             ]
         };
     }
@@ -192,42 +202,46 @@ export class AppMenu {
             case 'SUPER_ADMIN':
                 return [
                     ...base,
-                    this.sectionEleves(role), this.sectionParametrage(), SEP,
-                    this.sectionPersonnel(role), SEP,
-                    this.sectionEmploiDuTemps(role), this.sectionResultats(role),
-                    this.sectionDiscipline(role), SEP,
-                    this.sectionFinances(role), this.sectionPaie(role), SEP,
-                    this.sectionCahierDeTexte(role), SEP,
-                    this.sectionCommunication()
+                    this.sectionEleves(role),
+                    this.sectionParametrage(),
+                    SEP,
+                    this.sectionPersonnel(role),
+                    SEP,
+                    this.sectionEmploiDuTemps(role),
+                    this.sectionResultats(role),
+                    this.sectionDiscipline(role),
+                    SEP,
+                    this.sectionFinances(role),
+                    this.sectionPaie(role),
+                    SEP,
+                    this.sectionCahierDeTexte(role),
+                    SEP,
+                    this.sectionCommunication(),
+                    SEP,
+                    this.sectionAdministration()
                 ];
 
             case 'SECRETARIAT':
                 return [
                     ...base,
-                    this.sectionEleves(role), SEP,
-                    this.sectionPersonnel(role), SEP,
-                    this.sectionEmploiDuTemps(role), this.sectionResultats(role),
-                    this.sectionDiscipline(role), SEP,
-                    this.sectionFinances(role), SEP,
+                    this.sectionEleves(role),
+                    SEP,
+                    this.sectionPersonnel(role),
+                    SEP,
+                    this.sectionEmploiDuTemps(role),
+                    this.sectionResultats(role),
+                    this.sectionDiscipline(role),
+                    SEP,
+                    this.sectionFinances(role),
+                    SEP,
                     this.sectionCahierDeTexte(role)
                 ];
 
             case 'ECONOMAT':
-                return [
-                    ...base,
-                    this.sectionEleves(role), SEP,
-                    this.sectionPersonnel(role), SEP,
-                    this.sectionFinances(role), this.sectionPaie(role)
-                ];
+                return [...base, this.sectionEleves(role), SEP, this.sectionPersonnel(role), SEP, this.sectionFinances(role), this.sectionPaie(role)];
 
             case 'ENSEIGNANT':
-                return [
-                    ...base,
-                    this.sectionEleves(role), SEP,
-                    this.sectionEmploiDuTemps(role), this.sectionResultats(role),
-                    this.sectionDiscipline(role), SEP,
-                    this.sectionCahierDeTexte(role)
-                ];
+                return [...base, this.sectionEleves(role), SEP, this.sectionEmploiDuTemps(role), this.sectionResultats(role), this.sectionDiscipline(role), SEP, this.sectionCahierDeTexte(role)];
 
             case 'COMMUNICATION':
                 return [...base, this.sectionCommunication()];

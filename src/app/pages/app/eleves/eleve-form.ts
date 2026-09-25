@@ -15,6 +15,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { MessageModule } from 'primeng/message';
 import { EleveService, EleveRequest } from '@/app/core/services/eleve.service';
 import { EleveSummaryRailComponent, ChecklistRow } from './eleve-summary-rail';
+import { getAnneeScolaireCourante } from '@/app/core/utils/annee-scolaire.utils';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -390,11 +391,7 @@ export class EleveForm implements OnInit {
     protected readonly bloodGroups = BLOOD_GROUPS;
     protected readonly requiredCount = REQUIRED_FIELD_KEYS.length;
 
-    protected readonly anneeScolaire = (() => {
-        const now = new Date();
-        const y = now.getFullYear();
-        return now.getMonth() >= 7 ? `${y}/${y + 1}` : `${y - 1}/${y}`;
-    })();
+    protected readonly anneeScolaire = getAnneeScolaireCourante();
 
     // ── Options réactives à la langue ─────────────────────────────────────
 
@@ -598,7 +595,12 @@ export class EleveForm implements OnInit {
             : this.eleveService.creer(payload);
 
         req$.subscribe({
-            next: () => { this.saving.set(false); this.goBack(); },
+            next: () => {
+                this.saving.set(false);
+                this.router.navigate(['/app/eleves'], {
+                    state: { success: this.isEditMode ? 'modifie' : 'cree' }
+                });
+            },
             error: (err) => {
                 this.saving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

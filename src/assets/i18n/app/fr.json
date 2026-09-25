@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "groupes": {
+      "scolarite":     "Scolarité",
+      "finances":      "Finances",
+      "equipe":        "Équipe",
+      "communication": "Communication",
+      "systeme":       "Système"
+    }
+  },
   "menu": {
     "tableauDeBord": "Tableau de bord",
     "eleves": {
@@ -66,6 +75,10 @@
       "calendrier": "Calendrier scolaire",
       "contenu": "Contenu du site",
       "equipe": "Équipe pédagogique"
+    },
+    "administration": {
+      "label": "Administration",
+      "comptes": "Comptes utilisateurs"
     }
   },
 
@@ -105,7 +118,9 @@
       "classe": "Classe",
       "sexe": "Sexe",
       "naissance": "Date de naissance"
-    }
+    },
+    "successCree": "Élève créé avec succès.",
+    "successModifie": "Élève modifié avec succès."
   },
 
   "eleveForm": {
@@ -186,7 +201,9 @@
       "requis": "Ce champ est obligatoire.",
       "annuler": "Annuler",
       "creer": "Créer",
-      "modifier": "Enregistrer"
+      "modifier": "Enregistrer",
+      "successEnregistrement": "Enregistrement effectué avec succès.",
+      "successPP": "Professeur principal désigné avec succès."
     },
     "sousSysteme": {
       "FRANCOPHONE": "Francophone",
@@ -237,6 +254,7 @@
       },
       "professeurPrincipal": {
         "titre": "Désigner professeur principal",
+        "btnTooltip": "Désigner professeur principal",
         "personnelId": "Enseignant",
         "personnelPlaceholder": "Sélectionner un enseignant"
       },
@@ -250,6 +268,7 @@
     "trimestres": {
       "titre": "Trimestres & séquences",
       "nouveau": "Nouveau trimestre",
+      "voirSequences": "Voir les séquences",
       "form": {
         "titreCreation": "Nouveau trimestre",
         "titreEdition": "Modifier le trimestre",
@@ -301,6 +320,8 @@
     "quotasHoraires": {
       "titre": "Quotas horaires",
       "nouveau": "Nouveau quota",
+      "filtreClassePh": "Toutes les classes",
+      "filtreMatierePh": "Toutes les matières",
       "form": {
         "titreCreation": "Nouveau quota",
         "titreEdition": "Modifier le quota",
@@ -319,6 +340,8 @@
     "coefficients": {
       "titre": "Coefficients",
       "nouveau": "Nouveau coefficient",
+      "filtreClassePh": "Toutes les classes",
+      "filtreMatierePh": "Toutes les matières",
       "form": {
         "titreCreation": "Nouveau coefficient",
         "titreEdition": "Modifier le coefficient",
@@ -353,6 +376,743 @@
       "cols": {
         "libelle": "Intitulé",
         "extrait": "Aperçu"
+      }
+    }
+  },
+
+  "personnel": {
+    "titre": "Personnel",
+    "nouveau": "Nouveau personnel",
+    "desactiver": "Désactiver",
+    "reactiver": "Réactiver",
+    "successCree": "Membre du personnel créé avec succès.",
+    "successModifie": "Membre du personnel modifié avec succès.",
+    "filtres": {
+      "nom": "Nom",
+      "matricule": "Matricule",
+      "tousTypes": "Tous les types",
+      "rechercher": "Rechercher",
+      "reinitialiser": "Réinitialiser"
+    },
+    "colonnes": {
+      "matricule": "Matricule",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "typePersonnel": "Type",
+      "typeContrat": "Contrat",
+      "statut": "Statut"
+    },
+    "statut": {
+      "actif": "Actif",
+      "inactif": "Inactif"
+    },
+    "typePersonnel": {
+      "ENSEIGNANT": "Enseignant",
+      "NON_ENSEIGNANT": "Non enseignant"
+    },
+    "typeContrat": {
+      "VACATAIRE": "Vacataire",
+      "SEMI_PERMANENT": "Semi-permanent",
+      "PERMANENT": "Permanent"
+    },
+    "desactiverConfirm": {
+      "titre": "Désactiver ce membre du personnel",
+      "message": "Désactiver {{prenom}} {{nom}} ? Il / Elle ne pourra plus se connecter ni être affecté(e) à des créneaux.",
+      "annuler": "Annuler",
+      "confirmer": "Désactiver"
+    },
+    "reactiverConfirm": {
+      "titre": "Réactiver ce membre du personnel",
+      "message": "Réactiver {{prenom}} {{nom}} ?",
+      "annuler": "Annuler",
+      "confirmer": "Réactiver"
+    },
+    "form": {
+      "titreCreation": "Nouveau membre du personnel",
+      "titreEdition": "Modifier le membre du personnel",
+      "erreurChargement": "Impossible de charger les données de ce membre du personnel.",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "matricule": "Matricule (attribué à la création)",
+      "telephone": "Téléphone",
+      "email": "Adresse e-mail",
+      "dateEmbauche": "Date d'embauche",
+      "typePersonnel": "Type de personnel",
+      "typePersonnelEnseignantSub": "Enseigne une ou plusieurs matières",
+      "typePersonnelNonSub": "Administration, économat, etc.",
+      "typeContrat": "Type de contrat",
+      "fonction": "Fonction / poste",
+      "fonctionPlaceholder": "ex. Directeur, Comptable, Professeur de Maths…",
+      "salaireBase": "Salaire de base",
+      "salaireVacataireHint": "Pour un vacataire, le salaire est généralement calculé à l'heure — ce champ reste optionnel.",
+      "indemniteTransport": "Indemnité de transport",
+      "matieresPlaceholder": "Sélectionner les matières enseignées",
+      "matieresChargement": "Chargement des matières…",
+      "numeroCompteBancaire": "Numéro de compte bancaire",
+      "nomBanque": "Banque",
+      "annuler": "Annuler",
+      "creer": "Créer",
+      "modifier": "Enregistrer",
+      "sections": {
+        "identite": "Identité",
+        "identiteHint": "informations civiles du membre du personnel",
+        "contrat": "Contrat & rémunération",
+        "contratHint": "type de personnel, contrat et salaire",
+        "matieres": "Matières enseignées",
+        "matieresHint": "affiché uniquement pour les enseignants",
+        "banque": "Coordonnées bancaires",
+        "banqueHint": "pour le virement de la paie (optionnel)"
+      },
+      "rail": {
+        "titre": "NOUVELLE FICHE",
+        "titreFiche": "FICHE DU PERSONNEL",
+        "nomInconnu": "Membre du personnel",
+        "champsObligatoires": "Champs obligatoires",
+        "statutActif": "● Actif",
+        "statutInactif": "● Inactif"
+      }
+    }
+  },
+
+  "emploiDuTemps": {
+    "titre": "Emploi du temps",
+    "successCreneauCree": "Créneau créé avec succès.",
+    "titrePlanningClasse": "Planning par classe",
+    "titrePlanningEnseignant": "Planning par enseignant",
+    "nouveauCreneau": "Nouveau créneau",
+    "monPlanning": "Mon planning",
+    "selectionnerClasse": "Sélectionner une classe",
+    "selectionnerEnseignant": "Sélectionner un enseignant",
+    "choisirClassePourAfficher": "Sélectionnez une classe pour afficher son emploi du temps.",
+    "choisirEnseignantPourAfficher": "Sélectionnez un enseignant pour afficher son emploi du temps.",
+    "erreurChargement": "Impossible de charger l'emploi du temps. Veuillez réessayer.",
+    "supprimerCreneau": "Supprimer ce créneau",
+    "supprimerCreneauTitre": "Supprimer le créneau",
+    "supprimerCreneauConfirm": "Supprimer le créneau de {{matiere}} le {{jour}} ? Cette action est irréversible.",
+    "jourVide": "—",
+    "annuler": "Annuler",
+    "supprimer": "Supprimer",
+    "jours": {
+      "MONDAY": "Lundi",
+      "TUESDAY": "Mardi",
+      "WEDNESDAY": "Mercredi",
+      "THURSDAY": "Jeudi",
+      "FRIDAY": "Vendredi",
+      "SATURDAY": "Samedi",
+      "SUNDAY": "Dimanche"
+    },
+    "form": {
+      "titreNouveauCreneau": "Nouveau créneau",
+      "sectionRessources": "Ressources pédagogiques",
+      "sectionHoraire": "Jour et horaire",
+      "classe": "Classe",
+      "matiere": "Matière",
+      "enseignant": "Enseignant",
+      "jourSemaine": "Jour",
+      "heureDebut": "Heure de début",
+      "heureFin": "Heure de fin",
+      "anneeScolaire": "Année scolaire",
+      "selectionner": "Sélectionner",
+      "annuler": "Annuler",
+      "enregistrer": "Créer le créneau",
+      "chevauchementTitre": "Chevauchement d'horaire (R4)",
+      "erreurGenerique": "Une erreur est survenue. Veuillez réessayer.",
+      "heureFinInvalide": "L'heure de fin doit être après l'heure de début."
+    },
+    "enseignantReadonlyNotice": "Votre emploi du temps est géré par le secrétariat. Pour toute modification, contactez l'administration."
+  },
+
+  "resultats": {
+    "selecteur": {
+      "classe": "Classe",
+      "matiere": "Matière",
+      "sequence": "Séquence",
+      "choisirClasse": "Choisir une classe",
+      "choisirMatiere": "Choisir une matière",
+      "choisirSequence": "Choisir une séquence",
+      "aucuneClasseProfPrincipal": "Vous n'êtes professeur principal d'aucune classe. La validation des notes n'est pas disponible."
+    },
+    "saisie": {
+      "titre": "Saisie des notes",
+      "sousTitre": "Sélectionnez une séquence, une classe et une matière pour afficher et saisir les notes.",
+      "colMatricule": "Matricule",
+      "colNom": "Élève",
+      "colNote": "Note /20",
+      "validee": "Validée",
+      "enregistrer": "Enregistrer",
+      "nonEnregistre": "Modifications non enregistrées",
+      "legendeNonSaisie": "Note non encore saisie",
+      "aucunEleve": "Aucun élève trouvé pour cette sélection.",
+      "erreurChargement": "Impossible de charger les notes. Veuillez réessayer.",
+      "succes": "Enregistré"
+    },
+    "validation": {
+      "titre": "Validation des notes",
+      "sousTitre": "Seules les notes en brouillon peuvent être validées. L'opération est irréversible.",
+      "colMatricule": "Matricule",
+      "colNom": "Élève",
+      "colNote": "Note /20",
+      "selectionnes": "sélectionné(s)",
+      "valider": "Valider la sélection",
+      "notesValideesCount": "note(s) validée(s) avec succès",
+      "aucuneNote": "Aucune note en brouillon pour cette sélection.",
+      "toutesValidees": "Toutes les notes ont été validées.",
+      "erreurChargement": "Impossible de charger les notes. Veuillez réessayer.",
+      "noteNullTitle": "Note non renseignée — sera validée sans valeur",
+      "notesSansValeur": "note(s) sans valeur",
+      "confirmerTitre": "Confirmer la validation",
+      "confirmerMessage": "Vous êtes sur le point de valider {{n}} note(s). Cette action est irréversible.",
+      "avertissementNulles": "{{n}} note(s) n'ont pas de valeur renseignée (—). Elles seront validées sans note numérique.",
+      "annuler": "Annuler",
+      "confirmer": "Valider définitivement"
+    },
+    "bulletins": {
+      "titre": "Bulletins",
+      "sousTitre": "Consultez les moyennes d'un élève et téléchargez son bulletin.",
+      "etape1": "Choisir la séquence d'évaluation",
+      "etape2": "Rechercher un élève",
+      "rechercheNom": "Nom de l'élève",
+      "rechercheNomPlaceholder": "Rechercher par nom…",
+      "rechercheMatricule": "Matricule",
+      "rechercheMatriculePlaceholder": "ex. EL-2025-001",
+      "recherchePlaceholder": "Nom ou matricule (ex : Dupont, EL-2025-001)…",
+      "sequence": "Séquence",
+      "choisirSequence": "Choisir une séquence",
+      "changerEleve": "Changer d'élève",
+      "noSequenceWarning": "Sélectionnez d'abord une séquence (étape 1) pour consulter les moyennes.",
+      "titreMoyennes": "Aperçu des moyennes",
+      "colMatiere": "Matière",
+      "colNote": "Note",
+      "colCoefficient": "Coefficient",
+      "colPoids": "Contribution",
+      "moyenneGenerale": "Moyenne générale",
+      "telechargerPdf": "Télécharger le bulletin PDF",
+      "erreurMoyennes": "Impossible de charger les moyennes. Veuillez réessayer.",
+      "rechercheDisablee": "Choisissez d'abord une séquence (étape 1)…",
+      "miniCaracteres": "Saisissez au moins 2 caractères pour rechercher.",
+      "erreurPdf": "Impossible de télécharger le bulletin PDF. Veuillez réessayer."
+    }
+  },
+
+  "discipline": {
+    "commun": {
+      "miniCaracteres": "Saisissez au moins 2 caractères pour rechercher."
+    },
+    "sanctions": {
+      "titre": "Sanctions",
+      "sousTitre": "Saisir une sanction disciplinaire ou consulter l'historique",
+      "saisirTitre": "Saisir une sanction",
+      "recherchePlaceholder": "Nom ou matricule (ex. EL-2025-001)…",
+      "aucunResultat": "Aucun élève trouvé pour cette recherche",
+      "changerEleve": "Changer d'élève",
+      "typeSanction": "Type de sanction",
+      "choisirType": "Choisir un type…",
+      "dateSanction": "Date et heure",
+      "motif": "Motif",
+      "motifPlaceholder": "Décrire brièvement le motif…",
+      "enregistrer": "Enregistrer la sanction",
+      "champsRequis": "Veuillez remplir tous les champs obligatoires.",
+      "enregistreAvecSucces": "Sanction enregistrée avec succès",
+      "erreurEnregistrement": "Erreur lors de l'enregistrement. Veuillez réessayer.",
+      "historiqueEleve": "Historique des sanctions pour cet élève",
+      "aucuneSanctionEleve": "Aucune sanction enregistrée pour cet élève",
+      "historiqueClasse": "Historique par classe",
+      "choisirClasse": "Choisir une classe…",
+      "aucuneSanctionClasse": "Aucune sanction enregistrée pour cette classe",
+      "badgeEscalade": "Générée automatiquement",
+      "colDate": "Date",
+      "colEleve": "Élève",
+      "colType": "Type",
+      "colMotif": "Motif",
+      "historiqueClasseGuide": "Choisissez une classe pour afficher l'historique des sanctions.",
+      "erreurChargement": "Impossible de charger l'historique. Veuillez réessayer.",
+      "types": {
+        "BLAME": "Blâme",
+        "ABSENCE_JUSTIFIEE": "Absence justifiée",
+        "ABSENCE_NON_JUSTIFIEE": "Absence non justifiée",
+        "RETARD": "Retard",
+        "RETENUE": "Retenue",
+        "AVERTISSEMENT": "Avertissement",
+        "EXCLUSION_3J": "Exclusion 3 jours",
+        "EXCLUSION_8J": "Exclusion 8 jours",
+        "INTERPELLATION": "Interpellation"
+      }
+    },
+    "bonsSortie": {
+      "titre": "Bons de sortie / entrée",
+      "sousTitre": "Émettre un bon de sortie et valider les retours d'élèves",
+      "rechercheEleve": "Rechercher un élève",
+      "rechercherEleve": "Rechercher un élève",
+      "recherchePlaceholder": "Nom ou matricule (ex. EL-2025-001)…",
+      "aucunResultat": "Aucun élève trouvé pour cette recherche",
+      "changerEleve": "Changer d'élève",
+      "nouveauBon": "Nouveau bon de sortie",
+      "nouveauTitre": "Nouveau bon de sortie",
+      "motif": "Motif de la sortie",
+      "motifPlaceholder": "Raison de la sortie…",
+      "dateSortie": "Date et heure de sortie",
+      "emettre": "Émettre le bon",
+      "enregistrer": "Émettre le bon",
+      "champsRequis": "Veuillez remplir tous les champs obligatoires.",
+      "emis": "Bon de sortie émis avec succès",
+      "enregistreAvecSucces": "Bon de sortie émis avec succès",
+      "erreurAutorise": "Identifiant utilisateur introuvable. Reconnectez-vous.",
+      "erreurCreation": "Erreur lors de la création. Veuillez réessayer.",
+      "erreurEnregistrement": "Erreur lors de la création. Veuillez réessayer.",
+      "historique": "Bons de sortie pour cet élève",
+      "historiqueTitre": "Bons de sortie pour cet élève",
+      "aucunBon": "Aucun bon de sortie enregistré pour cet élève",
+      "colDateSortie": "Date de sortie",
+      "colDate": "Date de sortie",
+      "colMotif": "Motif",
+      "colStatut": "Statut",
+      "colRetour": "Retour",
+      "statutSorti": "Sorti(e)",
+      "statutRentre": "Rentré(e)",
+      "validerRetour": "Valider le retour",
+      "confirmerQuestion": "Confirmer ?",
+      "confirmerOui": "Oui",
+      "confirmerNon": "Non",
+      "retourValide": "Retour validé avec succès",
+      "erreurRetour": "Erreur lors de la validation du retour"
+    },
+    "regles": {
+      "titre": "Règles d'escalade disciplinaire",
+      "sousTitre": "Seuils déclencheurs de sanctions automatiques (R5/R15)",
+      "explication": "Quand un élève cumule un nombre défini de sanctions du même type, une sanction plus grave est déclenchée automatiquement. Configurez ici ces seuils.",
+      "lectureSeule": "Seul l'administrateur principal (SUPER_ADMIN) peut modifier ces règles.",
+      "listeTitre": "Règles configurées",
+      "nouveau": "Nouvelle règle",
+      "form": {
+        "titreCreation": "Nouvelle règle d'escalade",
+        "titreEdition": "Modifier la règle",
+        "declencheur": "Sanction déclencheur",
+        "seuil": "Seuil (nombre d'occurrences)",
+        "resultante": "Sanction générée automatiquement",
+        "choisirType": "Choisir un type…"
+      },
+      "cols": {
+        "regle": "Règle",
+        "declencheur": "Sanction déclencheur",
+        "seuil": "Seuil",
+        "resultante": "Sanction résultante"
+      },
+      "erreurEnregistrement": "Erreur lors de l'enregistrement. Veuillez réessayer."
+    }
+  },
+
+  "finances": {
+    "versements": {
+      "titre": "Versements de scolarité",
+      "sousTitre": "Enregistrer un paiement en caisse et consulter l'historique d'un élève",
+      "rechercheEleve": "Rechercher un élève",
+      "recherchePlaceholder": "Nom ou matricule (ex. EL-2025-001)…",
+      "aucunResultat": "Aucun élève trouvé pour cette recherche",
+      "changerEleve": "Changer d'élève",
+      "tauxScolarite": "Scolarité totale",
+      "totalVerse": "Total versé",
+      "soldeRestant": "Solde restant",
+      "nouveauTitre": "Nouveau versement (caisse)",
+      "montant": "Montant",
+      "montantPlaceholder": "Montant en FCFA…",
+      "modeCaisseInfo": "Mode caisse — validé immédiatement",
+      "enregistrer": "Enregistrer le versement",
+      "enregistreSucces": "Versement enregistré avec succès",
+      "erreurEnregistrement": "Erreur lors de l'enregistrement. Veuillez réessayer.",
+      "erreurPdf": "Impossible de télécharger la quittance PDF.",
+      "historique": "Historique des versements",
+      "aucunHistorique": "Aucun versement enregistré pour cet élève",
+      "afficheN": "Affichage des {{n}} derniers sur {{total}} versements",
+      "colDate": "Date",
+      "colMontant": "Montant",
+      "colMode": "Mode",
+      "colQuittance": "N° quittance / motif",
+      "colStatut": "Statut",
+      "colActions": "Actions",
+      "modeCAISSE": "Caisse",
+      "modeBANCAIRE": "Virement",
+      "enAttenteInfo": "Virement en attente de validation économat",
+      "telechargerPdf": "Télécharger la quittance PDF",
+      "statuts": {
+        "VALIDE": "Validé",
+        "EN_ATTENTE_VALIDATION": "En attente",
+        "REJETE": "Rejeté"
+      }
+    },
+    "validations": {
+      "titre": "Validations bancaires",
+      "sousTitre": "Comparez les déclarations avec le relevé bancaire réel avant de valider",
+      "bannerTitre": "Rappel obligatoire — Contrôle anti-fraude (R18)",
+      "bannerReplier": "Replier",
+      "bannerDeplier": "Voir le rappel",
+      "r18Point1": "Chaque virement déclaré DOIT être vérifié sur le relevé de compte réel de l'établissement.",
+      "r18Point2": "GESCOL ne vérifie rien automatiquement — votre validation constitue une attestation personnelle.",
+      "r18Point3": "En cas de doute, rejeter et signaler à votre supérieur — ne jamais valider sans vérification.",
+      "nEnAttente": "{{n}} versement(s) bancaire(s) en attente",
+      "actualiser": "Actualiser",
+      "enAttenteSuffix": " en attente",
+      "aucuneTitre": "Aucune validation en attente",
+      "aucuneSub": "Tous les virements déclarés ont été traités.",
+      "aComparer": "À COMPARER AVEC LE RELEVÉ BANCAIRE RÉEL",
+      "recu": "N° reçu bancaire",
+      "signataire": "Nom signataire",
+      "declarantId": "Déclaré par (ID)",
+      "valider": "Valider",
+      "rejeter": "Rejeter",
+      "dialogValiderTitre": "Confirmer la validation bancaire",
+      "eleve": "Élève concerné",
+      "infoBancaireAVerif": "Informations bancaires déclarées — à vérifier sur le relevé réel",
+      "r18TitreDialog": "Vérification obligatoire",
+      "r18Avertissement": "En cliquant sur Confirmer, vous attestez avoir vérifié ces informations sur le relevé bancaire réel de l'établissement. Cette action est irréversible et crédite immédiatement le solde de l'élève.",
+      "confirmerValidation": "Confirmer la validation",
+      "dialogRejeterTitre": "Rejeter la déclaration bancaire",
+      "motifRejet": "Motif du rejet",
+      "motifRejetPlaceholder": "Décrire la raison du rejet (écart constaté, reçu invalide, etc.)…",
+      "motifRejetRequis": "Un motif est obligatoire pour tout rejet.",
+      "confirmerRejet": "Confirmer le rejet",
+      "valideSucces": "Versement de {{nom}} validé — solde mis à jour.",
+      "rejeteSucces": "Déclaration de {{nom}} rejetée.",
+      "erreurValidation": "Erreur lors de la validation. Veuillez réessayer.",
+      "erreurRejet": "Erreur lors du rejet. Veuillez réessayer."
+    },
+    "moratoires": {
+      "titre": "Moratoires",
+      "sousTitre": "Demander et gérer des délais de paiement pour les élèves",
+      "formulaireTitre": "Nouvelle demande de moratoire",
+      "rechercherEleve": "Rechercher un élève",
+      "rechercheEleve": "Élève concerné",
+      "recherchePlaceholder": "Nom ou matricule…",
+      "aucunEleve": "Aucun élève trouvé",
+      "changerEleve": "Changer",
+      "scolarite": "Scolarité",
+      "verse": "Versé",
+      "soldeRestant": "Solde restant",
+      "dateProposee": "Date de paiement proposée",
+      "datePlaceholder": "jj/mm/aaaa",
+      "suggestionDate": "Suggestion : dans 30 jours",
+      "motif": "Motif (optionnel)",
+      "motifPlaceholder": "Expliquer la situation de l'élève…",
+      "soumettre": "Soumettre la demande",
+      "soumisSucces": "Demande de moratoire soumise avec succès.",
+      "erreurSoumission": "Erreur lors de la soumission. Veuillez réessayer.",
+      "ongletAttente": "En attente",
+      "ongletHistorique": "Historique",
+      "aucuneAttente": "Aucune demande en attente de décision",
+      "aucunHistorique": "Aucun moratoire dans l'historique",
+      "redoublant": "Redoublant",
+      "redoublantInfo": "Élève en situation de redoublement — demande prioritaire",
+      "colEleve": "Élève",
+      "colDateProposee": "Date proposée",
+      "colDemande": "Date demande",
+      "colMotif": "Motif",
+      "colStatut": "Statut",
+      "colActions": "Actions",
+      "valider": "Valider",
+      "refuser": "Refuser",
+      "confirmValider": "Confirmer la validation de ce moratoire ?",
+      "confirmRefuser": "Confirmer le refus de cette demande ?",
+      "oui": "Oui",
+      "tousStatuts": "Tous les statuts",
+      "filtreStatut": "Filtrer par statut",
+      "valideSucces": "Moratoire de {{nom}} validé.",
+      "refuseSucces": "Demande de {{nom}} refusée.",
+      "erreurValidation": "Erreur lors de la validation. Veuillez réessayer.",
+      "erreurRefus": "Erreur lors du refus. Veuillez réessayer.",
+      "statuts": {
+        "EN_ATTENTE": "En attente",
+        "VALIDE": "Validé",
+        "REFUSE": "Refusé"
+      }
+    },
+    "alertes": {
+      "titre": "Alertes de retard de paiement",
+      "sousTitre": "Suivi des élèves en situation de retard et déclenchement des notifications",
+      "elevesEnRetard": "élève(s) en retard de paiement",
+      "tousAJour": "Aucun retard de paiement",
+      "aucunRetard": "Tous les élèves sont à jour dans leurs paiements.",
+      "actualiser": "Actualiser",
+      "trierPar": "Trier par",
+      "trierParClasse": "Classe",
+      "trierParSolde": "Solde",
+      "declencher": "Déclencher les alertes",
+      "declencherZoneTitre": "Déclencher les notifications d'alerte",
+      "declencherZoneSub": "Envoyer les alertes à {{nb}} élève(s) en retard de paiement",
+      "colEleve": "Élève",
+      "colClasse": "Classe",
+      "colSoldeRestant": "Solde restant",
+      "dialogTitre": "Confirmer le déclenchement",
+      "dialogTexte": "Cette action va déclencher les notifications pour {{nb}} élève(s) en retard.",
+      "dialogNote": "Note : actuellement, cette action génère une entrée dans le journal du serveur. L'envoi réel de notifications (e-mail, SMS) sera activé dans une version ultérieure.",
+      "dialogConfirmer": "Déclencher",
+      "declencheSucces": "Alertes déclenchées — {{nb}} notification(s) traitée(s).",
+      "erreurDeclenchement": "Erreur lors du déclenchement. Veuillez réessayer.",
+      "seuilTitre": "Configuration du seuil d'alerte",
+      "seuilLabel": "Nombre de jours de retard avant alerte",
+      "jours": "jours",
+      "replier": "Replier",
+      "configurer": "Configurer",
+      "seuilSauvegarder": "Sauvegarder",
+      "seuilSauvegarde": "Seuil mis à jour avec succès."
+    },
+    "etats": {
+      "titre": "États & rapports financiers",
+      "sousTitre": "Versements par classe et totaux par période",
+      "ongletClasse": "Par classe",
+      "ongletPeriode": "Par période",
+      "classe": "Classe",
+      "classePlaceholder": "Sélectionner une classe…",
+      "afficher": "Afficher",
+      "calculer": "Calculer",
+      "aucunEleve": "Aucun élève pour cette classe.",
+      "dateDebut": "Date de début",
+      "dateFin": "Date de fin",
+      "erreurDates": "La date de fin doit être après la date de début.",
+      "erreurChargement": "Erreur lors du chargement des données.",
+      "colEleve": "Élève",
+      "colMatricule": "Matricule",
+      "colScolarite": "Scolarité",
+      "colVerse": "Total versé",
+      "colSolde": "Solde restant",
+      "colTaux": "% versé",
+      "total": "Total",
+      "totalVerse": "Total versé sur la période",
+      "nombreVersements": "Nombre de versements"
+    }
+  },
+
+  "paie": {
+    "baremes": {
+      "titre": "Barèmes de paie",
+      "sousTitre": "Configurer les taux et montants applicables à chaque type de contrat",
+      "nouveau": "Nouveau barème",
+      "creer": "Créer le barème",
+      "enregistrer": "Enregistrer",
+      "annuler": "Annuler",
+      "actualiser": "Actualiser",
+      "lectureSeule": "Seul l'administrateur principal (SUPER_ADMIN) peut créer ou modifier les barèmes.",
+      "aucun": "Aucun barème configuré.",
+      "aucunSub": "Créez le premier barème en cliquant sur le bouton ci-dessous.",
+      "tousConfigures": "Les barèmes des 3 types de contrat sont déjà configurés.",
+      "erreurChargement": "Impossible de charger les barèmes.",
+      "erreurEnregistrement": "Erreur lors de l'enregistrement. Veuillez réessayer.",
+      "erreurSuppression": "Erreur lors de la suppression. Veuillez réessayer.",
+      "form": {
+        "titreCreation": "Nouveau barème",
+        "titreEdition": "Modifier le barème",
+        "sectionContrat": "Type de contrat",
+        "sectionSalarial": "Retenues salariales",
+        "sectionPatronal": "Charges patronales",
+        "typeContrat": "Type de contrat",
+        "typeContratPlaceholder": "Sélectionner…",
+        "typeContrats": {
+          "VACATAIRE": "Vacataire",
+          "SEMI_PERMANENT": "Semi-permanent",
+          "PERMANENT": "Permanent"
+        },
+        "tauxIRPP": "Taux IRPP (%)",
+        "tauxCentimesAdditionnelsIRPP": "Centimes additionnels IRPP (%)",
+        "montantTaxeCommunale": "Taxe communale (FCFA)",
+        "tauxCreditFoncierSalarial": "Crédit foncier salarial (%)",
+        "montantRedevanceAudiovisuelle": "Redevance audiovisuelle (FCFA)",
+        "tauxPensionVieillesseSalarial": "Pension vieillesse salariale (%)",
+        "tauxCreditFoncierPatronal": "Crédit foncier patronal (%)",
+        "tauxFNE": "FNE (%)",
+        "tauxPensionVieillessePatronal": "Pension vieillesse patronale (%)",
+        "tauxAllocationsFamilialesPatronal": "Allocations familiales patronales (%)",
+        "tauxAccidentTravailPatronal": "Accident du travail patronal (%)"
+      },
+      "cols": {
+        "typeContrat": "Type de contrat",
+        "tauxIRPP": "IRPP",
+        "centimesIRPP": "Centimes add. IRPP",
+        "taxeCommune": "Taxe communale",
+        "cfSalarial": "CF salarial",
+        "redevance": "Redevance audiovisuelle",
+        "pensionSal": "Pension vieillesse sal.",
+        "cfPatronal": "CF patronal",
+        "fne": "FNE",
+        "pensionPat": "Pension vieillesse pat.",
+        "allocFamiliales": "Allocations familiales",
+        "accidentTravail": "Accident du travail"
+      }
+    },
+    "bulletins": {
+      "titre": "Bulletins de paie",
+      "sousTitre": "Générer un bulletin et consulter l'historique des bulletins d'un agent",
+      "sectionGeneration": "Générer un bulletin",
+      "sectionGenerationSub": "Sélectionnez un agent, renseignez la période et validez",
+      "sectionHistorique": "Historique des bulletins",
+      "sectionHistoriqueSub": "Consultez et téléchargez les bulletins passés d'un agent",
+      "etape": "Étape",
+      "recherchePersonnel": "Rechercher un agent",
+      "recherchePlaceholder": "Nom ou matricule…",
+      "rechercherBtn": "Rechercher",
+      "aucunPersonnel": "Aucun agent trouvé pour cette recherche.",
+      "changerPersonnel": "Changer d'agent",
+      "periode": "Période",
+      "moisLabel": "Mois",
+      "anneeLabel": "Année",
+      "modePaiement": "Mode de paiement",
+      "modeBILLETAGE": "Billetage",
+      "modeVIREMENT_BANCAIRE": "Virement bancaire",
+      "datePaiement": "Date de paiement",
+      "heuresEffectuees": "Heures effectuées",
+      "tauxHoraire": "Taux horaire (FCFA/h)",
+      "generer": "Générer le bulletin",
+      "champsRequis": "Veuillez remplir tous les champs obligatoires.",
+      "succes": "Bulletin généré avec succès",
+      "montantBrut": "Montant brut",
+      "montantNet": "Montant net",
+      "telechargerBulletin": "Télécharger le bulletin PDF",
+      "telechargerOrdre": "Télécharger l'ordre de virement PDF",
+      "voirHistorique": "Voir l'historique de cet agent",
+      "nouveauBulletin": "Générer un autre bulletin",
+      "erreurR19": "Virement bancaire impossible : cet agent n'a pas de coordonnées bancaires enregistrées.",
+      "erreurR19Lien": "Compléter la fiche de cet agent",
+      "erreurGeneration": "Erreur lors de la génération. Veuillez réessayer.",
+      "erreurPdf": "Impossible de télécharger le PDF. Veuillez réessayer.",
+      "erreurChargement": "Erreur lors du chargement de l'historique. Veuillez réessayer.",
+      "aucunBulletin": "Aucun bulletin généré pour cet agent.",
+      "colPeriode": "Période",
+      "colBrut": "Brut (FCFA)",
+      "colNet": "Net (FCFA)",
+      "colMode": "Mode",
+      "colDate": "Date paiement",
+      "pdfBtn": "Bulletin PDF",
+      "ordreBtn": "Ordre de virement",
+      "typeContrats": {
+        "VACATAIRE": "Vacataire",
+        "SEMI_PERMANENT": "Semi-permanent",
+        "PERMANENT": "Permanent"
+      }
+    }
+  },
+
+  "commun": {
+    "annuler": "Annuler",
+    "chargement": "Chargement…"
+  },
+
+  "communication": {
+    "commun": {
+      "requis": "Ce champ est obligatoire.",
+      "annuler": "Annuler",
+      "creer": "Créer",
+      "modifier": "Enregistrer",
+      "erreurEnregistrement": "Une erreur est survenue. Veuillez réessayer.",
+      "erreurChargement": "Impossible de charger les données."
+    },
+    "actualites": {
+      "titre": "Actualités",
+      "nouvelle": "Nouvelle actualité",
+      "successCreation": "Actualité créée avec succès.",
+      "successModification": "Actualité modifiée avec succès.",
+      "rechercheLabel": "Rechercher par titre…",
+      "limitationAdmin": "Seules les actualités publiées apparaissent ici — l'API ne retourne pas encore les brouillons en mode admin.",
+      "form": {
+        "titreCreation": "Nouvelle actualité",
+        "titreEdition": "Modifier l'actualité",
+        "titre": "Titre",
+        "titrePh": "ex. Résultats au Baccalauréat 2026",
+        "contenu": "Contenu",
+        "contenuPh": "Rédigez le texte de l'actualité…",
+        "contenuHint": "Texte brut ou HTML basique accepté (<b>, <i>, <ul>…). L'aperçu final est visible sur le site public.",
+        "datePublication": "Date de publication",
+        "imageUrl": "URL de l'image (optionnel)",
+        "imageUrlPh": "https://exemple.com/image.jpg",
+        "imageUrlHint": "Collez l'adresse URL d'une image hébergée — aucun fichier n'est téléversé dans cette version.",
+        "publie": "Publier immédiatement",
+        "publieHint": "Par défaut en brouillon — cochez pour publier directement sur le site."
+      },
+      "cols": {
+        "titre": "Titre",
+        "datePublication": "Date de publication",
+        "statut": "Statut",
+        "statuts": {
+          "publie": "Publié",
+          "brouillon": "Brouillon"
+        },
+        "actions": {
+          "publier": "Publier",
+          "depublier": "Dépublier"
+        }
+      }
+    },
+    "calendrier": {
+      "titre": "Calendrier scolaire",
+      "nouvelEvenement": "Nouvel événement",
+      "form": {
+        "titreCreation": "Nouvel événement",
+        "titreEdition": "Modifier l'événement",
+        "libelle": "Libellé",
+        "libellePh": "ex. Rentrée scolaire 2026-2027",
+        "description": "Description (optionnel)",
+        "descriptionPh": "Informations complémentaires sur l'événement…",
+        "dateDebut": "Date de début",
+        "dateFin": "Date de fin (optionnel — laisser vide si événement d'un seul jour)",
+        "dateFinCourt": "Date de fin (optionnel)",
+        "dateFinInvalide": "La date de fin doit être postérieure à la date de début."
+      },
+      "cols": {
+        "libelle": "Événement",
+        "dateDebut": "Début",
+        "dateFin": "Fin"
+      },
+      "badge": {
+        "passe": "Passé",
+        "avenir": "À venir",
+        "enCours": "En cours"
+      }
+    },
+    "contenu": {
+      "titre": "Contenu du site",
+      "sousTitre": "Ces blocs alimentent directement la vitrine publique. Chaque modification est immédiatement visible sur le site.",
+      "enregistrer": "Enregistrer",
+      "succes": "Contenu enregistré.",
+      "nonRenseigne": "Pas encore renseigné — le texte ci-dessous est un exemple de ton attendu (placeholder).",
+      "nonEnregistre": "Non enregistré",
+      "fichierUrlLabel": "URL de fichier associé (optionnel)",
+      "fichierUrlPh": "https://exemple.com/document.pdf",
+      "avisUrl": "Collez une URL — aucun fichier n'est téléversé dans cette version.",
+      "cles": {
+        "MOT_FONDATEUR": {
+          "label": "Mot du fondateur",
+          "description": "Citation affichée en italique dans la section « École » de la vitrine. Ton attendu : une phrase courte et inspirante."
+        },
+        "HORAIRES_COURS": {
+          "label": "Horaires de cours",
+          "description": "Texte libre affiché dans la section « Vie scolaire ». S'il est renseigné, il remplace les horaires par défaut."
+        },
+        "ACTIVITES_PERISCOLAIRES": {
+          "label": "Activités périscolaires",
+          "description": "Texte libre affiché dans la section « Vie scolaire », colonne Activités."
+        },
+        "COMMENT_INSCRIRE": {
+          "label": "Comment s'inscrire",
+          "description": "Texte complémentaire affiché dans la section « Admissions » au-dessus du bouton d'inscription."
+        }
+      }
+    },
+    "equipe": {
+      "titre": "Équipe pédagogique",
+      "nouveauMembre": "Nouveau membre",
+      "form": {
+        "titreCreation": "Nouveau membre",
+        "titreEdition": "Modifier le membre",
+        "nom": "Nom complet",
+        "nomPh": "ex. Jean Dupont",
+        "fonction": "Fonction",
+        "fonctionPh": "ex. Professeur de Mathématiques",
+        "photoUrl": "URL de la photo (optionnel)",
+        "photoUrlPh": "https://exemple.com/photo.jpg",
+        "photoUrlHint": "Collez l'adresse URL d'une photo hébergée — aucun fichier n'est téléversé dans cette version.",
+        "photoPreview": "Aperçu de la photo",
+        "ordre": "Ordre d'affichage (les plus petits nombres apparaissent en premier)"
+      },
+      "cols": {
+        "ordre": "Ordre",
+        "nom": "Nom",
+        "fonction": "Fonction"
       }
     }
   },
@@ -396,6 +1156,125 @@
       "imprimer": "Imprimer la fiche",
       "supprimer": "Supprimer",
       "suppressionInfo": "Suppression soumise à autorisation"
+    }
+  },
+
+  "comptes": {
+    "titre": "Comptes utilisateurs",
+    "nouveau": "Nouveau compte",
+    "creerDepuisPersonnel": "Créer un compte",
+    "filtres": {
+      "tousRoles": "Tous les rôles",
+      "tousStatuts": "Tous les statuts",
+      "actif": "Actif",
+      "inactif": "Inactif"
+    },
+    "colonnes": {
+      "email": "E-mail",
+      "roles": "Rôle(s)",
+      "personnel": "Personnel lié",
+      "statut": "Statut"
+    },
+    "statut": {
+      "actif": "Actif",
+      "inactif": "Inactif"
+    },
+    "roles": {
+      "SUPER_ADMIN":   "Super Admin",
+      "SECRETARIAT":   "Secrétariat",
+      "ECONOMAT":      "Économat",
+      "ENSEIGNANT":    "Enseignant",
+      "COMMUNICATION": "Communication",
+      "PARENT":        "Parent"
+    },
+    "actions": {
+      "modifierRoles":   "Modifier les rôles",
+      "reinitialiserMdp": "Réinitialiser le mot de passe",
+      "desactiver":      "Désactiver le compte",
+      "reactiver":       "Réactiver le compte"
+    },
+    "creer": {
+      "titre": "Créer un compte",
+      "titrePersonnel": "Créer un compte — {{nom}}",
+      "email": "Adresse e-mail",
+      "nom": "Nom",
+      "prenom": "Prénom (optionnel)",
+      "roles": "Rôle(s)",
+      "rolesPlaceholder": "Sélectionner au moins un rôle",
+      "roleObligatoire": "Le rôle ne peut pas être pré-sélectionné pour un personnel non-enseignant — veuillez choisir explicitement.",
+      "erreurChamps": "Veuillez saisir l'e-mail et sélectionner au moins un rôle.",
+      "erreurEnseignantPersonnel": "Un enseignant doit être lié à une fiche Personnel.",
+      "erreurNomObligatoire": "Le nom est obligatoire si aucun Personnel n'est sélectionné.",
+      "erreurPersonnelDejaLie": "Ce Personnel est déjà lié à un compte actif.",
+      "personnelLie": "Personnel lié",
+      "personnel": "Lier à un Personnel (optionnel)",
+      "personnelPlaceholder": "Nom, prénom ou matricule…",
+      "personnelAucun": "Aucun personnel sans compte",
+      "confirmer": "Créer le compte",
+      "creation": "Création…"
+    },
+    "motDePasseTemporaire": {
+      "titre": "Compte créé — Mot de passe temporaire",
+      "titreMdp": "Mot de passe temporaire",
+      "titreMdpReset": "Mot de passe réinitialisé",
+      "avertissement": "Ce mot de passe s'affiche une seule fois et ne pourra jamais être récupéré. Communiquez-le immédiatement à l'utilisateur et invitez-le à le changer lors de sa première connexion.",
+      "copier": "Copier",
+      "copie": "Copié !",
+      "confirmer": "J'ai noté le mot de passe — Fermer"
+    },
+    "modifierRoles": {
+      "titre": "Modifier les rôles",
+      "confirmer": "Enregistrer",
+      "enregistrement": "Enregistrement…"
+    },
+    "reinitialiser": {
+      "titre": "Réinitialiser le mot de passe",
+      "message": "Le mot de passe actuel de <strong>{{email}}</strong> sera immédiatement invalidé. Un nouveau mot de passe temporaire sera généré et affiché une seule fois.",
+      "confirmer": "Réinitialiser",
+      "reinitialisation": "Réinitialisation…"
+    },
+    "desactiver": {
+      "titre": "Désactiver le compte",
+      "message": "Le compte de <strong>{{email}}</strong> sera désactivé. Les sessions actives restent valables jusqu'à expiration naturelle du token (15 min).",
+      "confirmer": "Désactiver",
+      "desactivation": "Désactivation…"
+    },
+    "reactiver": {
+      "titre": "Réactiver le compte",
+      "message": "Le compte de <strong>{{email}}</strong> sera réactivé et l'utilisateur pourra se connecter de nouveau.",
+      "confirmer": "Réactiver",
+      "reactivation": "Réactivation…"
+    },
+    "successCree":      "Compte créé avec succès.",
+    "successRoles":     "Rôles mis à jour.",
+    "successReinit":    "Mot de passe réinitialisé.",
+    "successDesactive": "Compte désactivé.",
+    "successReactive":  "Compte réactivé."
+  },
+
+  "dashboard": {
+    "devise": "FCFA",
+    "effectifs": {
+      "titre": "Élèves inscrits",
+      "hint": "Répartition par sous-système",
+      "intake": "+{{n}} cette semaine",
+      "capacite": "élèves sur {{capacity}} places"
+    },
+    "recouvrement": {
+      "titre": "Recouvrement scolarité",
+      "encaisse": "Encaissé",
+      "attendu": "Attendu",
+      "resteARecouvrer": "Reste à recouvrer"
+    },
+    "activites": {
+      "titre": "Dernières activités",
+      "journalBtn": "Journal complet"
+    },
+    "alertes": {
+      "titre": "Alertes en attente"
+    },
+    "evenements": {
+      "titre": "Prochains événements"
     }
   }
 }

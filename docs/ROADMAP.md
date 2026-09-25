@@ -46,13 +46,13 @@ données du tableau de bord (après F09+ probablement, pas prioritaire).
 | F07ter | Affichage visuel réservé/confirmé sur le dashboard parent | ✅ Fait | Backend-21 |
 | F08 | App interne — Élève CRUD complet (établit le pattern PrimeNG de référence : table + formulaire) | ⏳ À faire | F01 |
 | F09 | App interne — Paramétrage (classes, trimestres, taux, quotas, matières, coefficients, niveaux, modèles lettre) | ✅ Fait | F08 |
-| F10 | App interne — Personnel (CRUD + désactivation R10) + Emploi du temps (vue calendrier, R4) | ⏳ À faire | F08 |
-| F11 | App interne — Résultats (saisie notes, validation R13/R21, bulletins) | ⏳ À faire | F08, F10 |
-| F12 | App interne — Discipline (sanctions, bons de sortie, règles R5/R15) | ⏳ À faire | F08 |
-| F13 | App interne — Finances (versements, validation bancaire R18, moratoires, états) | ⏳ À faire | F08 |
-| F14 | App interne — Paie (barèmes, bulletins R17/R19, ordres de virement) | ⏳ À faire | F10 |
+| F10 | App interne — Personnel (CRUD + désactivation R10) + Emploi du temps (vue calendrier, R4) | ✅ Fait | F08 |
+| F11 | App interne — Résultats (saisie notes, validation R13/R21, bulletins) | ✅ Fait | F08, F10 |
+| F12 | App interne — Discipline (sanctions, bons de sortie, règles R5/R15) | ✅ Fait | F08 |
+| F13 | App interne — Finances (versements, validation bancaire R18, moratoires, alertes, états) | ✅ Fait | F08 |
+| F14 | App interne — Paie (barèmes, bulletins R17/R19, ordres de virement) | ✅ Fait | F10 |
 | F15 | App interne — Cahier de texte (saisie + vraie logique offline, R20) | ⏳ À faire | F10, F11 |
-| F16 | Back-office Vitrine (actualités, contenu, équipe pédagogique — CRUD SUPER_ADMIN/COMMUNICATION) | ⏳ À faire | F08 |
+| F16 | Back-office Vitrine (actualités, contenu, équipe pédagogique — CRUD SUPER_ADMIN/COMMUNICATION) | ✅ Fait | F08 |
 | F17 | Passe qualité : revue visuelle, accessibilité, responsive, lint/analyse statique | ⏳ À faire | Tout le reste |
 
 ## Notes de séquencement

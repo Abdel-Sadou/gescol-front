@@ -1,20 +1,29 @@
-// TODO(API): STATS → remplacer par EtablissementService.getStatistiques()
-export const STATS: { value: string; label: string }[] = [
-    { value: '35',    label: "ans d'excellence académique" },
-    { value: '1 350', label: 'élèves accueillis chaque année' },
-    { value: '96%',   label: 'de réussite aux examens officiels' },
-    { value: '48',    label: 'salles de classe équipées' },
+// STATS, PRESENTATION, NEWS, STEPS, VIE_SCOLAIRE retirés du repli statique —
+// ces tableaux contenaient des affirmations factuelles inventées propres à COBIMAG
+// (dates de fondation, taux de réussite, horaires précis…). Remplacés par des
+// tableaux vides : les sections correspondantes de vitrine.ts affichent désormais
+// un message neutre "Bientôt disponible" lorsque l'API ne retourne pas de données.
+// Voir PROMPT_F16 pour le détail de la décision.
+
+export const STATS: { value: string; label: string }[] = [];
+
+export const PRESENTATION: { title: string; text: string }[] = [];
+
+export const STEPS: { n: number; title: string; text: string }[] = [];
+
+export const NEWS: { date: string; tag: string; title: string; excerpt: string }[] = [];
+
+export const VIE_SCOLAIRE: { title: string; items: string[] }[] = [
+    { title: 'Horaires',              items: [] },
+    { title: 'Activités',             items: [] },
+    { title: 'Cantine & Transport',   items: [] }
 ];
 
-// TODO(API): PRESENTATION → remplacer par VitrineService.getContenu('PRESENTATION_*')
-export const PRESENTATION: { title: string; text: string }[] = [
-    { title: 'Historique', text: "Fondé en 1991 à Yaoundé, le Collège Bilingue Marie Gisèle est né de la volonté d'offrir une éducation biculturelle exigeante, ancrée dans les deux systèmes éducatifs nationaux." },
-    { title: 'Mission',    text: 'Former des élèves rigoureux, bilingues et méthodiques, capables de réussir dans le sous-système francophone comme anglophone.' },
-    { title: 'Vision',     text: "Devenir une référence de l'excellence bilingue au Cameroun, reconnue pour la solidité de sa pédagogie et la réussite durable de ses anciens élèves." },
-    { title: 'Valeurs',    text: "Discipline, rigueur et méthode guident chaque enseignement, chaque évaluation et chaque relation au sein de l'établissement." },
-];
-
-// TODO(API): CYCLES → remplacer par VitrineService.getCycles()
+// CYCLES, SYSTEM_FR, SYSTEM_EN conservés en repli — décrivent la structure
+// générale du système éducatif camerounais (BEPC, Bac, GCE, cycles), pas
+// une affirmation propre à COBIMAG. POINT OUVERT : vérifier avec l'établissement
+// que les noms de classes (6ème → Terminale, Form 1 → Upper Sixth) et les
+// examens listés correspondent bien à l'organisation réelle du collège.
 export interface CycleData { fr: string; frClasses: string; en: string; enClasses: string; desc: string; }
 export const CYCLES: CycleData[] = [
     { fr: "Cycle d'Observation", frClasses: '6ème – 5ème', en: 'Observation Cycle',  enClasses: 'Form 1 – Form 2',         desc: "Consolidation des bases fondamentales et adaptation à l'enseignement secondaire." },
@@ -22,7 +31,9 @@ export const CYCLES: CycleData[] = [
     { fr: 'Second Cycle',        frClasses: '2nde – Terminale', en: 'Advanced Level', enClasses: 'Lower Sixth – Upper Sixth', desc: "Spécialisation et préparation aux examens de fin d'études secondaires (Baccalauréat / GCE A-Level)." },
 ];
 
-// TODO(API): SYSTEM_FR, SYSTEM_EN → remplacer par VitrineService.getSousSystemes()
+// SYSTEM_FR / SYSTEM_EN : structure générale du système éducatif camerounais.
+// POINT OUVERT : vérifier avec l'établissement que les examens listés
+// (CEP, BEPC, Bac, FSLC, GCE O-Level, GCE A-Level) sont bien tous préparés.
 export interface SystemData {
     badge: string; badgeBg: string; badgeColor: string;
     bg: string; color: string; border: string; tagBorder: string;
@@ -42,27 +53,3 @@ export const SYSTEM_EN: SystemData = {
     desc: 'Curriculum aligned with Cameroon GCE Board requirements, preparing students for the FSLC, GCE O-Level and A-Level.',
     tags: ['FSLC', 'GCE O-Level', 'GCE A-Level'],
 };
-
-// TODO(API): VIE_SCOLAIRE → remplacer par VitrineService.getContenu('HORAIRES_COURS') + getContenu('ACTIVITES_PERISCOLAIRES')
-export const VIE_SCOLAIRE: { title: string; items: string[] }[] = [
-    { title: 'Horaires', items: ['Lundi – Vendredi : 7h00 – 15h30', 'Étude surveillée : 15h30 – 17h00', 'Portail ouvert dès 6h30'] },
-    { title: 'Activités péri- et post-scolaires', items: ['Clubs de langues français / anglais', 'Sport : football, basketball, athlétisme', 'Musique, théâtre et arts plastiques', 'Soutien scolaire en fin de journée'] },
-    { title: 'Cantine & Transport', items: ['Cantine sur place, menus équilibrés', 'Service de transport scolaire sécurisé', 'Circuits couvrant les principaux quartiers de Yaoundé'] },
-];
-
-// TODO(API): NEWS → remplacer par VitrineService.getActualites()
-// Fallback visuel uniquement — affiché quand le backend est indisponible.
-// Pas de lien vers une page article : ces données ne sont pas dans le backend.
-export const NEWS: { date: string; tag: string; title: string; excerpt: string }[] = [
-    { date: '12 juin 2026',  tag: 'Examens',      title: 'Excellents résultats au Baccalauréat et au GCE A-Level 2026', excerpt: 'Le COBIMAG enregistre un taux de réussite record dans les deux sous-systèmes cette année.' },
-    { date: '28 mai 2026',   tag: 'Vie scolaire', title: "Semaine bilingue : sections francophone et anglophone à l'honneur", excerpt: "Une semaine d'échanges linguistiques et culturels entre les deux sections de l'établissement." },
-    { date: '15 mai 2026',   tag: 'Admissions',   title: 'Ouverture des inscriptions pour 2026-2027', excerpt: 'Les dossiers de préinscription sont désormais disponibles pour les nouvelles familles.' },
-];
-
-// TODO(API): STEPS → remplacer par VitrineService.getContenu('ETAPES_INSCRIPTION')
-export const STEPS: { n: number; title: string; text: string }[] = [
-    { n: 1, title: 'Retirer le dossier',       text: 'Téléchargez ou récupérez le dossier de préinscription en ligne ou au secrétariat.' },
-    { n: 2, title: 'Constituer le dossier',    text: "Rassemblez les pièces requises : bulletins, acte de naissance, photos d'identité." },
-    { n: 3, title: 'Test de positionnement',   text: "L'élève passe un test d'évaluation permettant d'orienter son affectation de classe." },
-    { n: 4, title: 'Confirmation & paiement',  text: "Après admission, confirmez l'inscription et réglez les frais de scolarité." },
-];

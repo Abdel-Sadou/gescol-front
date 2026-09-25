@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -32,18 +32,26 @@ import { PageResponse } from '@/app/core/services/eleve.service';
         <!-- ── Trimestres ────────────────────────────────────────────────── -->
         <div class="card mb-4">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.trimestres.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-calendar mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.trimestres.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.trimestres.nouveau')"
                         class="p-button-success" (click)="openCreateTrimestre()"></button>
                 }
             </div>
+            @if (trimestreSuccessMsg()) {
+                <p-message severity="success" [text]="trimestreSuccessMsg()!" class="mb-3 block"></p-message>
+            }
             <gescol-table #trimestreTable
                 [columns]="trimestreColumns(t)"
                 [data]="trimestreData()"
                 [showView]="true"
                 [showEdit]="canWrite()"
                 [showDelete]="canWrite()"
+                [tooltipView]="t('parametrage.trimestres.voirSequences')"
+                [selectedId]="selectedTrimestre()?.id ?? null"
                 (load)="onLoadTrimestre($event)"
                 (view)="onSelectTrimestre($event)"
                 (edit)="openEditTrimestre($event)"
@@ -53,7 +61,7 @@ import { PageResponse } from '@/app/core/services/eleve.service';
 
         <!-- ── Séquences du trimestre sélectionné ────────────────────────── -->
         @if (selectedTrimestre()) {
-            <div class="card">
+            <div class="card" #sequencesPanel>
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                     <div>
                         <h2 class="text-xl font-semibold m-0">{{ t('parametrage.trimestres.sequences.titre') }}</h2>
@@ -64,6 +72,9 @@ import { PageResponse } from '@/app/core/services/eleve.service';
                             class="p-button-success p-button-sm" (click)="openCreateSequence()"></button>
                     }
                 </div>
+                @if (sequenceSuccessMsg()) {
+                    <p-message severity="success" [text]="sequenceSuccessMsg()!" class="mb-3 block"></p-message>
+                }
                 @if (loadingSequences()) {
                     <div class="flex justify-center py-6">
                         <i class="pi pi-spin pi-spinner" style="font-size:2rem;color:var(--p-primary-color)"></i>
@@ -222,6 +233,7 @@ export class TrimestresListe implements OnInit {
     private transloco   = inject(TranslocoService);
 
     @ViewChild('trimestreTable') trimestreTable!: GescolTableComponent;
+    @ViewChild('sequencesPanel') sequencesPanelEl!: ElementRef;
 
     readonly anneeScolaireOptions = signal<AnneeScolaireOption[]>(getAnneeScolaireOptions());
 
@@ -231,6 +243,7 @@ export class TrimestresListe implements OnInit {
     readonly selectedTrimestreForEdit = signal<TrimestreResponse | null>(null);
     readonly trimestreSaving          = signal(false);
     readonly trimestreSaveError       = signal<string | null>(null);
+    readonly trimestreSuccessMsg      = signal<string | null>(null);
 
     // Séquences
     readonly selectedTrimestre  = signal<TrimestreResponse | null>(null);
@@ -245,12 +258,13 @@ export class TrimestresListe implements OnInit {
     readonly selectedSequenceForEdit = signal<SequenceResponse | null>(null);
     readonly sequenceSaving          = signal(false);
     readonly sequenceSaveError       = signal<string | null>(null);
+    readonly sequenceSuccessMsg      = signal<string | null>(null);
 
     deleteVisible = false;
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    canWrite = () => this.authService.role() === 'SUPER_ADMIN';
+    readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
     readonly trimestreForm = this.fb.group({
         libelle:      ['', Validators.required],
@@ -294,6 +308,9 @@ export class TrimestresListe implements OnInit {
 
     onSelectTrimestre(row: TrimestreResponse): void {
         this.selectedTrimestre.set(row);
+        setTimeout(() => {
+            this.sequencesPanelEl?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
     }
 
     // Trimestre CRUD
@@ -332,7 +349,13 @@ export class TrimestresListe implements OnInit {
         const item = this.selectedTrimestreForEdit();
         const req$ = item ? this.svc.modifierTrimestre(item.id, req) : this.svc.creerTrimestre(req);
         req$.subscribe({
-            next: () => { this.trimestreSaving.set(false); this.trimestreDialogVisible.set(false); this.trimestreTable?.resetPage(); },
+            next: () => {
+                this.trimestreSaving.set(false);
+                this.trimestreDialogVisible.set(false);
+                this.trimestreTable?.resetPage();
+                this.trimestreSuccessMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.trimestreSuccessMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.trimestreSaving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;
@@ -383,7 +406,13 @@ export class TrimestresListe implements OnInit {
         const item = this.selectedSequenceForEdit();
         const req$ = item ? this.svc.modifierSequence(item.id, req) : this.svc.creerSequence(req);
         req$.subscribe({
-            next: () => { this.sequenceSaving.set(false); this.sequenceDialogVisible.set(false); this.loadAllSequences(); },
+            next: () => {
+                this.sequenceSaving.set(false);
+                this.sequenceDialogVisible.set(false);
+                this.loadAllSequences();
+                this.sequenceSuccessMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.sequenceSuccessMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.sequenceSaving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

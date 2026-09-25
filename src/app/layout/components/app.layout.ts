@@ -75,14 +75,14 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                                 } @else {
                                     <!-- Section accordéon -->
                                     <div class="nav__section-wrap">
-                                        <!-- FIX 5 : aria-expanded présent -->
                                         <button
                                             type="button"
                                             class="nav__section-hd"
                                             [class.is-expanded]="isSectionExpanded(entry.label)"
                                             [class.is-active]="isSectionActive(entry)"
+                                            [class.is-flyout-open]="isFlyoutOpen(entry.label)"
                                             [attr.aria-expanded]="isSectionExpanded(entry.label)"
-                                            (click)="handleSectionClick(entry)"
+                                            (click)="handleSectionClick(entry, $event)"
                                             [title]="entry.label"
                                         >
                                             <i [class]="entry.icon" class="nav__section-icon" aria-hidden="true"></i>
@@ -137,6 +137,26 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                     <span class="lang__year">{{ schoolYear }}</span>
                 </div>
             </aside>
+
+            <!-- ── Flyout submenu tablette (icônes seules, ≤ 1080px) ──────── -->
+            @if (flyoutSection()) {
+                <div class="nav-flyout-backdrop" (click)="closeFlyout()" aria-hidden="true"></div>
+                <div class="nav-flyout" [style.top.px]="flyoutTop()" role="navigation" [attr.aria-label]="flyoutSection()!.label">
+                    <p class="nav-flyout__title">
+                        <i [class]="flyoutSection()!.icon" aria-hidden="true"></i>
+                        {{ flyoutSection()!.label }}
+                    </p>
+                    @for (child of flyoutSection()!.children; track child.routerLink) {
+                        <a
+                            class="nav-flyout__item"
+                            [routerLink]="child.routerLink"
+                            routerLinkActive="nav-flyout__item--active"
+                            [routerLinkActiveOptions]="{ exact: false }"
+                            (click)="closeFlyout()"
+                        >{{ child.label }}</a>
+                    }
+                </div>
+            }
 
             <!-- ── Main ────────────────────────────────────────────────────── -->
             <div class="main">
@@ -265,10 +285,10 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             font-family: var(--font-serif);
             font-size: 20px;
             font-weight: 700;
-            color: #fff;
-            background: var(--color-primary);
+            color: var(--color-primary-dark);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius-full);
-            box-shadow: 0 0 0 2px rgba(232, 114, 44, 0.55);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
         }
 
         .brand__text {
@@ -301,16 +321,28 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         /* ── Navigation ─────────────────────────────────────────────────────── */
         .nav { flex: 1; }
 
-        .nav__group { margin-bottom: 20px; }
+        .nav__group { margin-bottom: 6px; }
+
+        .nav__group + .nav__group { margin-top: 12px; }
 
         .nav__group-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin: 0;
-            padding: 0 22px 8px;
-            font-size: 10.5px;
+            padding: 0 22px 7px;
+            font-size: 9.5px;
             font-weight: 700;
-            letter-spacing: 1.4px;
+            letter-spacing: 1.8px;
             text-transform: uppercase;
-            color: var(--color-text-on-dark-muted);
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .nav__group-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         /* Lien direct ── FIX 3 : border-color dans transition */
@@ -364,11 +396,20 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         .nav__section-hd:hover { background: rgba(255,255,255,0.09); color: #fff; }
 
         .nav__section-hd.is-active {
-            color: rgba(255,255,255,0.92);
-            border-left-color: rgba(232, 114, 44, 0.5);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.06);
+            border-left-color: rgba(232, 114, 44, 0.55);
         }
 
-        .nav__section-hd.is-expanded { color: #fff; }
+        .nav__section-hd.is-expanded {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .nav__section-hd.is-active.is-expanded {
+            background: rgba(255, 255, 255, 0.09);
+            border-left-color: var(--color-accent);
+        }
 
         .nav__section-icon { font-size: 15px; flex-shrink: 0; }
         .nav__section-label { flex: 1; }
@@ -402,18 +443,33 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             grid-template-rows: 1fr;
         }
 
-        /* Le wrapper interne masque le débordement pendant l'animation */
-        .nav__children-inner { overflow: hidden; padding-bottom: 0; }
+        /* Ligne de piste verticale reliant les sous-items */
+        .nav__children-inner {
+            overflow: hidden;
+            padding-bottom: 0;
+            position: relative;
+        }
+
+        .nav__children-inner::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 4px;
+            bottom: 4px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.10);
+            pointer-events: none;
+        }
 
         .nav__children.is-open .nav__children-inner { padding-bottom: 4px; }
 
-        /* Sous-items ── FIX 3 : border-color dans transition */
+        /* Sous-items — couleur atténuée pour hiérarchie claire */
         .nav__child {
             display: block;
-            padding: 7px 22px 7px 52px;
+            padding: 6px 22px 6px 52px;
             font-size: 12.5px;
             font-weight: 400;
-            color: var(--color-text-on-dark);
+            color: rgba(255, 255, 255, 0.60);
             text-decoration: none;
             border-left: 3px solid transparent;
             white-space: nowrap;
@@ -422,8 +478,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             transition: background 0.12s, color 0.12s, border-color 0.12s;
         }
 
-        /* FIX 6 : hover 0.05 → 0.08 */
-        .nav__child:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .nav__child:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.90); }
 
         .nav__child--active {
             background: rgba(232, 114, 44, 0.14);
@@ -644,11 +699,70 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
         /* ── Contenu ────────────────────────────────────────────────────────── */
         .content { flex: 1; min-height: 0; padding: 24px 26px; overflow-y: auto; }
 
+        /* ── Flyout submenu ─────────────────────────────────────────────────── */
+        .nav-flyout-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 399;
+        }
+
+        .nav-flyout {
+            position: fixed;
+            left: 72px;
+            min-width: 210px;
+            max-width: 260px;
+            background: var(--color-primary-dark);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 6px 0 28px rgba(0, 0, 0, 0.30);
+            z-index: 400;
+            overflow: hidden;
+        }
+
+        .nav-flyout__title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            padding: 12px 16px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.40);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-flyout__title i { font-size: 14px; }
+
+        .nav-flyout__item {
+            display: block;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: background 0.12s, color 0.12s;
+        }
+
+        .nav-flyout__item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .nav-flyout__item--active {
+            background: rgba(232, 114, 44, 0.15);
+            border-left-color: var(--color-accent);
+            color: #fff;
+            font-weight: 500;
+        }
+
         /* ── Tablette ≤ 1080 px : icônes seules ─────────────────────────────── */
         @media (max-width: 1080px) {
-            .sidebar { width: 78px; }
+            .sidebar { width: 72px; }
 
-            /* FIX 8 : display: revert → valeurs explicites */
             .brand__text, .nav__group-label, .lang__year, .brand__tagline { display: none; }
             .nav__item span   { display: none; }
             .nav__section-label { display: none; }
@@ -656,25 +770,85 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
 
             .brand, .lang { justify-content: center; padding-inline: 0; }
 
+            /* Séparateur visuel entre groupes de nav */
+            .nav__group { margin-bottom: 0; }
+            .nav__group + .nav__group {
+                margin-top: 0;
+                padding-top: 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            /* Icônes plus grandes pour tablette */
+            .nav__item i,
+            .nav__section-icon { font-size: 18px; }
+
+            /* Item direct */
             .nav__item {
                 justify-content: center;
-                padding-inline: 0;
+                padding: 11px 0;
                 border-left-width: 0;
                 border-right: 3px solid transparent;
                 transition: background 0.15s, color 0.15s, border-color 0.15s;
+                position: relative;
             }
-            .nav__item--active { border-right-color: var(--color-accent); border-left-color: transparent; }
 
+            .nav__item--active {
+                background: rgba(232, 114, 44, 0.18);
+                border-right-color: var(--color-accent);
+                border-left-color: transparent;
+                color: #fff;
+            }
+
+            /* Section accordéon — en-tête */
             .nav__section-hd {
                 justify-content: center;
-                padding-inline: 0;
+                padding: 11px 0;
                 border-left-width: 0;
                 border-right: 3px solid transparent;
+                position: relative;
             }
-            .nav__section-hd.is-active { border-right-color: rgba(232, 114, 44, 0.7); border-left-color: transparent; }
+
+            .nav__section-hd.is-active {
+                background: rgba(255, 255, 255, 0.09);
+                border-right-color: var(--color-accent);
+                border-left-color: transparent;
+            }
 
             /* Children masqués en mode icônes */
             .nav__children { grid-template-rows: 0fr !important; pointer-events: none; }
+
+            /* État de l'icône quand son flyout est ouvert */
+            .nav__section-hd.is-flyout-open {
+                background: rgba(255, 255, 255, 0.12);
+                color: #fff;
+                border-right-color: var(--color-accent);
+            }
+
+            /* Tooltip CSS au survol — affiche le label sans délai navigateur */
+            .nav__item::after,
+            .nav__section-hd::after {
+                content: attr(title);
+                position: absolute;
+                left: calc(100% + 10px);
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 5px 12px;
+                background: rgba(17, 45, 30, 0.97);
+                color: rgba(255, 255, 255, 0.92);
+                font-size: 12px;
+                font-family: var(--font-sans);
+                font-weight: 500;
+                white-space: nowrap;
+                border-radius: 7px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.14s ease;
+                z-index: 400;
+            }
+
+            .nav__item:hover::after,
+            .nav__section-hd:hover::after { opacity: 1; }
         }
 
         /* ── Mobile ≤ 767 px : overlay pleine largeur ───────────────────────── */
@@ -699,9 +873,9 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             .nav__section-label { display: block; }
             .nav__section-arrow { display: inline-block; }
 
-            /* Children ré-activés (override 1080px) */
+            /* Children ré-activés — !important obligatoire pour écraser le 1080px */
             .nav__children { pointer-events: auto; }
-            .nav__children.is-open { grid-template-rows: 1fr; }
+            .nav__children.is-open { grid-template-rows: 1fr !important; }
 
             .brand  { padding: 0 22px 24px; justify-content: flex-start; }
             .lang   { padding: 16px 22px;   justify-content: flex-start; }
@@ -740,6 +914,8 @@ export class AppLayout {
     readonly sidebarOverlayOpen = signal(false);
     readonly profileMenuOpen    = signal(false);
     readonly expandedSections   = signal<Set<string>>(new Set());
+    readonly flyoutSection      = signal<NavSection | null>(null);
+    readonly flyoutTop          = signal(0);
 
     private readonly _pageTitle  = signal('Tableau de bord');
     private readonly _currentUrl = signal('');
@@ -791,10 +967,10 @@ export class AppLayout {
             while (route.firstChild) route = route.firstChild;
             this._pageTitle.set(route.data['breadcrumb'] ?? 'Tableau de bord');
             this.sidebarOverlayOpen.set(false);
+            this.flyoutSection.set(null);
             this.autoExpand(url);
         });
     }
-
     @HostListener('document:click', ['$event'])
     onDocClick(e: MouseEvent): void {
         if (this.profileMenuOpen() && !this.elRef.nativeElement.contains(e.target)) {
@@ -804,6 +980,7 @@ export class AppLayout {
 
     toggleSidebar(): void { this.sidebarOverlayOpen.update(v => !v); }
     closeSidebar():  void { this.sidebarOverlayOpen.set(false); }
+    closeFlyout():   void { this.flyoutSection.set(null); }
     setLang(lang: Lang): void { this.langService.setLang(lang); }
 
     toggleProfileMenu(e: MouseEvent): void { e.stopPropagation(); this.profileMenuOpen.update(v => !v); }
@@ -818,21 +995,30 @@ export class AppLayout {
         return entry.children.some(c => url.startsWith(c.routerLink));
     }
 
-    protected handleSectionClick(entry: NavSection): void {
+    protected isFlyoutOpen(label: string): boolean {
+        return this.flyoutSection()?.label === label;
+    }
+
+    protected handleSectionClick(entry: NavSection, event?: MouseEvent): void {
         const w = window.innerWidth;
         if (w > 767 && w <= 1080) {
-            void this.router.navigate([entry.firstRoute]);
-            this.closeSidebar();
+            if (this.flyoutSection()?.label === entry.label) {
+                this.closeFlyout();
+            } else {
+                const rect = (event?.currentTarget as HTMLElement)?.getBoundingClientRect();
+                this.flyoutTop.set(rect?.top ?? 0);
+                this.flyoutSection.set(entry);
+            }
         } else {
+            this.closeFlyout();
             this.toggleSection(entry.label);
         }
     }
 
     private toggleSection(label: string): void {
         this.expandedSections.update(s => {
-            const next = new Set(s);
-            if (next.has(label)) next.delete(label); else next.add(label);
-            return next;
+            if (s.has(label)) return new Set<string>();   // ferme si déjà ouverte
+            return new Set<string>([label]);              // ouvre en fermant tout le reste
         });
     }
 
@@ -840,7 +1026,8 @@ export class AppLayout {
         for (const group of this.navGroups()) {
             for (const entry of group.entries) {
                 if (entry.kind === 'section' && entry.children.some(c => url.startsWith(c.routerLink))) {
-                    this.expandedSections.update(s => { const n = new Set(s); n.add(entry.label); return n; });
+                    this.expandedSections.set(new Set<string>([entry.label]));
+                    return;
                 }
             }
         }
@@ -950,19 +1137,34 @@ export class AppLayout {
             finEntries.push(this.section(this.t('menu.paie.label'), 'pi pi-money-bill', ch));
         }
 
-        // ── Administration ────────────────────────────────────────────────────
-        const admEntries: NavEntry[] = [];
+        // ── Équipe (Personnel) ───────────────────────────────────────────────
+        const equipeEntries: NavEntry[] = [];
 
         if (['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT'].includes(role)) {
             const ch: NavItem[] = [this.item(this.t('menu.personnel.liste'), '', '/app/personnel')];
             if (['SUPER_ADMIN', 'SECRETARIAT'].includes(role)) {
                 ch.push(this.item(this.t('menu.personnel.nouveau'), '', '/app/personnel/nouveau'));
             }
-            admEntries.push(this.section(this.t('menu.personnel.label'), 'pi pi-id-card', ch));
+            equipeEntries.push(this.section(this.t('menu.personnel.label'), 'pi pi-id-card', ch));
         }
 
+        // ── Communication ────────────────────────────────────────────────────
+        const commEntries: NavEntry[] = [];
+
+        if (['SUPER_ADMIN', 'COMMUNICATION'].includes(role)) {
+            commEntries.push(this.section(this.t('menu.communication.label'), 'pi pi-megaphone', [
+                this.item(this.t('menu.communication.actualites'), '', '/app/communication/actualites'),
+                this.item(this.t('menu.communication.calendrier'), '', '/app/communication/calendrier'),
+                this.item(this.t('menu.communication.contenu'),    '', '/app/communication/contenu'),
+                this.item(this.t('menu.communication.equipe'),     '', '/app/communication/equipe'),
+            ]));
+        }
+
+        // ── Système (Paramétrage + Comptes) — SUPER_ADMIN uniquement ─────────
+        const sysEntries: NavEntry[] = [];
+
         if (role === 'SUPER_ADMIN') {
-            admEntries.push(this.section(this.t('menu.parametrage.label'), 'pi pi-cog', [
+            sysEntries.push(this.section(this.t('menu.parametrage.label'), 'pi pi-cog', [
                 this.item(this.t('menu.parametrage.classes'),           '', '/app/parametrage/classes'),
                 this.item(this.t('menu.parametrage.trimestres'),        '', '/app/parametrage/trimestres'),
                 this.item(this.t('menu.parametrage.tauxScolarite'),     '', '/app/parametrage/taux-scolarite'),
@@ -972,21 +1174,15 @@ export class AppLayout {
                 this.item(this.t('menu.parametrage.niveaux'),           '', '/app/parametrage/niveaux'),
                 this.item(this.t('menu.parametrage.modelesEngagement'), '', '/app/parametrage/modeles-engagement'),
             ]));
-        }
-
-        if (['SUPER_ADMIN', 'COMMUNICATION'].includes(role)) {
-            admEntries.push(this.section(this.t('menu.communication.label'), 'pi pi-megaphone', [
-                this.item(this.t('menu.communication.actualites'), '', '/app/communication/actualites'),
-                this.item(this.t('menu.communication.calendrier'), '', '/app/communication/calendrier'),
-                this.item(this.t('menu.communication.contenu'),    '', '/app/communication/contenu'),
-                this.item(this.t('menu.communication.equipe'),     '', '/app/communication/equipe'),
-            ]));
+            sysEntries.push(this.item(this.t('menu.administration.comptes'), 'pi pi-lock', '/app/administration/comptes'));
         }
 
         const groups: NavGroup[] = [home];
-        if (scolEntries.length) groups.push({ label: 'Scolarité',      entries: scolEntries });
-        if (finEntries.length)  groups.push({ label: 'Finances',       entries: finEntries  });
-        if (admEntries.length)  groups.push({ label: 'Administration', entries: admEntries  });
+        if (scolEntries.length)   groups.push({ label: this.t('nav.groupes.scolarite'),     entries: scolEntries   });
+        if (finEntries.length)    groups.push({ label: this.t('nav.groupes.finances'),      entries: finEntries    });
+        if (equipeEntries.length) groups.push({ label: this.t('nav.groupes.equipe'),        entries: equipeEntries });
+        if (commEntries.length)   groups.push({ label: this.t('nav.groupes.communication'), entries: commEntries   });
+        if (sysEntries.length)    groups.push({ label: this.t('nav.groupes.systeme'),       entries: sysEntries    });
         return groups;
     }
 }

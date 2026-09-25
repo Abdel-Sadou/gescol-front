@@ -1,0 +1,55 @@
+@if (data(); as d) {
+  <cob-dashboard-hero
+    [badge]="badge"
+    [greeting]="greeting()"
+    [focus]="focus()"
+    [facts]="facts()"
+  />
+
+  <cob-kpi-grid [kpis]="kpis()" />
+
+  <div class="main-grid">
+    <cob-task-queue [taches]="d.taches" [busyId]="busyId()" (act)="onAct($event)" />
+
+    <section class="panel" aria-labelledby="site-title">
+      <header class="panel__head site__head">
+        <h2 class="panel__title" id="site-title">Sur la vitrine en ce moment</h2>
+        <a class="site__open" [href]="'https://' + siteHost()" target="_blank" rel="noopener">Ouvrir le site ↗</a>
+      </header>
+
+      @if (d.aLaUne; as une) {
+        <figure class="browser">
+          <div class="browser__bar" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <span class="browser__url">{{ siteHost() }}{{ une.url }}</span>
+          </div>
+          <div class="browser__body">
+            @if (une.imageUrl) {
+              <img class="browser__img" [src]="une.imageUrl" alt="" />
+            } @else {
+              <div class="browser__img browser__img--empty"><span>Photo à ajouter</span></div>
+            }
+            <figcaption class="browser__text">
+              <span class="browser__tag">À la une</span>
+              <span class="browser__title">{{ une.titre }}</span>
+              <span class="browser__meta">Publié le {{ date(une.publieLe) }} · {{ lectures(une.lectures) }} lectures</span>
+            </figcaption>
+          </div>
+        </figure>
+      }
+
+      <p class="site__label">Contenus du site</p>
+      <ul class="blocks">
+        @for (b of blocks(); track b.cle) {
+          <li class="blocks__row">
+            <span class="blocks__dot" [class.blocks__dot--stale]="b.stale" aria-hidden="true"></span>
+            <span class="blocks__name">{{ b.libelle }}</span>
+            <span class="blocks__meta" [class.blocks__meta--stale]="b.stale">{{ b.meta }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  </div>
+} @else {
+  <cob-dashboard-state [status]="status()" (retry)="reload()" />
+}
