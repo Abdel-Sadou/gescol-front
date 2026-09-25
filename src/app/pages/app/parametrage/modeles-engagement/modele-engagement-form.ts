@@ -101,11 +101,8 @@ const VARIABLES_DISPONIBLES = [
 
             <!-- Barre d'action ancrée en bas -->
             @if (!loadingItem() && !loadError()) {
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.75rem 1.25rem; margin:1.5rem -1.25rem -1.25rem; background:var(--color-surface-sunken); border-top:1px solid var(--color-border); border-radius:0 0 var(--radius-md) var(--radius-md); flex-wrap:wrap">
-                    <span style="font-size:0.8rem; color:var(--color-text-muted)">
-                        {{ t('parametrage.modelesEngagement.form.variablesHint') }}
-                    </span>
-                    <div style="display:flex; gap:0.5rem; margin-left:auto">
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:1rem; padding:0.75rem 1.25rem; margin:1.5rem -1.25rem -1.25rem; background:var(--color-surface-sunken); border-top:1px solid var(--color-border); border-radius:0 0 var(--radius-md) var(--radius-md); flex-wrap:wrap">
+                    <div style="display:flex; gap:0.5rem">
                         <button pButton type="button" severity="secondary"
                             [label]="t('parametrage.modelesEngagement.annuler')"
                             [disabled]="saving()"

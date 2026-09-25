@@ -43,7 +43,8 @@
     },
     "presentation": {
       "surtitle": "About us",
-      "titre": "Our history, our values"
+      "titre": "Our history, our values",
+      "vide": "Content coming soon."
     },
     "equipe": {
       "titre": "Our teaching staff",
@@ -87,8 +88,10 @@
       "vide": "Information coming soon."
     },
     "cantine": {
-      "titre": "Canteen & Transport"
-    }
+      "titre": "Canteen & Transport",
+      "vide": "Information coming soon."
+    },
+    "bientotDisponible": "School life details are being set up. Check back soon for timetables, activities and services."
   },
   "actualites": {
     "surtitle": "News",
@@ -116,7 +119,8 @@
     "titre": "How to enrol your child",
     "texteDefaut": "To enrol your child at Marie Gisèle Bilingual College, start by creating your parent account online, then follow the enrolment steps. Our team is with you every step of the way.",
     "cta": "Enrol my child",
-    "demarrer": "Start online enrolment"
+    "demarrer": "Start online enrolment",
+    "stepsVide": "Enrolment steps are being configured. Start your application online or contact the school office for information."
   },
   "footer": {
     "droits": "All rights reserved.",
@@ -124,6 +128,7 @@
     "liensRapides": "Quick links",
     "reseauxSociaux": "Social media",
     "mentionsLegales": "Legal notice",
-    "accesSecretariat": "Staff access"
+    "accesSecretariat": "Staff access",
+    "connexionPersonnel": "Staff portal →"
   }
 }

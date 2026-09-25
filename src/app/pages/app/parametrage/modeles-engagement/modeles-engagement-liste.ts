@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +20,10 @@ import { PageResponse } from '@/app/core/services/eleve.service';
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
         <div class="card">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.modelesEngagement.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-file-edit mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.modelesEngagement.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.modelesEngagement.nouveau')"
                         class="p-button-success"
@@ -58,7 +61,7 @@ export class ModelesEngagementListe {
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    canWrite = () => this.authService.role() === 'SUPER_ADMIN';
+    readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
     columns(t: (k: string) => string): ColDef[] {
         return [

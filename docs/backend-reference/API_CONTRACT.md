@@ -537,7 +537,7 @@ Tri par défaut : `nom`. Champs autorisés : `nom`, `matricule`.
 **Corps** : identique POST | **Réponse 200** | **Erreurs** : 404
 
 ### `DELETE /api/eleves/{id}` — Supprimer
-**Réponse 204** | **Erreurs** : 404, 409 (élève a des notes ou des versements — cf. MASTER_CONTEXT.md R7)
+**Réponse 204** | **Erreurs** : 404, 409 (élève a des notes ou des versements — cf. MASTER_CONTEXT.md R2)
 
 ---
 
@@ -609,6 +609,87 @@ Tri par défaut : `nom`. Champs autorisés : `nom`, `matricule`.
 ### `PUT /api/personnel/{id}/reactiver`
 **Accès** : `SUPER_ADMIN`, `SECRETARIAT`  
 **Réponse 200** : `PersonnelResponse` (champ `actif` devient `true`) | **Erreurs** : 404
+
+### `GET /api/personnel/sans-compte` — Personnel sans compte actif
+**Accès** : `SUPER_ADMIN`
+
+Retourne la liste (non paginée) des membres du personnel actifs qui n'ont pas encore de compte `Utilisateur` actif lié. Utilisé pour alimenter le sélecteur "Choisir un personnel" dans le formulaire de création de compte.
+
+**Réponse 200** : `List<PersonnelResponse>` — même structure que `GET /api/personnel`, triée par nom.
+
+---
+
+## Module 4b — Gestion des comptes utilisateurs (`/api/utilisateurs`)
+
+**Accès** : `SUPER_ADMIN` exclusivement (module le plus sensible — attribue les accès)
+
+> Le rôle `PARENT` n'est jamais créé ici ; il est réservé à l'auto-inscription publique (`POST /api/parent/comptes`).
+
+### `POST /api/utilisateurs` — Créer un compte
+
+**Réponse 201** : `UtilisateurCreatedResponse` — le mot de passe temporaire est retourné **une seule fois** dans cet appel, jamais récupérable ensuite.
+
+**Corps** :
+| Champ | Type | Contraintes |
+|-------|------|-------------|
+| `email` | string (email) | Obligatoire, unique dans l'établissement |
+| `nom` | string | Optionnel si `personnelId` fourni (dérivé du Personnel) — obligatoire sinon |
+| `prenom` | string | Optionnel (dérivé du Personnel si `personnelId` fourni) |
+| `roles` | array enum | Obligatoire, au moins un — valeurs : `SUPER_ADMIN`, `SECRETARIAT`, `ECONOMAT`, `ENSEIGNANT`, `COMMUNICATION` |
+| `personnelId` | UUID | **Obligatoire si rôle `ENSEIGNANT`** — optionnel pour les autres rôles |
+
+> **Workflow recommandé pour un ENSEIGNANT** : appeler d'abord `GET /api/personnel/sans-compte` pour récupérer la liste, sélectionner le Personnel souhaité, puis soumettre avec `personnelId`. `nom` et `prenom` peuvent être omis, ils sont hérités du Personnel.
+
+**Réponse 201** :
+| Champ | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | |
+| `email` | string | |
+| `nom` | string | |
+| `prenom` | string \| null | |
+| `roles` | array string | |
+| `actif` | boolean | Toujours `true` à la création |
+| `personnelId` | UUID \| null | |
+| `personnelNom` | string \| null | Nom du Personnel lié (évite un aller-retour frontend) |
+| `personnelPrenom` | string \| null | |
+| `dateCreation` | LocalDateTime | |
+| `motDePasseTemporaire` | string | **Présent uniquement dans cette réponse** |
+
+**Erreurs** :
+- 400 : rôle `PARENT` demandé, ou validation échouée
+- 400 : rôle `ENSEIGNANT` sans `personnelId`
+- 400 : `nom` absent et aucun `personnelId` fourni pour le dériver
+- 409 : email déjà utilisé dans l'établissement
+- 409 : R22 — `personnelId` déjà lié à un compte actif
+
+### `GET /api/utilisateurs` — Liste paginée
+
+**Paramètres** :
+| Paramètre | Type | Description |
+|-----------|------|-------------|
+| `actif` | boolean | Optionnel — filtre par statut |
+| `role` | enum | Optionnel — filtre par rôle |
+
+**Réponse 200** : `PageResponse<UtilisateurResponse>` — identique à `UtilisateurCreatedResponse` **sans** `motDePasseTemporaire`
+
+### `PUT /api/utilisateurs/{id}/roles` — Modifier les rôles
+
+**Corps** : `{ "roles": ["SECRETARIAT", "ECONOMAT"] }`  
+**Réponse 200** : `UtilisateurResponse` | **Erreurs** : 400 (PARENT refusé), 404
+
+### `PUT /api/utilisateurs/{id}/reinitialiser-mot-de-passe`
+
+**Réponse 200** : `{ "motDePasseTemporaire": "..." }` — nouveau mot de passe aléatoire, retourné une seule fois  
+**Erreurs** : 404
+
+### `PUT /api/utilisateurs/{id}/desactiver`
+
+**Réponse 204** — le compte ne peut plus se connecter (le blocage a lieu au `loadUserByUsername` : l'utilisateur inactif n'est pas trouvé → 401 au login). Les tokens JWT existants restent valides jusqu'à leur expiration (15 min).  
+**Erreurs** : 404
+
+### `PUT /api/utilisateurs/{id}/reactiver`
+
+**Réponse 204** | **Erreurs** : 404
 
 ---
 
@@ -1613,3 +1694,147 @@ Si elle est inexistante **ou** dépubliée (`publie = false`) : **404 dans les d
 | `QUOTAS_MODIFIER` | Configuré manuellement | POST/PUT/DELETE `/api/quotas-horaires` |
 | `NOTES_VALIDER` | Configuré manuellement | `PUT /api/resultats/notes/valider` |
 | `QUOTAS_VALIDER` | Configuré manuellement | (cf. MASTER_CONTEXT.md) |
+
+---
+
+## F17 — Tableaux de bord par rôle
+
+### Objet commun `TacheResponse`
+```json
+{
+  "id": "eco-val-uuid",
+  "module": "Validation bancaire",
+  "titre": "Kevin Nkoa, 5ème A — 150 000 FCFA",
+  "detail": "Bordereau n° 44812",
+  "priorite": "HAUTE",
+  "echeance": "2026-09-23",
+  "echeanceLibelle": null,
+  "action": {
+    "libelle": "Valider",
+    "type": "COMMANDE",
+    "methode": "PUT",
+    "endpoint": "/api/finances/versements/{id}/valider",
+    "confirmation": "Valider ce versement ?"
+  }
+}
+```
+Tri serveur : `priorite` (HAUTE > MOYENNE > BASSE), puis `echeance` croissante. **8 tâches maximum.**  
+`action.type = "NAVIGUER"` → champ `route` (les autres sont null).  
+`action.type = "COMMANDE"` → champs `methode`, `endpoint`, `confirmation` (les autres sont null).
+
+---
+
+### `GET /api/tableau-de-bord/direction`
+**Rôles :** SUPER_ADMIN uniquement
+
+**Réponse :**
+```json
+{
+  "effectifs": { "total": 1384, "capacite": 1450, "francophones": 872, "anglophones": 512, "variation7j": 38 },
+  "recouvrement": { "taux": 68, "encaisse": 421380000, "attendu": 619675000, "reste": 198295000, "variationAnneePrecedente": -4 },
+  "notesValidation": {
+    "sequence": "Séquence 1", "tauxGlobal": 61, "echeance": "2026-09-30",
+    "niveauxAJour": 9, "niveauxTotal": 14,
+    "niveaux": [ { "sousSysteme": "FR", "niveau": "6ème", "taux": 92 } ]
+  },
+  "discipline": { "incidents7j": 12, "escalades": 2, "retardsRepetes": 7 },
+  "taches": [ ]
+}
+```
+
+---
+
+### `GET /api/tableau-de-bord/secretariat`
+**Rôles :** SECRETARIAT, SUPER_ADMIN
+
+**Réponse :**
+```json
+{
+  "inscriptions": { "septJours": 38, "semainePrecedente": 27, "francophones": 24, "anglophones": 14 },
+  "dossiersIncomplets": { "nombre": 0, "echeance": null, "pieceLaPlusManquante": "" },
+  "bonsSortieJour": [
+    { "id": "uuid", "heureSortie": "10:15", "eleve": "Aïcha Fomba", "classe": "Lower Sixth",
+      "motif": "Rendez-vous administratif", "retourPrevu": null, "heureRetour": null, "statut": "SORTI" }
+  ],
+  "moratoires": { "demandes": 5, "enAttenteEconomat": 2 },
+  "taches": [ ]
+}
+```
+Note : `dossiersIncomplets.nombre` retourne toujours 0 (PARTIE 3 — non construit).
+
+---
+
+### `GET /api/tableau-de-bord/economat`
+**Rôles :** ECONOMAT, SUPER_ADMIN
+
+**Réponse :**
+```json
+{
+  "recouvrement": { "taux": 68, "encaisse": 421380000, "attendu": 619675000, "reste": 198295000, "variationAnneePrecedente": -4 },
+  "encaissements7j": [ { "date": "2026-09-17", "montant": 2100000, "nombre": 24 } ],
+  "variationSemaine": 12,
+  "partMobileMoney": 61,
+  "retards": { "familles": 34, "montant": 8900000, "relanceDeclenchee": false },
+  "validationsBancaires": { "nombre": 12, "montant": 3400000 },
+  "paie": { "mois": "Septembre", "statut": "A_GENERER", "echeance": "2026-09-25", "agents": 64, "baremePublie": false },
+  "prochaineEcheance": { "libelle": "Clôture Séquence 1", "date": "2026-09-30" },
+  "taches": [ ]
+}
+```
+`encaissements7j` contient **toujours 7 entrées**, jours sans versement à 0.
+
+---
+
+### `GET /api/tableau-de-bord/enseignant`
+**Rôles :** ENSEIGNANT uniquement (jamais SUPER_ADMIN — intentionnel)
+
+**Réponse :**
+```json
+{
+  "creneauxJour": [
+    { "id": "uuid", "debut": "10:30", "fin": "12:30", "classe": "Form 3B", "sousSysteme": "EN",
+      "matiere": "Mathematics", "salle": null, "cahierRenseigne": false }
+  ],
+  "heuresSemaine": { "effectuees": 14, "quota": 18 },
+  "notes": { "sequence": "Séquence 1", "classesSaisies": 3, "classesTotal": 5,
+             "echeance": "2026-09-28", "notesRestantes": 46, "classesRestantes": ["5ème A"] },
+  "cahierTexte": { "tauxAJour": 92, "seancesNonRenseignees": 2 },
+  "sanctions30j": 2,
+  "synchronisation": { "etat": "SYNCHRONISE", "derniere": "2026-09-23T09:42:00" },
+  "taches": [ ]
+}
+```
+`salle` est toujours null (EmploiDuTemps n'a pas de champ salle).
+
+---
+
+### `GET /api/tableau-de-bord/communication`
+**Rôles :** COMMUNICATION, SUPER_ADMIN
+
+**Réponse :**
+```json
+{
+  "actualites": { "publiees": 18, "ceMois": 3, "brouillonsPrets": 2, "dernierePublication": "2026-09-20" },
+  "evenements": { "aVenir": 4, "mois": "septembre", "prochain": { "titre": "Réunion des parents", "date": "2026-10-05" } },
+  "contenus": [ { "cle": "REGLEMENT", "libelle": "REGLEMENT", "modifieLe": "2025-09-01", "aRevoir": true, "motif": "Non modifié depuis le début de l'année scolaire" } ],
+  "aLaUne": { "titre": "Excellents résultats…", "publieLe": "2026-06-12", "lectures": 1240, "imageUrl": null, "url": "/actualites/uuid" },
+  "equipeSansPhoto": 3,
+  "taches": [ ]
+}
+```
+
+---
+
+### Endpoints COMMANDE référencés par la file « À traiter »
+
+| Bouton | Méthode + route | Rôle |
+|--------|-----------------|------|
+| Valider déclaration bancaire | `PUT /api/finances/versements/:id/valider` | ECONOMAT, SUPER_ADMIN |
+| Rejeter déclaration bancaire | `PUT /api/finances/versements/:id/rejeter` | ECONOMAT, SUPER_ADMIN |
+| Déclencher relances | `POST /api/finances/alertes/declencher` | ECONOMAT, SUPER_ADMIN |
+| Enregistrer retour (bon de sortie) | `PUT /api/discipline/bons-sortie/:id/entree` | SECRETARIAT, SUPER_ADMIN |
+| Publier actualité | `PUT /api/vitrine/actualites/:id/publier` | COMMUNICATION, SUPER_ADMIN |
+
+### Endpoint ajouté — `PUT /api/vitrine/actualites/:id/publier`
+Publie un brouillon (met `publie = true`). Corps vide. Réponse : `ActualiteResponse` mis à jour.  
+**Rôles :** COMMUNICATION, SUPER_ADMIN

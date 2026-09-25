@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
@@ -31,12 +31,18 @@ interface SelectOption { value: string; label: string; }
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
         <div class="card">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.tauxScolarite.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-money-bill mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.tauxScolarite.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.tauxScolarite.nouveau')"
                         class="p-button-success" (click)="openCreate()"></button>
                 }
             </div>
+            @if (successMsg()) {
+                <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
+            }
             <gescol-table #tableRef
                 [columns]="columns(t)"
                 [data]="data()"
@@ -118,6 +124,7 @@ export class TauxScolariteListe implements OnInit {
     readonly selectedItem  = signal<TauxScolariteResponse | null>(null);
     readonly saving        = signal(false);
     readonly saveError     = signal<string | null>(null);
+    readonly successMsg    = signal<string | null>(null);
     readonly classeOptions        = signal<SelectOption[]>([]);
     readonly anneeScolaireOptions = signal<AnneeScolaireOption[]>(getAnneeScolaireOptions());
 
@@ -125,9 +132,7 @@ export class TauxScolariteListe implements OnInit {
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    // SCOLARITE_TAUX_MODIFIER est une permission manuelle non visible dans le JWT
-    // On restreint à SUPER_ADMIN (garantie d'avoir cette permission) côté UX
-    canWrite = () => this.authService.role() === 'SUPER_ADMIN';
+    readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
     readonly form = this.fb.group({
         classeId:     [null as string | null, Validators.required],
@@ -186,7 +191,13 @@ export class TauxScolariteListe implements OnInit {
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierTaux(item.id, req) : this.svc.creerTaux(req);
         req$.subscribe({
-            next: () => { this.saving.set(false); this.dialogVisible.set(false); this.tableRef?.resetPage(); },
+            next: () => {
+                this.saving.set(false);
+                this.dialogVisible.set(false);
+                this.tableRef?.resetPage();
+                this.successMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.successMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.saving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

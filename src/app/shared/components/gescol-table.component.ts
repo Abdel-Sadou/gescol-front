@@ -6,15 +6,19 @@ import { Table, TableModule, TableLazyLoadEvent } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
+import { TagModule } from 'primeng/tag';
 import { TranslocoModule } from '@jsverse/transloco';
 import type { PageResponse } from '@/app/core/services/eleve.service';
 
 export interface ColDef {
     field: string;
-    header: string;     // déjà traduit par le parent
-    sortable?: boolean; // whitelist de tri : n'activer que les champs autorisés par le backend
+    header: string;           // déjà traduit par le parent
+    sortable?: boolean;       // whitelist de tri : n'activer que les champs autorisés par le backend
     width?: string;
-    date?: boolean;     // afficher comme date DD/MM/YYYY
+    date?: boolean;           // afficher comme date DD/MM/YYYY
+    boolean?: boolean;        // afficher comme badge oui/non
+    booleanTrueLabel?: string;
+    booleanFalseLabel?: string;
 }
 
 export interface GescolLoadEvent {
@@ -26,7 +30,8 @@ export interface GescolLoadEvent {
 @Component({
     selector: 'gescol-table',
     standalone: true,
-    imports: [CommonModule, TableModule, ButtonModule, TooltipModule, MessageModule, TranslocoModule, DatePipe],
+    imports: [CommonModule, TableModule, ButtonModule, TooltipModule, MessageModule, TagModule, TranslocoModule, DatePipe],
+    styles: [`.gescol-row-selected td { background: var(--p-highlight-bg) !important; }`],
     template: `
         <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
             @if (state === 'error') {
@@ -64,29 +69,34 @@ export interface GescolLoadEvent {
                                     <th [style]="col.width ? 'width:' + col.width : ''">{{ col.header }}</th>
                                 }
                             }
-                            @if (showView || showEdit || showDelete) {
-                                <th style="width:110px;text-align:center">{{ t('table.actions') }}</th>
+                            @if (showView || showEdit || showDelete || showToggleActive || showCustomAction) {
+                                <th style="width:150px;text-align:center">{{ t('table.actions') }}</th>
                             }
                         </tr>
                     </ng-template>
                     <ng-template #body let-row>
-                        <tr>
+                        <tr [class.gescol-row-selected]="selectedId && row['id'] === selectedId">
                             @for (col of columns; track col.field) {
                                 <td>
-                                    @if (col.date) {
+                                    @if (col.boolean) {
+                                        <p-tag
+                                            [value]="row[col.field] ? (col.booleanTrueLabel ?? 'Oui') : (col.booleanFalseLabel ?? 'Non')"
+                                            [severity]="row[col.field] ? 'success' : 'danger'">
+                                        </p-tag>
+                                    } @else if (col.date) {
                                         {{ row[col.field] | date:'dd/MM/yyyy' }}
                                     } @else {
                                         {{ row[col.field] }}
                                     }
                                 </td>
                             }
-                            @if (showView || showEdit || showDelete) {
+                            @if (showView || showEdit || showDelete || showToggleActive || showCustomAction) {
                                 <td style="text-align:center">
                                     <div class="flex gap-1 justify-center">
                                         @if (showView) {
-                                            <button pButton icon="pi pi-eye"
+                                            <button pButton [icon]="iconView"
                                                 class="p-button-text p-button-sm p-button-info"
-                                                [pTooltip]="t('table.voir')" tooltipPosition="top"
+                                                [pTooltip]="tooltipView || t('table.voir')" tooltipPosition="top"
                                                 (click)="view.emit(row)"></button>
                                         }
                                         @if (showEdit) {
@@ -94,6 +104,20 @@ export interface GescolLoadEvent {
                                                 class="p-button-text p-button-sm p-button-success"
                                                 [pTooltip]="t('table.modifier')" tooltipPosition="top"
                                                 (click)="edit.emit(row)"></button>
+                                        }
+                                        @if (showToggleActive) {
+                                            <button pButton
+                                                [icon]="row['actif'] ? 'pi pi-pause' : 'pi pi-play'"
+                                                [class]="row['actif'] ? 'p-button-text p-button-sm p-button-warning' : 'p-button-text p-button-sm p-button-success'"
+                                                [pTooltip]="row['actif'] ? tooltipDeactivate : tooltipReactivate"
+                                                tooltipPosition="top"
+                                                (click)="toggleActive.emit(row)"></button>
+                                        }
+                                        @if (showCustomAction && customActionCondition(row)) {
+                                            <button pButton [icon]="iconCustomAction"
+                                                [class]="customActionSeverity"
+                                                [pTooltip]="tooltipCustomAction" tooltipPosition="top"
+                                                (click)="customAction.emit(row)"></button>
                                         }
                                         @if (showDelete) {
                                             <button pButton icon="pi pi-trash"
@@ -108,7 +132,7 @@ export interface GescolLoadEvent {
                     </ng-template>
                     <ng-template #emptymessage>
                         <tr>
-                            <td [attr.colspan]="columns.length + (showView || showEdit || showDelete ? 1 : 0)"
+                            <td [attr.colspan]="columns.length + (showView || showEdit || showDelete || showToggleActive ? 1 : 0)"
                                 class="text-center py-8 text-surface-400">
                                 {{ t('table.aucun') }}
                             </td>
@@ -126,10 +150,24 @@ export class GescolTableComponent {
     @Input() showView = false;
     @Input() showEdit = true;
     @Input() showDelete = true;
-    @Output() load  = new EventEmitter<GescolLoadEvent>();
-    @Output() view  = new EventEmitter<any>();
-    @Output() edit  = new EventEmitter<any>();
-    @Output() delete = new EventEmitter<any>();
+    @Input() showToggleActive = false;
+    @Input() tooltipDeactivate = '';
+    @Input() tooltipReactivate = '';
+    @Input() tooltipView = '';
+    @Input() iconView = 'pi pi-eye';
+    @Input() selectedId: string | null = null;
+    // Action personnalisée optionnelle — conditionnelle par ligne.
+    @Input() showCustomAction  = false;
+    @Input() iconCustomAction  = 'pi pi-user-plus';
+    @Input() tooltipCustomAction = '';
+    @Input() customActionSeverity = 'p-button-text p-button-sm p-button-info';
+    @Input() customActionCondition: (row: any) => boolean = () => true;
+    @Output() load         = new EventEmitter<GescolLoadEvent>();
+    @Output() view         = new EventEmitter<any>();
+    @Output() edit         = new EventEmitter<any>();
+    @Output() delete       = new EventEmitter<any>();
+    @Output() toggleActive = new EventEmitter<any>();
+    @Output() customAction = new EventEmitter<any>();
 
     @ViewChild('dt') dt!: Table;
 

@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal, ViewChild, OnInit } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -20,7 +20,7 @@ interface SelectOption { value: string; label: string; }
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        ReactiveFormsModule, TranslocoDirective,
+        FormsModule, ReactiveFormsModule, TranslocoDirective,
         ButtonModule, DialogModule, SelectModule, InputNumberModule,
         MessageModule, FluidModule,
         GescolTableComponent, DeleteConfirmDialogComponent
@@ -29,11 +29,40 @@ interface SelectOption { value: string; label: string; }
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
         <div class="card">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('parametrage.coefficients.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-percentage mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('parametrage.coefficients.titre') }}
+                </h2>
                 @if (canWrite()) {
                     <button pButton icon="pi pi-plus" [label]="t('parametrage.coefficients.nouveau')"
                         class="p-button-success" (click)="openCreate()"></button>
                 }
+            </div>
+            @if (successMsg()) {
+                <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
+            }
+            <!-- Filtres rapides -->
+            <div class="flex gap-3 mb-3 flex-wrap">
+                <div style="min-width:200px;flex:1">
+                    <p-select
+                        [ngModel]="filterClasseId()"
+                        (ngModelChange)="onClasseFilterChange($event)"
+                        [options]="classeOptions()"
+                        optionLabel="label" optionValue="value"
+                        [showClear]="true"
+                        [placeholder]="t('parametrage.coefficients.filtreClassePh')">
+                    </p-select>
+                </div>
+                <div style="min-width:200px;flex:1">
+                    <p-select
+                        [ngModel]="filterMatiereId()"
+                        (ngModelChange)="onMatiereFilterChange($event)"
+                        [options]="matiereOptions()"
+                        optionLabel="label" optionValue="value"
+                        [showClear]="true"
+                        [placeholder]="t('parametrage.coefficients.filtreMatierePh')">
+                    </p-select>
+                </div>
             </div>
             <gescol-table #tableRef
                 [columns]="columns(t)"
@@ -117,15 +146,18 @@ export class CoefficientsListe implements OnInit {
     readonly dialogVisible = signal(false);
     readonly selectedItem  = signal<CoefficientResponse | null>(null);
     readonly saving        = signal(false);
-    readonly saveError     = signal<string | null>(null);
-    readonly classeOptions = signal<SelectOption[]>([]);
+    readonly saveError      = signal<string | null>(null);
+    readonly successMsg     = signal<string | null>(null);
+    readonly classeOptions  = signal<SelectOption[]>([]);
     readonly matiereOptions = signal<SelectOption[]>([]);
+    readonly filterClasseId  = signal<string | null>(null);
+    readonly filterMatiereId = signal<string | null>(null);
 
     deleteVisible = false;
     deleteLabel   = '';
     deleteFn: () => any = () => {};
 
-    canWrite = () => this.authService.role() === 'SUPER_ADMIN';
+    readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
     readonly form = this.fb.group({
         matiereId:[null as string | null, Validators.required],
@@ -154,10 +186,27 @@ export class CoefficientsListe implements OnInit {
 
     onLoad(event: GescolLoadEvent): void {
         this.data.set(undefined);
-        this.svc.getCoefficients(event.page, event.size, event.sort).subscribe({
-            next:  res => this.data.set(res),
-            error: ()  => this.data.set('error')
+        this.svc.getCoefficients(0, 500, event.sort).subscribe({
+            next: res => {
+                const cid = this.filterClasseId();
+                const mid = this.filterMatiereId();
+                let items = res.content;
+                if (cid) items = items.filter(i => i.classeId === cid);
+                if (mid) items = items.filter(i => i.matiereId === mid);
+                this.data.set({ content: items, page: 0, size: items.length, totalElements: items.length, totalPages: items.length > 0 ? 1 : 0 });
+            },
+            error: () => this.data.set('error')
         });
+    }
+
+    onClasseFilterChange(value: string | null): void {
+        this.filterClasseId.set(value);
+        this.tableRef?.resetPage();
+    }
+
+    onMatiereFilterChange(value: string | null): void {
+        this.filterMatiereId.set(value);
+        this.tableRef?.resetPage();
     }
 
     openCreate(): void {
@@ -186,7 +235,13 @@ export class CoefficientsListe implements OnInit {
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierCoefficient(item.id, req) : this.svc.creerCoefficient(req);
         req$.subscribe({
-            next: () => { this.saving.set(false); this.dialogVisible.set(false); this.tableRef?.resetPage(); },
+            next: () => {
+                this.saving.set(false);
+                this.dialogVisible.set(false);
+                this.tableRef?.resetPage();
+                this.successMsg.set(this.transloco.translate('app.parametrage.commun.successEnregistrement'));
+                setTimeout(() => this.successMsg.set(null), 4000);
+            },
             error: (err) => {
                 this.saving.set(false);
                 const msg = err?.error?.message ?? err?.error?.detail ?? null;

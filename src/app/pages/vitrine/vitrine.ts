@@ -13,7 +13,7 @@ import {
 } from '@/app/core/services/vitrine.service';
 import { CobimagBase } from '@/app/shared/cobimag-base';
 import {
-    CYCLES, SYSTEM_FR, SYSTEM_EN, STATS, PRESENTATION, VIE_SCOLAIRE, NEWS, STEPS,
+    CYCLES, SYSTEM_FR, SYSTEM_EN, STATS, PRESENTATION, VIE_SCOLAIRE, STEPS,
     SystemData
 } from '@/app/data/vitrine.data';
 
@@ -92,6 +92,7 @@ import {
       <a href="#admissions" (click)="scrollTo($event,'admissions'); closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.admissions') }}</a>
       <a href="#contact"     (click)="scrollTo($event,'contact');     closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.contact') }}</a>
       <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:10px; text-align:center; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14px; padding:12px; border-radius:3px; text-decoration:none;">{{ t('nav.espaceParent') }}</a>
+      <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:8px; text-align:center; font-size:12px; color:rgba(95,97,97,0.8); padding:6px 0; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
     </nav>
   }
 </header>
@@ -144,7 +145,8 @@ import {
   </div>
 </section>
 
-<!-- ══ STATS ═════════════════════════════════════════════════════════════ -->
+<!-- ══ STATS — masqué tant que l'API de statistiques n'est pas branchée ══ -->
+@if (stats.length > 0) {
 <section style="background:#008B47; padding:44px 24px;">
   <div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:28px; text-align:center;">
     @for (stat of stats; track $index) {
@@ -155,6 +157,7 @@ import {
     }
   </div>
 </section>
+}
 
 <!-- ══ ÉCOLE ═════════════════════════════════════════════════════════════ -->
 <section id="ecole" style="scroll-margin-top:110px; padding:72px 24px; background:#F7F8F6;">
@@ -169,8 +172,11 @@ import {
       <p style="text-transform:uppercase; letter-spacing:1.5px; font-size:12.5px; font-weight:700; color:#E8722C; margin:0;">{{ t('ecole.motFondateur.surtitle') }}</p>
     </div>
     <div style="display:flex; gap:44px; flex-wrap:wrap; align-items:center; margin-bottom:72px;">
-      <div style="flex:1; min-width:240px; max-width:320px; aspect-ratio:4/5; border-radius:4px; background:repeating-linear-gradient(45deg, rgba(232,114,44,0.08) 0px, rgba(232,114,44,0.08) 10px, transparent 10px, transparent 20px), #EDEEEC; display:flex; align-items:center; justify-content:center; padding:16px; text-align:center;">
-        <span style="font-family:monospace; font-size:12px; color:#5F6161;">PHOTO</span>
+      <div style="flex:1; min-width:200px; max-width:320px; aspect-ratio:4/5; border-radius:4px; overflow:hidden; position:relative; background:linear-gradient(160deg, #EAF5EE 0%, #d4eedd 100%); border-top:3px solid #008B47; display:flex; align-items:flex-end; justify-content:center;">
+        <svg style="display:block; width:85%; margin:0 auto;" viewBox="0 0 240 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="120" cy="88" r="58" fill="#BFE3CD"/>
+          <path d="M0 300C0 232.68 53.726 178 120 178s120 54.68 120 122H0z" fill="#BFE3CD"/>
+        </svg>
       </div>
       <div style="flex:2; min-width:300px;">
         <span style="font-family:'Lora',serif; font-size:56px; color:#E8722C; line-height:0.4; display:block; margin-bottom:6px;">"</span>
@@ -189,14 +195,18 @@ import {
     <!-- Présentation -->
     <p style="text-transform:uppercase; letter-spacing:1.5px; font-size:12.5px; font-weight:700; color:#E8722C; margin:0 0 8px;">{{ t('ecole.presentation.surtitle') }}</p>
     <h2 style="font-family:'Lora',serif; font-size:clamp(24px,3.4vw,32px); color:#1c2a20; margin:0 0 32px; font-weight:600;">{{ t('ecole.presentation.titre') }}</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:22px;">
-      @for (block of presentation; track $index) {
-        <div style="background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:26px 22px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-          <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 10px; font-weight:700;">{{block.title}}</h3>
-          <p style="font-size:14px; margin:0;">{{block.text}}</p>
-        </div>
-      }
-    </div>
+    @if (presentation.length > 0) {
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:22px;">
+        @for (block of presentation; track $index) {
+          <div style="background:#FFFFFF; border-top:3px solid #008B47; border-radius:2px; padding:26px 22px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 10px; font-weight:700;">{{block.title}}</h3>
+            <p style="font-size:14px; margin:0;">{{block.text}}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <p style="font-size:14.5px; color:#5F6161; font-style:italic; margin:0;">{{ t('ecole.presentation.vide') }}</p>
+    }
 
     <!-- Équipe pédagogique (API) -->
     @if (equipe().length > 0) {
@@ -256,56 +266,39 @@ import {
   <div style="max-width:1180px; margin:0 auto;">
     <p style="text-transform:uppercase; letter-spacing:1.5px; font-size:12.5px; font-weight:700; color:#E8722C; margin:0 0 8px;">{{ t('vieScolaire.surtitle') }}</p>
     <h2 style="font-family:'Lora',serif; font-size:clamp(24px,3.4vw,32px); color:#1c2a20; margin:0 0 36px; font-weight:600;">{{ t('vieScolaire.titre') }}</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px;">
+    @if (hasVieScolaireContent()) {
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px;">
 
-      <!-- Horaires (API ou statique) -->
-      <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
-        <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.horaires.titre') }}</h3>
-        @if (contenuHoraires()?.contenu) {
-          <p style="font-size:14px; line-height:1.75; white-space:pre-line; margin:0;">{{ contenuHoraires()!.contenu }}</p>
-        } @else {
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            @for (item of vieScolaireHorairesItems; track $index) {
-              <div style="display:flex; gap:10px; font-size:14px; align-items:flex-start;">
-                <span style="width:6px; height:6px; border-radius:50%; background:#E8722C; margin-top:7px; flex-shrink:0;"></span>
-                <span>{{item}}</span>
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Activités périscolaires (API ou statique) -->
-      <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
-        <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.activites.titre') }}</h3>
-        @if (contenuActivites()?.contenu) {
-          <p style="font-size:14px; line-height:1.75; white-space:pre-line; margin:0;">{{ contenuActivites()!.contenu }}</p>
-        } @else {
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            @for (item of vieScolaireActivitesItems; track $index) {
-              <div style="display:flex; gap:10px; font-size:14px; align-items:flex-start;">
-                <span style="width:6px; height:6px; border-radius:50%; background:#E8722C; margin-top:7px; flex-shrink:0;"></span>
-                <span>{{item}}</span>
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Cantine & Transport (toujours statique) -->
-      <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
-        <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.cantine.titre') }}</h3>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          @for (item of vieScolaireCantineItems; track $index) {
-            <div style="display:flex; gap:10px; font-size:14px; align-items:flex-start;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#E8722C; margin-top:7px; flex-shrink:0;"></span>
-              <span>{{item}}</span>
-            </div>
+        <!-- Horaires (API ou statique) -->
+        <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
+          <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.horaires.titre') }}</h3>
+          @if (contenuHoraires()?.contenu) {
+            <p style="font-size:14px; line-height:1.75; white-space:pre-line; margin:0;">{{ contenuHoraires()!.contenu }}</p>
+          } @else {
+            <p style="font-size:14px; color:#5F6161; font-style:italic; margin:0;">{{ t('vieScolaire.horaires.vide') }}</p>
           }
         </div>
-      </div>
 
-    </div>
+        <!-- Activités périscolaires (API ou statique) -->
+        <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
+          <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.activites.titre') }}</h3>
+          @if (contenuActivites()?.contenu) {
+            <p style="font-size:14px; line-height:1.75; white-space:pre-line; margin:0;">{{ contenuActivites()!.contenu }}</p>
+          } @else {
+            <p style="font-size:14px; color:#5F6161; font-style:italic; margin:0;">{{ t('vieScolaire.activites.vide') }}</p>
+          }
+        </div>
+
+        <!-- Cantine & Transport -->
+        <div style="background:#FFFFFF; border-radius:4px; padding:26px 24px;">
+          <h3 style="font-family:'Lora',serif; font-size:18px; color:#1c2a20; margin:0 0 16px; font-weight:700;">{{ t('vieScolaire.cantine.titre') }}</h3>
+          <p style="font-size:14px; color:#5F6161; font-style:italic; margin:0;">{{ t('vieScolaire.cantine.vide') }}</p>
+        </div>
+
+      </div>
+    } @else {
+      <p style="font-size:15px; color:#5F6161; font-style:italic; max-width:540px; line-height:1.65; margin:0;">{{ t('vieScolaire.bientotDisponible') }}</p>
+    }
   </div>
 </section>
 
@@ -336,22 +329,9 @@ import {
           </div>
         }
       } @else {
-        @for (item of news; track $index) {
-          <div style="border:1px solid #E7E7E5; border-radius:4px; overflow:hidden; display:flex; flex-direction:column;">
-            <div style="aspect-ratio:16/10; background:repeating-linear-gradient(45deg, rgba(0,139,71,0.08) 0px, rgba(0,139,71,0.08) 10px, transparent 10px, transparent 20px), #F0F1EF; display:flex; align-items:center; justify-content:center; padding:14px; text-align:center;">
-              <span style="font-family:monospace; font-size:11.5px; color:#5F6161;">PHOTO — {{item.tag}}</span>
-            </div>
-            <div style="padding:20px; display:flex; flex-direction:column; gap:8px; flex:1;">
-              <div style="display:flex; gap:10px; align-items:center;">
-                <span style="background:#FDECE1; color:#E8722C; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;">{{item.tag}}</span>
-                <span style="font-size:12px; color:#5F6161;">{{item.date}}</span>
-              </div>
-              <h3 style="font-family:'Lora',serif; font-size:17px; color:#1c2a20; margin:0; font-weight:700; line-height:1.3;">{{item.title}}</h3>
-              <p style="font-size:13.5px; margin:0; flex:1;">{{item.excerpt}}</p>
-              <a href="#" (click)="noop($event)" style="color:#008B47; font-weight:700; font-size:13.5px; margin-top:4px; text-decoration:none; opacity:0.45; cursor:default;">{{ t('actualites.lireSuite') }}</a>
-            </div>
-          </div>
-        }
+        <div style="grid-column:1/-1; text-align:center; padding:40px 0;">
+          <p style="font-size:15px; color:#5F6161; font-style:italic; margin:0;">{{ t('actualites.vide') }}</p>
+        </div>
       }
 
     </div>
@@ -363,15 +343,19 @@ import {
   <div style="max-width:1180px; margin:0 auto;">
     <p style="text-transform:uppercase; letter-spacing:1.5px; font-size:12.5px; font-weight:700; color:#E8722C; margin:0 0 8px;">{{ t('admissions.surtitle') }}</p>
     <h2 style="font-family:'Lora',serif; font-size:clamp(24px,3.4vw,32px); color:#FFFFFF; margin:0 0 40px; font-weight:600;">{{ t('admissions.titre') }}</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:24px; margin-bottom:36px;">
-      @for (step of steps; track $index) {
-        <div>
-          <div style="width:44px; height:44px; border-radius:50%; background:#E8722C; color:#FFFFFF; font-family:'Lora',serif; font-weight:700; font-size:18px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">{{step.n}}</div>
-          <h3 style="font-family:'Lora',serif; font-size:17px; color:#FFFFFF; margin:0 0 8px; font-weight:700;">{{step.title}}</h3>
-          <p style="font-size:13.5px; color:rgba(255,255,255,0.75); margin:0;">{{step.text}}</p>
-        </div>
-      }
-    </div>
+    @if (steps.length > 0) {
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:24px; margin-bottom:36px;">
+        @for (step of steps; track $index) {
+          <div>
+            <div style="width:44px; height:44px; border-radius:50%; background:#E8722C; color:#FFFFFF; font-family:'Lora',serif; font-weight:700; font-size:18px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">{{step.n}}</div>
+            <h3 style="font-family:'Lora',serif; font-size:17px; color:#FFFFFF; margin:0 0 8px; font-weight:700;">{{step.title}}</h3>
+            <p style="font-size:13.5px; color:rgba(255,255,255,0.75); margin:0;">{{step.text}}</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <p style="font-size:15px; color:rgba(255,255,255,0.85); margin:0 0 28px;">{{ t('admissions.stepsVide') }}</p>
+    }
     @if (contenuAdmissions()?.contenu) {
       <p style="font-size:15px; color:rgba(255,255,255,0.85); margin:0 0 28px; white-space:pre-line;">{{ contenuAdmissions()!.contenu }}</p>
     }
@@ -409,12 +393,12 @@ import {
       </div>
 
       <div>
-        <h4 style="color:#FFFFFF; font-size:14px; font-weight:700; margin:0 0 16px; letter-spacing:0.3px;">{{ t('footer.reseauxSociaux') }}</h4>
+        <h4 style="color:#FFFFFF; font-size:14px; font-weight:700; margin:0 0 16px; letter-spacing:0.3px;">{{ t('nav.contact') }}</h4>
         <div style="display:flex; flex-direction:column; gap:10px; font-size:13.5px;">
-          <a href="#" (click)="noop($event)" style="color:rgba(255,255,255,0.75); text-decoration:none;">Facebook</a>
-          <a href="#" (click)="noop($event)" style="color:rgba(255,255,255,0.75); text-decoration:none;">Instagram</a>
-          <a href="#" (click)="noop($event)" style="color:rgba(255,255,255,0.75); text-decoration:none;">LinkedIn</a>
-          <a href="#" (click)="noop($event)" style="color:rgba(255,255,255,0.75); text-decoration:none;">YouTube</a>
+          <a [href]="'mailto:' + t('topbar.email')" style="color:rgba(255,255,255,0.75); text-decoration:none;">{{ t('topbar.email') }}</a>
+          <a [href]="'tel:' + t('topbar.telephone')" style="color:rgba(255,255,255,0.75); text-decoration:none;">{{ t('topbar.telephone') }}</a>
+          <a href="#" (click)="goConnexion($event)" style="color:rgba(255,255,255,0.85); font-weight:600; text-decoration:none;">{{ t('footer.espaceParent') }}</a>
+          <a href="#" (click)="goConnexion($event)" style="color:rgba(255,255,255,0.5); font-size:12px; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
         </div>
       </div>
 
@@ -426,7 +410,7 @@ import {
         <app-language-switcher variant="dark" />
         <a href="#" (click)="noop($event)" style="color:rgba(255,255,255,0.6); text-decoration:none;">{{ t('footer.mentionsLegales') }}</a>
         <a href="#" (click)="goConnexion($event)" style="color:rgba(255,255,255,0.75); font-weight:600; text-decoration:none;">{{ t('footer.espaceParent') }}</a>
-        <a href="#" (click)="goFiche($event)" style="color:rgba(255,255,255,0.35); font-size:11.5px; text-decoration:none;">{{ t('footer.accesSecretariat') }}</a>
+        <a href="#" (click)="goConnexion($event)" style="color:rgba(255,255,255,0.5); font-size:11.5px; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
       </span>
     </div>
   </div>
@@ -475,16 +459,12 @@ export class Vitrine extends CobimagBase {
 
     // Données statiques
     readonly stats        = STATS;
+
     readonly presentation = PRESENTATION;
     readonly cycles       = CYCLES;
     readonly systems      : SystemData[] = [SYSTEM_FR, SYSTEM_EN];
     readonly steps        = STEPS;
-    readonly news         = NEWS;
 
-    // Accès indexé au tableau vie scolaire (pour le template @for)
-    readonly vieScolaireHorairesItems  = VIE_SCOLAIRE[0].items;
-    readonly vieScolaireActivitesItems = VIE_SCOLAIRE[1].items;
-    readonly vieScolaireCantineItems   = VIE_SCOLAIRE[2].items;
 
     // Données API (conservées depuis PROMPT_F03)
     contenuMotFondateur = toSignal<ContenuVitrineResponse | null>(
@@ -498,6 +478,9 @@ export class Vitrine extends CobimagBase {
     contenuActivites = toSignal<ContenuVitrineResponse | null>(
         this.vitrineService.getContenu('ACTIVITES_PERISCOLAIRES').pipe(catchError(() => of(null))),
         { initialValue: null }
+    );
+    readonly hasVieScolaireContent = computed(() =>
+        !!(this.contenuHoraires()?.contenu || this.contenuActivites()?.contenu)
     );
     contenuAdmissions = toSignal<ContenuVitrineResponse | null>(
         this.vitrineService.getContenu('COMMENT_INSCRIRE').pipe(catchError(() => of(null))),

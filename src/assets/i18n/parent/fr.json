@@ -1,9 +1,11 @@
 {
   "connexion": {
     "espace": "Espace Parent",
+    "titre": "Connexion",
     "sousTitre": "COBIMAG — Marie Gisèle Bilingual College",
     "retourSite": "Retour au site",
-    "conseil": "Conseil : utilisez le nom d'un de vos enfants comme identifiant.",
+    "noticePersonnel": "Personnel de l'établissement — connectez-vous avec vos identifiants fournis par l'administration scolaire.",
+    "conseil": "Conseil : renseignez l'adresse e-mail avec laquelle vous souhaitez être contacté par l'école.",
     "onglet": {
       "seConnecter": "Se connecter",
       "creerCompte": "Créer un compte"
@@ -15,6 +17,7 @@
       "nom": "Nom",
       "prenom": "Prénom",
       "email": "Adresse e-mail",
+      "emailPlaceholder": "votre@email.com",
       "afficherMotDePasse": "Afficher le mot de passe",
       "masquerMotDePasse": "Masquer le mot de passe"
     },

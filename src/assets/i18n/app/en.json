@@ -1,4 +1,13 @@
 {
+  "nav": {
+    "groupes": {
+      "scolarite":     "Academics",
+      "finances":      "Finances",
+      "equipe":        "Staff",
+      "communication": "Communication",
+      "systeme":       "System"
+    }
+  },
   "menu": {
     "tableauDeBord": "Dashboard",
     "eleves": {
@@ -66,7 +75,104 @@
       "calendrier": "School calendar",
       "contenu": "Website content",
       "equipe": "Teaching team"
+    },
+    "administration": {
+      "label": "Administration",
+      "comptes": "User accounts"
     }
+  },
+
+  "comptes": {
+    "titre": "User accounts",
+    "nouveau": "New account",
+    "creerDepuisPersonnel": "Create account",
+    "filtres": {
+      "tousRoles": "All roles",
+      "tousStatuts": "All statuses",
+      "actif": "Active",
+      "inactif": "Inactive"
+    },
+    "colonnes": {
+      "email": "Email",
+      "roles": "Role(s)",
+      "personnel": "Linked staff",
+      "statut": "Status"
+    },
+    "statut": {
+      "actif": "Active",
+      "inactif": "Inactive"
+    },
+    "roles": {
+      "SUPER_ADMIN":   "Super Admin",
+      "SECRETARIAT":   "Secretariat",
+      "ECONOMAT":      "Finance",
+      "ENSEIGNANT":    "Teacher",
+      "COMMUNICATION": "Communication",
+      "PARENT":        "Parent"
+    },
+    "actions": {
+      "modifierRoles":    "Edit roles",
+      "reinitialiserMdp": "Reset password",
+      "desactiver":       "Deactivate account",
+      "reactiver":        "Reactivate account"
+    },
+    "creer": {
+      "titre": "Create account",
+      "titrePersonnel": "Create account — {{nom}}",
+      "email": "Email address",
+      "nom": "Last name",
+      "prenom": "First name (optional)",
+      "roles": "Role(s)",
+      "rolesPlaceholder": "Select at least one role",
+      "roleObligatoire": "Role cannot be pre-selected for non-teaching staff — please choose explicitly.",
+      "erreurChamps": "Please enter the email address and select at least one role.",
+      "erreurEnseignantPersonnel": "A teacher must be linked to a Staff record.",
+      "erreurNomObligatoire": "Last name is required when no Staff member is selected.",
+      "erreurPersonnelDejaLie": "This staff member is already linked to an active account.",
+      "personnelLie": "Linked staff member",
+      "personnel": "Link to a Staff member (optional)",
+      "personnelPlaceholder": "Name, first name or ID…",
+      "personnelAucun": "No staff member available",
+      "confirmer": "Create account",
+      "creation": "Creating…"
+    },
+    "motDePasseTemporaire": {
+      "titre": "Account created — Temporary password",
+      "titreMdp": "Temporary password",
+      "titreMdpReset": "Password reset",
+      "avertissement": "This password is shown once and can never be retrieved again. Share it with the user immediately and ask them to change it on first login.",
+      "copier": "Copy",
+      "copie": "Copied!",
+      "confirmer": "I have noted the password — Close"
+    },
+    "modifierRoles": {
+      "titre": "Edit roles",
+      "confirmer": "Save",
+      "enregistrement": "Saving…"
+    },
+    "reinitialiser": {
+      "titre": "Reset password",
+      "message": "The current password of <strong>{{email}}</strong> will be immediately invalidated. A new temporary password will be generated and shown once.",
+      "confirmer": "Reset",
+      "reinitialisation": "Resetting…"
+    },
+    "desactiver": {
+      "titre": "Deactivate account",
+      "message": "The account of <strong>{{email}}</strong> will be deactivated. Active sessions remain valid until the token expires naturally (15 min).",
+      "confirmer": "Deactivate",
+      "desactivation": "Deactivating…"
+    },
+    "reactiver": {
+      "titre": "Reactivate account",
+      "message": "The account of <strong>{{email}}</strong> will be reactivated and the user will be able to log in again.",
+      "confirmer": "Reactivate",
+      "reactivation": "Reactivating…"
+    },
+    "successCree":      "Account created successfully.",
+    "successRoles":     "Roles updated.",
+    "successReinit":    "Password reset successfully.",
+    "successDesactive": "Account deactivated.",
+    "successReactive":  "Account reactivated."
   },
 
   "table": {
@@ -105,7 +211,9 @@
       "classe": "Class",
       "sexe": "Gender",
       "naissance": "Date of birth"
-    }
+    },
+    "successCree": "Student created successfully.",
+    "successModifie": "Student updated successfully."
   },
 
   "eleveForm": {
@@ -186,7 +294,9 @@
       "requis": "This field is required.",
       "annuler": "Cancel",
       "creer": "Create",
-      "modifier": "Save"
+      "modifier": "Save",
+      "successEnregistrement": "Saved successfully.",
+      "successPP": "Homeroom teacher assigned successfully."
     },
     "sousSysteme": {
       "FRANCOPHONE": "Francophone",
@@ -237,6 +347,7 @@
       },
       "professeurPrincipal": {
         "titre": "Assign homeroom teacher",
+        "btnTooltip": "Assign homeroom teacher",
         "personnelId": "Teacher",
         "personnelPlaceholder": "Select a teacher"
       },
@@ -250,6 +361,7 @@
     "trimestres": {
       "titre": "Terms & sequences",
       "nouveau": "New term",
+      "voirSequences": "View sequences",
       "form": {
         "titreCreation": "New term",
         "titreEdition": "Edit term",
@@ -301,6 +413,8 @@
     "quotasHoraires": {
       "titre": "Teaching quotas",
       "nouveau": "New quota",
+      "filtreClassePh": "All classes",
+      "filtreMatierePh": "All subjects",
       "form": {
         "titreCreation": "New quota",
         "titreEdition": "Edit quota",
@@ -319,6 +433,8 @@
     "coefficients": {
       "titre": "Coefficients",
       "nouveau": "New coefficient",
+      "filtreClassePh": "All classes",
+      "filtreMatierePh": "All subjects",
       "form": {
         "titreCreation": "New coefficient",
         "titreEdition": "Edit coefficient",
@@ -353,6 +469,743 @@
       "cols": {
         "libelle": "Name",
         "extrait": "Preview"
+      }
+    }
+  },
+
+  "personnel": {
+    "titre": "Staff",
+    "nouveau": "New staff member",
+    "desactiver": "Deactivate",
+    "reactiver": "Reactivate",
+    "successCree": "Staff member created successfully.",
+    "successModifie": "Staff member updated successfully.",
+    "filtres": {
+      "nom": "Last name",
+      "matricule": "Staff ID",
+      "tousTypes": "All types",
+      "rechercher": "Search",
+      "reinitialiser": "Reset"
+    },
+    "colonnes": {
+      "matricule": "Staff ID",
+      "nom": "Last name",
+      "prenom": "First name",
+      "typePersonnel": "Type",
+      "typeContrat": "Contract",
+      "statut": "Status"
+    },
+    "statut": {
+      "actif": "Active",
+      "inactif": "Inactive"
+    },
+    "typePersonnel": {
+      "ENSEIGNANT": "Teacher",
+      "NON_ENSEIGNANT": "Non-teaching"
+    },
+    "typeContrat": {
+      "VACATAIRE": "Substitute",
+      "SEMI_PERMANENT": "Semi-permanent",
+      "PERMANENT": "Permanent"
+    },
+    "desactiverConfirm": {
+      "titre": "Deactivate staff member",
+      "message": "Deactivate {{prenom}} {{nom}}? They will no longer be able to log in or be assigned to time slots.",
+      "annuler": "Cancel",
+      "confirmer": "Deactivate"
+    },
+    "reactiverConfirm": {
+      "titre": "Reactivate staff member",
+      "message": "Reactivate {{prenom}} {{nom}}?",
+      "annuler": "Cancel",
+      "confirmer": "Reactivate"
+    },
+    "form": {
+      "titreCreation": "New staff member",
+      "titreEdition": "Edit staff member",
+      "erreurChargement": "Unable to load this staff member's data.",
+      "nom": "Last name",
+      "prenom": "First name",
+      "matricule": "Staff ID (assigned at creation)",
+      "telephone": "Phone",
+      "email": "Email address",
+      "dateEmbauche": "Hire date",
+      "typePersonnel": "Staff type",
+      "typePersonnelEnseignantSub": "Teaches one or more subjects",
+      "typePersonnelNonSub": "Administration, finance, etc.",
+      "typeContrat": "Contract type",
+      "fonction": "Role / position",
+      "fonctionPlaceholder": "e.g. Principal, Accountant, Maths Teacher…",
+      "salaireBase": "Base salary",
+      "salaireVacataireHint": "For substitute staff, salary is typically hourly — this field is optional.",
+      "indemniteTransport": "Transport allowance",
+      "matieresPlaceholder": "Select subjects taught",
+      "matieresChargement": "Loading subjects…",
+      "numeroCompteBancaire": "Bank account number",
+      "nomBanque": "Bank",
+      "annuler": "Cancel",
+      "creer": "Create",
+      "modifier": "Save",
+      "sections": {
+        "identite": "Identity",
+        "identiteHint": "personal details of the staff member",
+        "contrat": "Contract & pay",
+        "contratHint": "staff type, contract and salary",
+        "matieres": "Subjects taught",
+        "matieresHint": "shown only for teaching staff",
+        "banque": "Banking details",
+        "banqueHint": "for payroll transfer (optional)"
+      },
+      "rail": {
+        "titre": "NEW RECORD",
+        "titreFiche": "STAFF RECORD",
+        "nomInconnu": "Staff member",
+        "champsObligatoires": "Required fields",
+        "statutActif": "● Active",
+        "statutInactif": "● Inactive"
+      }
+    }
+  },
+
+  "emploiDuTemps": {
+    "titre": "Timetable",
+    "successCreneauCree": "Time slot created successfully.",
+    "titrePlanningClasse": "Class timetable",
+    "titrePlanningEnseignant": "Teacher timetable",
+    "nouveauCreneau": "New time slot",
+    "monPlanning": "My timetable",
+    "selectionnerClasse": "Select a class",
+    "selectionnerEnseignant": "Select a teacher",
+    "choisirClassePourAfficher": "Select a class to view its timetable.",
+    "choisirEnseignantPourAfficher": "Select a teacher to view their timetable.",
+    "erreurChargement": "Unable to load the timetable. Please try again.",
+    "supprimerCreneau": "Delete this slot",
+    "supprimerCreneauTitre": "Delete time slot",
+    "supprimerCreneauConfirm": "Delete the {{matiere}} slot on {{jour}}? This action cannot be undone.",
+    "jourVide": "—",
+    "annuler": "Cancel",
+    "supprimer": "Delete",
+    "jours": {
+      "MONDAY": "Monday",
+      "TUESDAY": "Tuesday",
+      "WEDNESDAY": "Wednesday",
+      "THURSDAY": "Thursday",
+      "FRIDAY": "Friday",
+      "SATURDAY": "Saturday",
+      "SUNDAY": "Sunday"
+    },
+    "form": {
+      "titreNouveauCreneau": "New time slot",
+      "sectionRessources": "Teaching resources",
+      "sectionHoraire": "Day and time",
+      "classe": "Class",
+      "matiere": "Subject",
+      "enseignant": "Teacher",
+      "jourSemaine": "Day",
+      "heureDebut": "Start time",
+      "heureFin": "End time",
+      "anneeScolaire": "School year",
+      "selectionner": "Select",
+      "annuler": "Cancel",
+      "enregistrer": "Create slot",
+      "chevauchementTitre": "Schedule conflict (R4)",
+      "erreurGenerique": "An error occurred. Please try again.",
+      "heureFinInvalide": "End time must be after start time."
+    },
+    "enseignantReadonlyNotice": "Your timetable is managed by the secretariat. To request changes, please contact the administration."
+  },
+
+  "resultats": {
+    "selecteur": {
+      "classe": "Class",
+      "matiere": "Subject",
+      "sequence": "Sequence",
+      "choisirClasse": "Choose a class",
+      "choisirMatiere": "Choose a subject",
+      "choisirSequence": "Choose a sequence",
+      "aucuneClasseProfPrincipal": "You are not the main teacher of any class. Note validation is not available."
+    },
+    "saisie": {
+      "titre": "Grade entry",
+      "sousTitre": "Select a sequence, a class and a subject to load and enter grades.",
+      "colMatricule": "Student ID",
+      "colNom": "Student",
+      "colNote": "Grade /20",
+      "validee": "Validated",
+      "enregistrer": "Save",
+      "nonEnregistre": "Unsaved changes",
+      "legendeNonSaisie": "Grade not yet entered",
+      "aucunEleve": "No students found for this selection.",
+      "erreurChargement": "Unable to load grades. Please try again.",
+      "succes": "Saved"
+    },
+    "validation": {
+      "titre": "Grade validation",
+      "sousTitre": "Only draft grades can be validated. This action cannot be undone.",
+      "colMatricule": "Student ID",
+      "colNom": "Student",
+      "colNote": "Grade /20",
+      "selectionnes": "selected",
+      "valider": "Validate selection",
+      "notesValideesCount": "grade(s) successfully validated",
+      "aucuneNote": "No draft grades for this selection.",
+      "toutesValidees": "All grades have been validated.",
+      "erreurChargement": "Unable to load grades. Please try again.",
+      "noteNullTitle": "Grade not entered — will be validated without a value",
+      "notesSansValeur": "grade(s) without a value",
+      "confirmerTitre": "Confirm validation",
+      "confirmerMessage": "You are about to validate {{n}} grade(s). This action cannot be undone.",
+      "avertissementNulles": "{{n}} grade(s) have no value entered (—). They will be validated without a numeric grade.",
+      "annuler": "Cancel",
+      "confirmer": "Validate permanently"
+    },
+    "bulletins": {
+      "titre": "Report cards",
+      "sousTitre": "View a student's averages and download their report card.",
+      "etape1": "Choose the assessment sequence",
+      "etape2": "Search for a student",
+      "rechercheNom": "Student name",
+      "rechercheNomPlaceholder": "Search by name…",
+      "rechercheMatricule": "Student ID",
+      "rechercheMatriculePlaceholder": "e.g. EL-2025-001",
+      "recherchePlaceholder": "Name or student ID (e.g. Smith, EL-2025-001)…",
+      "sequence": "Sequence",
+      "choisirSequence": "Choose a sequence",
+      "changerEleve": "Change student",
+      "noSequenceWarning": "Please choose a sequence first (step 1) to view averages.",
+      "titreMoyennes": "Averages preview",
+      "colMatiere": "Subject",
+      "colNote": "Grade",
+      "colCoefficient": "Coefficient",
+      "colPoids": "Weight",
+      "moyenneGenerale": "Overall average",
+      "telechargerPdf": "Download PDF report card",
+      "erreurMoyennes": "Unable to load averages. Please try again.",
+      "rechercheDisablee": "Select a sequence first (step 1)…",
+      "miniCaracteres": "Enter at least 2 characters to search.",
+      "erreurPdf": "Unable to download the report card PDF. Please try again."
+    }
+  },
+
+  "discipline": {
+    "commun": {
+      "miniCaracteres": "Enter at least 2 characters to search."
+    },
+    "sanctions": {
+      "titre": "Sanctions",
+      "sousTitre": "Record a disciplinary sanction or view history",
+      "saisirTitre": "Record a sanction",
+      "recherchePlaceholder": "Name or student ID (e.g. EL-2025-001)…",
+      "aucunResultat": "No student found for this search",
+      "changerEleve": "Change student",
+      "typeSanction": "Sanction type",
+      "choisirType": "Choose a type…",
+      "dateSanction": "Date and time",
+      "motif": "Reason",
+      "motifPlaceholder": "Briefly describe the reason…",
+      "enregistrer": "Record sanction",
+      "champsRequis": "Please fill in all required fields.",
+      "enregistreAvecSucces": "Sanction recorded successfully",
+      "erreurEnregistrement": "Error while saving. Please try again.",
+      "historiqueEleve": "Sanction history for this student",
+      "aucuneSanctionEleve": "No sanctions recorded for this student",
+      "historiqueClasse": "History by class",
+      "choisirClasse": "Choose a class…",
+      "aucuneSanctionClasse": "No sanctions recorded for this class",
+      "badgeEscalade": "Auto-generated",
+      "colDate": "Date",
+      "colEleve": "Student",
+      "colType": "Type",
+      "colMotif": "Reason",
+      "historiqueClasseGuide": "Choose a class to view sanction history.",
+      "erreurChargement": "Unable to load history. Please try again.",
+      "types": {
+        "BLAME": "Reprimand",
+        "ABSENCE_JUSTIFIEE": "Justified absence",
+        "ABSENCE_NON_JUSTIFIEE": "Unjustified absence",
+        "RETARD": "Tardiness",
+        "RETENUE": "Detention",
+        "AVERTISSEMENT": "Warning",
+        "EXCLUSION_3J": "3-day suspension",
+        "EXCLUSION_8J": "8-day suspension",
+        "INTERPELLATION": "Formal notice"
+      }
+    },
+    "bonsSortie": {
+      "titre": "Exit / return passes",
+      "sousTitre": "Issue an exit pass and validate student returns",
+      "rechercheEleve": "Search for a student",
+      "rechercherEleve": "Search for a student",
+      "recherchePlaceholder": "Name or student ID (e.g. EL-2025-001)…",
+      "aucunResultat": "No student found for this search",
+      "changerEleve": "Change student",
+      "nouveauBon": "New exit pass",
+      "nouveauTitre": "New exit pass",
+      "motif": "Reason for exit",
+      "motifPlaceholder": "Reason for leaving…",
+      "dateSortie": "Exit date and time",
+      "emettre": "Issue pass",
+      "enregistrer": "Issue pass",
+      "champsRequis": "Please fill in all required fields.",
+      "emis": "Exit pass issued successfully",
+      "enregistreAvecSucces": "Exit pass issued successfully",
+      "erreurAutorise": "User ID not found. Please log in again.",
+      "erreurCreation": "Error while creating the pass. Please try again.",
+      "erreurEnregistrement": "Error while creating the pass. Please try again.",
+      "historique": "Exit passes for this student",
+      "historiqueTitre": "Exit passes for this student",
+      "aucunBon": "No exit passes recorded for this student",
+      "colDateSortie": "Exit date",
+      "colDate": "Exit date",
+      "colMotif": "Reason",
+      "colStatut": "Status",
+      "colRetour": "Return",
+      "statutSorti": "Out",
+      "statutRentre": "Returned",
+      "validerRetour": "Confirm return",
+      "confirmerQuestion": "Confirm?",
+      "confirmerOui": "Yes",
+      "confirmerNon": "No",
+      "retourValide": "Return confirmed successfully",
+      "erreurRetour": "Error while confirming return"
+    },
+    "regles": {
+      "titre": "Disciplinary escalation rules",
+      "sousTitre": "Thresholds that trigger automatic sanctions (R5/R15)",
+      "explication": "When a student accumulates a set number of sanctions of the same type, a more severe sanction is triggered automatically. Configure those thresholds here.",
+      "lectureSeule": "Only the principal administrator (SUPER_ADMIN) can modify these rules.",
+      "listeTitre": "Configured rules",
+      "nouveau": "New rule",
+      "form": {
+        "titreCreation": "New escalation rule",
+        "titreEdition": "Edit rule",
+        "declencheur": "Triggering sanction",
+        "seuil": "Threshold (number of occurrences)",
+        "resultante": "Automatically generated sanction",
+        "choisirType": "Choose a type…"
+      },
+      "cols": {
+        "regle": "Rule",
+        "declencheur": "Triggering sanction",
+        "seuil": "Threshold",
+        "resultante": "Resulting sanction"
+      },
+      "erreurEnregistrement": "Error while saving. Please try again."
+    }
+  },
+
+  "finances": {
+    "versements": {
+      "titre": "Tuition payments",
+      "sousTitre": "Record a cash payment and view a student's history",
+      "rechercheEleve": "Search for a student",
+      "recherchePlaceholder": "Name or student ID (e.g. EL-2025-001)…",
+      "aucunResultat": "No student found for this search",
+      "changerEleve": "Change student",
+      "tauxScolarite": "Total tuition",
+      "totalVerse": "Total paid",
+      "soldeRestant": "Outstanding balance",
+      "nouveauTitre": "New payment (cash)",
+      "montant": "Amount",
+      "montantPlaceholder": "Amount in XAF…",
+      "modeCaisseInfo": "Cash mode — validated immediately",
+      "enregistrer": "Record payment",
+      "enregistreSucces": "Payment recorded successfully",
+      "erreurEnregistrement": "Error while saving. Please try again.",
+      "erreurPdf": "Unable to download the receipt PDF.",
+      "historique": "Payment history",
+      "aucunHistorique": "No payments recorded for this student",
+      "afficheN": "Showing last {{n}} of {{total}} payments",
+      "colDate": "Date",
+      "colMontant": "Amount",
+      "colMode": "Mode",
+      "colQuittance": "Receipt No. / reason",
+      "colStatut": "Status",
+      "colActions": "Actions",
+      "modeCAISSE": "Cash",
+      "modeBANCAIRE": "Transfer",
+      "enAttenteInfo": "Bank transfer awaiting treasurer validation",
+      "telechargerPdf": "Download receipt PDF",
+      "statuts": {
+        "VALIDE": "Validated",
+        "EN_ATTENTE_VALIDATION": "Pending",
+        "REJETE": "Rejected"
+      }
+    },
+    "validations": {
+      "titre": "Bank validations",
+      "sousTitre": "Compare declarations against the real bank statement before validating",
+      "bannerTitre": "Mandatory reminder — Anti-fraud control (R18)",
+      "bannerReplier": "Collapse",
+      "bannerDeplier": "See reminder",
+      "r18Point1": "Every declared bank transfer MUST be verified against the institution's real account statement.",
+      "r18Point2": "GESCOL does not verify anything automatically — your validation is a personal attestation.",
+      "r18Point3": "If in doubt, reject and report to your supervisor — never validate without checking.",
+      "nEnAttente": "{{n}} bank transfer(s) pending validation",
+      "actualiser": "Refresh",
+      "enAttenteSuffix": " pending",
+      "aucuneTitre": "No pending validations",
+      "aucuneSub": "All declared bank transfers have been processed.",
+      "aComparer": "TO BE CHECKED AGAINST THE REAL BANK STATEMENT",
+      "recu": "Bank receipt no.",
+      "signataire": "Signatory name",
+      "declarantId": "Declared by (ID)",
+      "valider": "Validate",
+      "rejeter": "Reject",
+      "dialogValiderTitre": "Confirm bank validation",
+      "eleve": "Student concerned",
+      "infoBancaireAVerif": "Declared banking details — verify against the real statement",
+      "r18TitreDialog": "Mandatory verification",
+      "r18Avertissement": "By clicking Confirm, you attest that you have verified this information against the institution's real bank statement. This action is irreversible and immediately updates the student's balance.",
+      "confirmerValidation": "Confirm validation",
+      "dialogRejeterTitre": "Reject bank declaration",
+      "motifRejet": "Rejection reason",
+      "motifRejetPlaceholder": "Describe the reason for rejection (discrepancy, invalid receipt, etc.)…",
+      "motifRejetRequis": "A reason is required for every rejection.",
+      "confirmerRejet": "Confirm rejection",
+      "valideSucces": "Payment by {{nom}} validated — balance updated.",
+      "rejeteSucces": "Declaration by {{nom}} rejected.",
+      "erreurValidation": "Error during validation. Please try again.",
+      "erreurRejet": "Error during rejection. Please try again."
+    },
+    "moratoires": {
+      "titre": "Payment plans",
+      "sousTitre": "Request and manage payment deferrals for students",
+      "formulaireTitre": "New payment plan request",
+      "rechercherEleve": "Search for a student",
+      "rechercheEleve": "Student concerned",
+      "recherchePlaceholder": "Name or student ID…",
+      "aucunEleve": "No student found",
+      "changerEleve": "Change",
+      "scolarite": "Tuition",
+      "verse": "Paid",
+      "soldeRestant": "Outstanding",
+      "dateProposee": "Proposed payment date",
+      "datePlaceholder": "dd/mm/yyyy",
+      "suggestionDate": "Suggestion: 30 days from now",
+      "motif": "Reason (optional)",
+      "motifPlaceholder": "Explain the student's situation…",
+      "soumettre": "Submit request",
+      "soumisSucces": "Payment plan request submitted successfully.",
+      "erreurSoumission": "Error while submitting. Please try again.",
+      "ongletAttente": "Pending",
+      "ongletHistorique": "History",
+      "aucuneAttente": "No requests pending a decision",
+      "aucunHistorique": "No payment plans in history",
+      "redoublant": "Repeating year",
+      "redoublantInfo": "Student repeating the year — request is prioritised",
+      "colEleve": "Student",
+      "colDateProposee": "Proposed date",
+      "colDemande": "Request date",
+      "colMotif": "Reason",
+      "colStatut": "Status",
+      "colActions": "Actions",
+      "valider": "Approve",
+      "refuser": "Refuse",
+      "confirmValider": "Confirm approval of this payment plan?",
+      "confirmRefuser": "Confirm refusal of this request?",
+      "oui": "Yes",
+      "tousStatuts": "All statuses",
+      "filtreStatut": "Filter by status",
+      "valideSucces": "Payment plan for {{nom}} approved.",
+      "refuseSucces": "Request for {{nom}} refused.",
+      "erreurValidation": "Error during approval. Please try again.",
+      "erreurRefus": "Error during refusal. Please try again.",
+      "statuts": {
+        "EN_ATTENTE": "Pending",
+        "VALIDE": "Approved",
+        "REFUSE": "Refused"
+      }
+    },
+    "alertes": {
+      "titre": "Late-payment alerts",
+      "sousTitre": "Monitor students with outstanding balances and trigger notifications",
+      "elevesEnRetard": "student(s) with overdue payments",
+      "tousAJour": "No overdue payments",
+      "aucunRetard": "All students are up to date with their payments.",
+      "actualiser": "Refresh",
+      "trierPar": "Sort by",
+      "trierParClasse": "Class",
+      "trierParSolde": "Balance",
+      "declencher": "Trigger alerts",
+      "declencherZoneTitre": "Trigger payment alert notifications",
+      "declencherZoneSub": "Send alerts to {{nb}} student(s) with overdue payments",
+      "colEleve": "Student",
+      "colClasse": "Class",
+      "colSoldeRestant": "Outstanding balance",
+      "dialogTitre": "Confirm alert trigger",
+      "dialogTexte": "This action will trigger notifications for {{nb}} student(s) with overdue payments.",
+      "dialogNote": "Note: this action currently writes an entry to the server log. Real notification delivery (e-mail, SMS) will be enabled in a future version.",
+      "dialogConfirmer": "Trigger",
+      "declencheSucces": "Alerts triggered — {{nb}} notification(s) processed.",
+      "erreurDeclenchement": "Error while triggering alerts. Please try again.",
+      "seuilTitre": "Alert threshold configuration",
+      "seuilLabel": "Number of days overdue before alert",
+      "jours": "days",
+      "replier": "Collapse",
+      "configurer": "Configure",
+      "seuilSauvegarder": "Save",
+      "seuilSauvegarde": "Threshold updated successfully."
+    },
+    "etats": {
+      "titre": "Financial reports & statements",
+      "sousTitre": "Payments by class and totals by period",
+      "ongletClasse": "By class",
+      "ongletPeriode": "By period",
+      "classe": "Class",
+      "classePlaceholder": "Select a class…",
+      "afficher": "Show",
+      "calculer": "Calculate",
+      "aucunEleve": "No students for this class.",
+      "dateDebut": "Start date",
+      "dateFin": "End date",
+      "erreurDates": "End date must be after start date.",
+      "erreurChargement": "Error while loading data.",
+      "colEleve": "Student",
+      "colMatricule": "Student ID",
+      "colScolarite": "Tuition",
+      "colVerse": "Total paid",
+      "colSolde": "Outstanding",
+      "colTaux": "% paid",
+      "total": "Total",
+      "totalVerse": "Total paid in period",
+      "nombreVersements": "Number of payments"
+    }
+  },
+
+  "paie": {
+    "baremes": {
+      "titre": "Payroll scales",
+      "sousTitre": "Configure the rates and amounts applicable to each contract type",
+      "nouveau": "New scale",
+      "creer": "Create scale",
+      "enregistrer": "Save",
+      "annuler": "Cancel",
+      "actualiser": "Refresh",
+      "lectureSeule": "Only the main administrator (SUPER_ADMIN) can create or modify payroll scales.",
+      "aucun": "No payroll scales configured.",
+      "aucunSub": "Create the first payroll scale by clicking the button below.",
+      "tousConfigures": "Payroll scales for all 3 contract types are already configured.",
+      "erreurChargement": "Unable to load payroll scales.",
+      "erreurEnregistrement": "Error while saving. Please try again.",
+      "erreurSuppression": "Error while deleting. Please try again.",
+      "form": {
+        "titreCreation": "New payroll scale",
+        "titreEdition": "Edit payroll scale",
+        "sectionContrat": "Contract type",
+        "sectionSalarial": "Employee deductions",
+        "sectionPatronal": "Employer contributions",
+        "typeContrat": "Contract type",
+        "typeContratPlaceholder": "Select…",
+        "typeContrats": {
+          "VACATAIRE": "Temporary",
+          "SEMI_PERMANENT": "Semi-permanent",
+          "PERMANENT": "Permanent"
+        },
+        "tauxIRPP": "IRPP rate (%)",
+        "tauxCentimesAdditionnelsIRPP": "IRPP additional centimes (%)",
+        "montantTaxeCommunale": "Municipal tax (XAF)",
+        "tauxCreditFoncierSalarial": "Employee mortgage levy (%)",
+        "montantRedevanceAudiovisuelle": "Audiovisual licence (XAF)",
+        "tauxPensionVieillesseSalarial": "Employee old-age pension (%)",
+        "tauxCreditFoncierPatronal": "Employer mortgage levy (%)",
+        "tauxFNE": "FNE (%)",
+        "tauxPensionVieillessePatronal": "Employer old-age pension (%)",
+        "tauxAllocationsFamilialesPatronal": "Employer family allowances (%)",
+        "tauxAccidentTravailPatronal": "Employer work accident (%)"
+      },
+      "cols": {
+        "typeContrat": "Contract type",
+        "tauxIRPP": "IRPP",
+        "centimesIRPP": "IRPP additional centimes",
+        "taxeCommune": "Municipal tax",
+        "cfSalarial": "Employee mortgage levy",
+        "redevance": "Audiovisual licence",
+        "pensionSal": "Employee old-age pension",
+        "cfPatronal": "Employer mortgage levy",
+        "fne": "FNE",
+        "pensionPat": "Employer old-age pension",
+        "allocFamiliales": "Family allowances",
+        "accidentTravail": "Work accident"
+      }
+    },
+    "bulletins": {
+      "titre": "Pay slips",
+      "sousTitre": "Generate a pay slip and view an employee's pay history",
+      "sectionGeneration": "Generate a pay slip",
+      "sectionGenerationSub": "Select an employee, enter the period and confirm",
+      "sectionHistorique": "Pay slip history",
+      "sectionHistoriqueSub": "View and download past pay slips for an employee",
+      "etape": "Step",
+      "recherchePersonnel": "Search for an employee",
+      "recherchePlaceholder": "Name or employee ID…",
+      "rechercherBtn": "Search",
+      "aucunPersonnel": "No employee found for this search.",
+      "changerPersonnel": "Change employee",
+      "periode": "Period",
+      "moisLabel": "Month",
+      "anneeLabel": "Year",
+      "modePaiement": "Payment method",
+      "modeBILLETAGE": "Cash",
+      "modeVIREMENT_BANCAIRE": "Bank transfer",
+      "datePaiement": "Payment date",
+      "heuresEffectuees": "Hours worked",
+      "tauxHoraire": "Hourly rate (XAF/h)",
+      "generer": "Generate pay slip",
+      "champsRequis": "Please fill in all required fields.",
+      "succes": "Pay slip generated successfully",
+      "montantBrut": "Gross amount",
+      "montantNet": "Net amount",
+      "telechargerBulletin": "Download pay slip PDF",
+      "telechargerOrdre": "Download bank transfer order PDF",
+      "voirHistorique": "View this employee's history",
+      "nouveauBulletin": "Generate another pay slip",
+      "erreurR19": "Bank transfer not possible: this employee has no bank account details on file.",
+      "erreurR19Lien": "Complete this employee's record",
+      "erreurGeneration": "Error while generating the pay slip. Please try again.",
+      "erreurPdf": "Unable to download the PDF. Please try again.",
+      "erreurChargement": "Error while loading pay history. Please try again.",
+      "aucunBulletin": "No pay slips generated for this employee.",
+      "colPeriode": "Period",
+      "colBrut": "Gross (XAF)",
+      "colNet": "Net (XAF)",
+      "colMode": "Method",
+      "colDate": "Payment date",
+      "pdfBtn": "Pay slip PDF",
+      "ordreBtn": "Transfer order",
+      "typeContrats": {
+        "VACATAIRE": "Temporary",
+        "SEMI_PERMANENT": "Semi-permanent",
+        "PERMANENT": "Permanent"
+      }
+    }
+  },
+
+  "commun": {
+    "annuler": "Cancel",
+    "chargement": "Loading…"
+  },
+
+  "communication": {
+    "commun": {
+      "requis": "This field is required.",
+      "annuler": "Cancel",
+      "creer": "Create",
+      "modifier": "Save",
+      "erreurEnregistrement": "An error occurred. Please try again.",
+      "erreurChargement": "Unable to load data."
+    },
+    "actualites": {
+      "titre": "News",
+      "nouvelle": "New article",
+      "successCreation": "Article created successfully.",
+      "successModification": "Article updated successfully.",
+      "rechercheLabel": "Search by title…",
+      "limitationAdmin": "Only published articles appear here — the API does not yet return drafts in admin mode.",
+      "form": {
+        "titreCreation": "New article",
+        "titreEdition": "Edit article",
+        "titre": "Title",
+        "titrePh": "e.g. Baccalauréat results 2026",
+        "contenu": "Content",
+        "contenuPh": "Write the article content…",
+        "contenuHint": "Plain text or basic HTML accepted (<b>, <i>, <ul>…). Final rendering visible on the public site.",
+        "datePublication": "Publication date",
+        "imageUrl": "Image URL (optional)",
+        "imageUrlPh": "https://example.com/image.jpg",
+        "imageUrlHint": "Paste the URL of a hosted image — no file upload in this version.",
+        "publie": "Publish immediately",
+        "publieHint": "Draft by default — check to publish directly to the website."
+      },
+      "cols": {
+        "titre": "Title",
+        "datePublication": "Publication date",
+        "statut": "Status",
+        "statuts": {
+          "publie": "Published",
+          "brouillon": "Draft"
+        },
+        "actions": {
+          "publier": "Publish",
+          "depublier": "Unpublish"
+        }
+      }
+    },
+    "calendrier": {
+      "titre": "School calendar",
+      "nouvelEvenement": "New event",
+      "form": {
+        "titreCreation": "New event",
+        "titreEdition": "Edit event",
+        "libelle": "Label",
+        "libellePh": "e.g. Start of the 2026-2027 school year",
+        "description": "Description (optional)",
+        "descriptionPh": "Additional information about the event…",
+        "dateDebut": "Start date",
+        "dateFin": "End date (optional — leave empty for single-day events)",
+        "dateFinCourt": "End date (optional)",
+        "dateFinInvalide": "End date must be after start date."
+      },
+      "cols": {
+        "libelle": "Event",
+        "dateDebut": "Start",
+        "dateFin": "End"
+      },
+      "badge": {
+        "passe": "Past",
+        "avenir": "Upcoming",
+        "enCours": "Ongoing"
+      }
+    },
+    "contenu": {
+      "titre": "Website content",
+      "sousTitre": "These blocks feed directly into the public website. Changes are immediately visible.",
+      "enregistrer": "Save",
+      "succes": "Content saved.",
+      "nonRenseigne": "Not yet filled in — the text below is a placeholder showing the expected tone.",
+      "nonEnregistre": "Unsaved changes",
+      "fichierUrlLabel": "Associated file URL (optional)",
+      "fichierUrlPh": "https://example.com/document.pdf",
+      "avisUrl": "Paste a URL — no file is uploaded in this version.",
+      "cles": {
+        "MOT_FONDATEUR": {
+          "label": "Founder's message",
+          "description": "Quote displayed in italics in the 'School' section of the website. Expected tone: a short, inspiring sentence."
+        },
+        "HORAIRES_COURS": {
+          "label": "Class schedule",
+          "description": "Free text shown in the 'School life' section. When filled in, it replaces the default schedule."
+        },
+        "ACTIVITES_PERISCOLAIRES": {
+          "label": "Extracurricular activities",
+          "description": "Free text shown in the 'School life' section, Activities column."
+        },
+        "COMMENT_INSCRIRE": {
+          "label": "How to enrol",
+          "description": "Supplementary text shown in the 'Admissions' section above the enrolment button."
+        }
+      }
+    },
+    "equipe": {
+      "titre": "Teaching staff",
+      "nouveauMembre": "New member",
+      "form": {
+        "titreCreation": "New member",
+        "titreEdition": "Edit member",
+        "nom": "Full name",
+        "nomPh": "e.g. Jean Dupont",
+        "fonction": "Role",
+        "fonctionPh": "e.g. Mathematics teacher",
+        "photoUrl": "Photo URL (optional)",
+        "photoUrlPh": "https://example.com/photo.jpg",
+        "photoUrlHint": "Paste the URL of a hosted photo — no file upload in this version.",
+        "photoPreview": "Photo preview",
+        "ordre": "Display order (lower numbers appear first)"
+      },
+      "cols": {
+        "ordre": "Order",
+        "nom": "Name",
+        "fonction": "Role"
       }
     }
   },
@@ -396,6 +1249,32 @@
       "imprimer": "Print record",
       "supprimer": "Delete",
       "suppressionInfo": "Deletion requires authorisation"
+    }
+  },
+
+  "dashboard": {
+    "devise": "FCFA",
+    "effectifs": {
+      "titre": "Enrolled Students",
+      "hint": "Breakdown by sub-system",
+      "intake": "+{{n}} this week",
+      "capacite": "students out of {{capacity}} places"
+    },
+    "recouvrement": {
+      "titre": "Fee Collection",
+      "encaisse": "Collected",
+      "attendu": "Expected",
+      "resteARecouvrer": "Remaining"
+    },
+    "activites": {
+      "titre": "Recent Activity",
+      "journalBtn": "Full log"
+    },
+    "alertes": {
+      "titre": "Pending Alerts"
+    },
+    "evenements": {
+      "titre": "Upcoming Events"
     }
   }
 }

@@ -1,0 +1,72 @@
+/* Mise en page commune aux 5 tableaux de bord (incluse par chaque composant rôle). */
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  container-type: inline-size;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@container (max-width: 900px) {
+  .main-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.panel {
+  padding: 18px 22px 20px;
+  background: var(--color-surface, #fffdf8);
+  border: 1px solid var(--color-border, #e9e1d2);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-card, 0 2px 10px -4px rgb(23 61 42 / 0.12));
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.panel__title {
+  margin: 0;
+  font-family: var(--font-serif, 'Lora', serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #173d2a);
+}
+
+.panel__aside {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-text-muted, #736a5c);
+}
+
+.panel__hint {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--color-text-muted, #736a5c);
+}
+
+.panel__hint strong { color: var(--color-text, #173d2a); }
+
+/* Pastille de sous-système FR (pleine) / EN (cerclée) */
+.pill {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9.5px;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.pill--FR { color: #fff; background: var(--color-primary-deep, #1f5c3d); }
+.pill--EN { color: var(--color-primary-deep, #1f5c3d); background: #fff; border: 1.5px solid var(--color-primary-deep, #1f5c3d); }

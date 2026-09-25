@@ -1,0 +1,48 @@
+@if (data(); as d) {
+  <cob-dashboard-hero
+    [badge]="badge"
+    [greeting]="greeting()"
+    [focus]="focus()"
+    [facts]="facts()"
+  />
+
+  <cob-kpi-grid [kpis]="kpis()" />
+
+  <div class="main-grid">
+    <cob-task-queue [taches]="d.taches" [busyId]="busyId()" (act)="onAct($event)" />
+
+    <section class="panel" aria-labelledby="day-title">
+      <header class="panel__head day__head">
+        <h2 class="panel__title" id="day-title">Ma journée</h2>
+        <span class="sync" [class]="'sync--' + d.synchronisation.etat">
+          <span class="sync__dot" aria-hidden="true"></span>{{ syncLabel() }}
+        </span>
+      </header>
+
+      @if (slots().length === 0) {
+        <p class="panel__hint">Aucun cours aujourd'hui.</p>
+      } @else {
+        <ol class="day">
+          @for (s of slots(); track s.id) {
+            <li class="slot" [class]="'slot--' + s.state">
+              <div class="slot__time">
+                <span class="slot__start">{{ s.start }}</span>
+                <span class="slot__end">→ {{ s.end }}</span>
+              </div>
+              <div class="slot__body">
+                <p class="slot__title">
+                  {{ s.klass }}
+                  <span class="pill slot__pill" [class]="'pill--' + s.sub">{{ s.sub }}</span>
+                </p>
+                <p class="slot__line">{{ s.line }}</p>
+              </div>
+              <span class="slot__status">{{ s.status }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </section>
+  </div>
+} @else {
+  <cob-dashboard-state [status]="status()" (retry)="reload()" />
+}

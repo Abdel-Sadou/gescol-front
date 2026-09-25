@@ -1,0 +1,45 @@
+@if (data(); as d) {
+  <cob-dashboard-hero
+    [badge]="badge"
+    [greeting]="greeting()"
+    [focus]="focus()"
+    [facts]="facts()"
+  />
+
+  <cob-kpi-grid [kpis]="kpis()" />
+
+  <div class="main-grid">
+    <cob-task-queue [taches]="d.taches" [busyId]="busyId()" (act)="onAct($event)" />
+
+    <section class="panel" aria-labelledby="cash-title">
+      <header class="panel__head">
+        <h2 class="panel__title" id="cash-title">Encaissements — 7 derniers jours</h2>
+      </header>
+      <p class="panel__hint">
+        En millions de FCFA · total <strong>{{ totalLabel() }}</strong>
+        @if (peakDay()) { · pic le {{ peakDay() }} }
+      </p>
+
+      <div class="chart" role="img" [attr.aria-label]="'Encaissements des 7 derniers jours, total ' + totalLabel() + ' FCFA'">
+        @for (b of bars(); track b.key) {
+          <div class="chart__col" [title]="b.title">
+            <span class="chart__value" [class.chart__value--today]="b.kind === 'today'">{{ b.value }}</span>
+            <span class="chart__bar" [class]="'chart__bar--' + b.kind" [style.height.px]="b.height"></span>
+          </div>
+        }
+      </div>
+      <div class="chart__axis">
+        @for (b of bars(); track b.key) {
+          <span class="chart__day" [class.chart__day--today]="b.kind === 'today'">{{ b.day }}</span>
+        }
+      </div>
+
+      <p class="deadline">
+        <span class="deadline__label">{{ d.prochaineEcheance.libelle }} — {{ echeanceLabel() }}</span>
+        <span class="deadline__value">{{ joursEcheance() }} jours</span>
+      </p>
+    </section>
+  </div>
+} @else {
+  <cob-dashboard-state [status]="status()" (retry)="reload()" />
+}

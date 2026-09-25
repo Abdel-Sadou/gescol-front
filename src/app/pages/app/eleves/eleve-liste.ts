@@ -1,11 +1,12 @@
 import {
-    Component, inject, signal, ViewChild
+    Component, computed, inject, OnInit, signal, ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 import { GescolTableComponent, ColDef, GescolLoadEvent } from '@/app/shared/components/gescol-table.component';
 import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-confirm-dialog.component';
 import { EleveService, EleveResponse, EleveSearchParams, PageResponse } from '@/app/core/services/eleve.service';
@@ -19,6 +20,7 @@ import { AuthService } from '@/app/core/services/auth.service';
         TranslocoDirective,
         ButtonModule,
         InputTextModule,
+        MessageModule,
         GescolTableComponent,
         DeleteConfirmDialogComponent
     ],
@@ -27,13 +29,19 @@ import { AuthService } from '@/app/core/services/auth.service';
         <div class="card">
             <!-- En-tête -->
             <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                <h2 class="text-xl font-semibold m-0">{{ t('eleves.titre') }}</h2>
+                <h2 class="text-xl font-semibold m-0">
+                    <i class="pi pi-graduation-cap mr-2" style="color:var(--color-primary)"></i>
+                    {{ t('eleves.titre') }}
+                </h2>
                 @if (canCreate()) {
                     <button pButton icon="pi pi-plus" [label]="t('eleves.nouveau')"
                         class="p-button-success"
                         (click)="router.navigate(['/app/eleves/nouveau'])"></button>
                 }
             </div>
+            @if (successMsg()) {
+                <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
+            }
 
             <!-- Filtres de recherche -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
@@ -83,25 +91,35 @@ import { AuthService } from '@/app/core/services/auth.service';
     </ng-container>
     `
 })
-export class EleveListe {
+export class EleveListe implements OnInit {
     protected router      = inject(Router);
     private eleveService  = inject(EleveService);
     private authService   = inject(AuthService);
+    private transloco     = inject(TranslocoService);
 
     @ViewChild('tableRef') tableRef!: GescolTableComponent;
 
-    readonly data = signal<PageResponse<EleveResponse> | 'error' | undefined>(undefined);
+    readonly data       = signal<PageResponse<EleveResponse> | 'error' | undefined>(undefined);
+    readonly successMsg = signal<string | null>(null);
 
     filters: EleveSearchParams = {};
 
     private currentSort = 'nom,asc';
     private pendingFilters: EleveSearchParams = {};
 
-    /** Visible pour SUPER_ADMIN et SECRETARIAT */
-    canCreate = () => {
+    readonly canCreate = computed(() => {
         const r = this.authService.role();
         return r === 'SUPER_ADMIN' || r === 'SECRETARIAT';
-    };
+    });
+
+    ngOnInit(): void {
+        const s = history.state;
+        if (s?.success === 'cree' || s?.success === 'modifie') {
+            const key = s.success === 'cree' ? 'eleves.successCree' : 'eleves.successModifie';
+            this.successMsg.set(this.transloco.translate('app.' + key));
+            setTimeout(() => this.successMsg.set(null), 4000);
+        }
+    }
 
     columns(t: (k: string) => string): ColDef[] {
         return [

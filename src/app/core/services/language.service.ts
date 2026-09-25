@@ -12,6 +12,7 @@ export class LanguageService {
     private transloco = inject(TranslocoService);
 
     readonly currentLang = signal<Lang>('fr');
+    readonly switching   = signal(false);
 
     constructor() {
         const stored = localStorage.getItem(LANG_KEY);
@@ -27,10 +28,16 @@ export class LanguageService {
     }
 
     setLang(lang: Lang): void {
-        this.currentLang.set(lang);
+        if (lang === this.currentLang()) return;
         localStorage.setItem(LANG_KEY, lang);
-        this.transloco.setActiveLang(lang);
-        // Précharger les scopes de la nouvelle langue (Transloco met en cache)
-        SCOPES.forEach(scope => this.transloco.load(`${scope}/${lang}`).subscribe());
+        // Charger tous les scopes avant de changer la langue active —
+        // sinon Transloco re-rend les composants avant que les fichiers
+        // soient en cache et affiche les clés brutes.
+        this.switching.set(true);
+        this.preload(lang).then(() => {
+            this.currentLang.set(lang);
+            this.transloco.setActiveLang(lang);
+            this.switching.set(false);
+        });
     }
 }

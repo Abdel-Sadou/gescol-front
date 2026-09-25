@@ -1,0 +1,45 @@
+@if (data(); as d) {
+  <cob-dashboard-hero
+    [badge]="badge"
+    [greeting]="greeting()"
+    [focus]="focus()"
+    [facts]="facts()"
+  />
+
+  <cob-kpi-grid [kpis]="kpis()" />
+
+  <div class="main-grid">
+    <cob-task-queue [taches]="d.taches" [busyId]="busyId()" (act)="onAct($event)" />
+
+    <section class="panel" aria-labelledby="pulse-title">
+      <header class="panel__head">
+        <h2 class="panel__title" id="pulse-title">Pouls des classes</h2>
+        <span class="panel__aside">Notes validées · {{ d.notesValidation.sequence.toLowerCase() }}</span>
+      </header>
+      <p class="panel__hint">Chaque case est un niveau. Les cases orange sont en retard sur l'échéance du {{ echeance() }}.</p>
+
+      @for (row of pulse(); track row.code) {
+        <div class="pulse__row">
+          <span class="pill" [class]="'pill--' + row.code">{{ row.code }}</span>
+          <div class="pulse__cells">
+            @for (c of row.cells; track c.label) {
+              <div class="pulse__cell" [class]="'pulse__cell--' + c.level" [attr.aria-label]="c.label + ' : ' + c.pct + ' %'">
+                <span class="pulse__pct">{{ c.pct }}%</span>
+                <span class="pulse__label">{{ c.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <ul class="pulse__legend">
+        <li><span class="swatch swatch--high"></span>≥ 80 %</li>
+        <li><span class="swatch swatch--mid"></span>60–79 %</li>
+        <li><span class="swatch swatch--low"></span>40–59 %</li>
+        <li><span class="swatch swatch--late"></span>&lt; 40 % · en retard</li>
+      </ul>
+    </section>
+  </div>
+} @else {
+  <cob-dashboard-state [status]="status()" (retry)="reload()" />
+}

@@ -10,22 +10,26 @@ import { LanguageService, Lang } from '@/app/core/services/language.service';
     standalone: true,
     imports: [],
     template: `
-        <div style="display:inline-flex; align-items:center; gap:0;">
+        <div style="display:inline-flex; align-items:center; gap:0; position:relative;">
             <button
                 (click)="set('fr')"
+                [disabled]="switching()"
                 [style.fontWeight]="lang() === 'fr' ? '700' : '400'"
                 [style.color]="activeColor()"
-                [style.opacity]="lang() === 'fr' ? '1' : '0.55'"
-                style="background:none; border:none; cursor:pointer; font-family:'Work Sans',sans-serif; font-size:12px; padding:4px 6px; letter-spacing:0.5px; transition:opacity 0.15s;">
+                [style.opacity]="switching() ? '0.4' : (lang() === 'fr' ? '1' : '0.55')"
+                [style.cursor]="switching() ? 'wait' : 'pointer'"
+                style="background:none; border:none; font-family:'Work Sans',sans-serif; font-size:12px; padding:4px 6px; letter-spacing:0.5px; transition:opacity 0.15s;">
                 FR
             </button>
             <span [style.color]="sepColor()" style="font-size:11px; user-select:none;">|</span>
             <button
                 (click)="set('en')"
+                [disabled]="switching()"
                 [style.fontWeight]="lang() === 'en' ? '700' : '400'"
                 [style.color]="activeColor()"
-                [style.opacity]="lang() === 'en' ? '1' : '0.55'"
-                style="background:none; border:none; cursor:pointer; font-family:'Work Sans',sans-serif; font-size:12px; padding:4px 6px; letter-spacing:0.5px; transition:opacity 0.15s;">
+                [style.opacity]="switching() ? '0.4' : (lang() === 'en' ? '1' : '0.55')"
+                [style.cursor]="switching() ? 'wait' : 'pointer'"
+                style="background:none; border:none; font-family:'Work Sans',sans-serif; font-size:12px; padding:4px 6px; letter-spacing:0.5px; transition:opacity 0.15s;">
                 EN
             </button>
         </div>
@@ -35,7 +39,8 @@ export class LanguageSwitcher {
     @Input() variant: 'light' | 'dark' | 'app' = 'light';
 
     private langService = inject(LanguageService);
-    lang = this.langService.currentLang;
+    lang      = this.langService.currentLang;
+    switching = this.langService.switching;
 
     set(l: Lang): void { this.langService.setLang(l); }
 
