@@ -27,56 +27,98 @@ import {
 
   <!-- ══ HEADER ══════════════════════════════════════════════════════════ -->
   <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; box-shadow:0 1px 0 rgba(0,0,0,0.09);">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 24px; gap:16px; flex-wrap:nowrap;">
-
-      <a href="#" (click)="goLanding($event)" style="display:flex; align-items:center; gap:11px; text-decoration:none; flex-shrink:0;">
-        <img src="/assets/logo-cobimag.png" [attr.width]="logoParentSize" [attr.height]="logoParentSize" alt="Logo établissement" style="border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.14);">
-        <span style="display:flex; flex-direction:column; line-height:1.2;">
-          <span style="font-family:'Lora',serif; font-weight:700; font-size:16px; color:#1c2a20; white-space:nowrap;">{{ t('dashboard.zone') }}</span>
-          @if (showSubtitle) {
-            <span style="font-size:10.5px; font-style:italic; color:#5F6161; white-space:nowrap;">{{ t('dashboard.sousTitre') }}</span>
-          }
-        </span>
-      </a>
-
-      <div style="display:flex; align-items:center; gap:20px; flex-shrink:0; flex-wrap:nowrap;">
-
-        <!-- Nav principale -->
-        <div style="display:flex; align-items:center; gap:6px;">
-          <a href="#" (click)="goMesInscriptions($event)" style="color:#1c2a20; font-weight:600; font-size:13px; padding:8px 12px; border-radius:2px; text-decoration:none; white-space:nowrap;">
-            {{ t('dashboard.mesInscriptions') }}
-          </a>
-          <a href="#" (click)="goNouvelleInscription($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13px; padding:9px 18px; border-radius:2px; text-decoration:none; white-space:nowrap;">
-            + {{ t('dashboard.nouvelleInscription') }}
-          </a>
-        </div>
-
-        <!-- Zone utilisateur -->
-        <div style="display:flex; align-items:center; gap:12px;">
-          <!-- Cloche notifications (placeholder — API à venir) -->
+    @if (mobileHeader) {
+      <!-- En-tête compact mobile -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px;">
+        <a href="#" (click)="goLanding($event)" style="display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0;">
+          <img src="/assets/logo-cobimag.png" width="34" height="34" alt="Logo établissement" style="border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.14);">
+          <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20;">{{ t('dashboard.zone') }}</span>
+        </a>
+        <div style="display:flex; align-items:center; gap:10px;">
           <button style="position:relative; background:none; border:none; cursor:pointer; width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#5F6161;" title="Notifications">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
           </button>
-          @if (parentDisplayName()) {
-            <span [title]="parentDisplayName()" style="width:32px; height:32px; border-radius:50%; background:#EAF5EE; border:1.5px solid #BFE3CD; color:#008B47; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:default;">
-              {{ parentDisplayName()[0].toUpperCase() }}
-            </span>
-          }
-          <app-language-switcher variant="light" />
-          <a href="#" (click)="onDeconnexion($event)"
-             style="display:inline-flex; align-items:center; gap:5px; border:1.5px solid #E7E7E5; color:#5F6161; font-weight:600; font-size:12.5px; padding:7px 13px; border-radius:2px; text-decoration:none; white-space:nowrap;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            {{ t('dashboard.deconnexion') }}
-          </a>
+          <button (click)="toggleMobileHeaderMenu()" style="background:none; border:1.5px solid #E7E7E5; border-radius:2px; width:36px; height:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; padding:0;">
+            @if (mobileHeaderMenuOpen()) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1c2a20" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            } @else {
+              <span style="width:16px; height:2px; background:#1c2a20;"></span>
+              <span style="width:16px; height:2px; background:#1c2a20;"></span>
+              <span style="width:16px; height:2px; background:#1c2a20;"></span>
+            }
+          </button>
+        </div>
+      </div>
+      @if (mobileHeaderMenuOpen()) {
+        <nav style="border-top:1px solid #E7E7E5; padding:8px 20px 16px; display:flex; flex-direction:column; gap:0;">
+          <a href="#" (click)="goMesInscriptions($event); closeMobileHeaderMenu()" style="color:#1c2a20; font-weight:600; font-size:14px; padding:13px 0; border-bottom:1px solid #F4F4F3; text-decoration:none;">{{ t('dashboard.mesInscriptions') }}</a>
+          <a href="#" (click)="goNouvelleInscription($event); closeMobileHeaderMenu()" style="color:#E8722C; font-weight:700; font-size:14px; padding:13px 0; border-bottom:1px solid #F4F4F3; text-decoration:none;">+ {{ t('dashboard.nouvelleInscription') }}</a>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0 2px;">
+            <app-language-switcher variant="light" />
+            <a href="#" (click)="onDeconnexion($event)" style="display:inline-flex; align-items:center; gap:5px; border:1.5px solid #E7E7E5; color:#5F6161; font-weight:600; font-size:12.5px; padding:7px 13px; border-radius:2px; text-decoration:none;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              {{ t('dashboard.deconnexion') }}
+            </a>
+          </div>
+        </nav>
+      }
+    } @else {
+      <!-- En-tête complet desktop -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 24px; gap:16px; flex-wrap:nowrap;">
+
+        <a href="#" (click)="goLanding($event)" style="display:flex; align-items:center; gap:11px; text-decoration:none; flex-shrink:0;">
+          <img src="/assets/logo-cobimag.png" [attr.width]="logoParentSize" [attr.height]="logoParentSize" alt="Logo établissement" style="border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.14);">
+          <span style="display:flex; flex-direction:column; line-height:1.2;">
+            <span style="font-family:'Lora',serif; font-weight:700; font-size:16px; color:#1c2a20; white-space:nowrap;">{{ t('dashboard.zone') }}</span>
+            @if (showSubtitle) {
+              <span style="font-size:10.5px; font-style:italic; color:#5F6161; white-space:nowrap;">{{ t('dashboard.sousTitre') }}</span>
+            }
+          </span>
+        </a>
+
+        <div style="display:flex; align-items:center; gap:20px; flex-shrink:0; flex-wrap:nowrap;">
+
+          <!-- Nav principale -->
+          <div style="display:flex; align-items:center; gap:6px;">
+            <a href="#" (click)="goMesInscriptions($event)" style="color:#1c2a20; font-weight:600; font-size:13px; padding:8px 12px; border-radius:2px; text-decoration:none; white-space:nowrap;">
+              {{ t('dashboard.mesInscriptions') }}
+            </a>
+            <a href="#" (click)="goNouvelleInscription($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:13px; padding:9px 18px; border-radius:2px; text-decoration:none; white-space:nowrap;">
+              + {{ t('dashboard.nouvelleInscription') }}
+            </a>
+          </div>
+
+          <!-- Zone utilisateur -->
+          <div style="display:flex; align-items:center; gap:12px;">
+            <!-- Cloche notifications (placeholder — API à venir) -->
+            <button style="position:relative; background:none; border:none; cursor:pointer; width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:#5F6161;" title="Notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+            </button>
+            @if (parentDisplayName()) {
+              <span [title]="parentDisplayName()" style="width:32px; height:32px; border-radius:50%; background:#EAF5EE; border:1.5px solid #BFE3CD; color:#008B47; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:default;">
+                {{ parentDisplayName()[0].toUpperCase() }}
+              </span>
+            }
+            <app-language-switcher variant="light" />
+            <a href="#" (click)="onDeconnexion($event)"
+               style="display:inline-flex; align-items:center; gap:5px; border:1.5px solid #E7E7E5; color:#5F6161; font-weight:600; font-size:12.5px; padding:7px 13px; border-radius:2px; text-decoration:none; white-space:nowrap;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              {{ t('dashboard.deconnexion') }}
+            </a>
+          </div>
+
         </div>
 
       </div>
-
-    </div>
+    }
   </header>
 
   <!-- ══ BANDE HERO VERTE ════════════════════════════════════════════════ -->
@@ -418,6 +460,12 @@ export class ParentDashboard extends CobimagBase {
 
     // ── Données parent ─────────────────────────────────────────────────────
     parentDisplayName = computed(() => this.authService.currentUser()?.sub ?? '');
+
+    // ── Header mobile ──────────────────────────────────────────────────────
+    readonly mobileHeaderMenuOpen = signal(false);
+    get mobileHeader(): boolean { return this.viewportWidth < 780; }
+    toggleMobileHeaderMenu(): void { this.mobileHeaderMenuOpen.update(v => !v); }
+    closeMobileHeaderMenu(): void { this.mobileHeaderMenuOpen.set(false); }
 
     // ── PDF download ───────────────────────────────────────────────────────
     readonly pdfLoading = signal<string | null>(null);

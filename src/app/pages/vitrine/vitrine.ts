@@ -58,8 +58,8 @@ import {
       </span>
     </a>
 
-    @if (!isMobile) {
-      <nav style="display:flex; gap:20px; align-items:center; flex:1; min-width:0; overflow-x:auto; white-space:nowrap;">
+    @if (!navCollapsed) {
+      <nav style="display:flex; gap:20px; align-items:center; flex:1; min-width:0; overflow:hidden; white-space:nowrap;">
         <a href="#accueil"     (click)="scrollTo($event,'accueil')"     style="color:#1c2a20; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer;">{{ t('nav.accueil') }}</a>
         <a href="#ecole"       (click)="scrollTo($event,'ecole')"       style="color:#1c2a20; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer;">{{ t('nav.ecole') }}</a>
         <a href="#formations"  (click)="scrollTo($event,'formations')"  style="color:#1c2a20; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer;">{{ t('nav.formations') }}</a>
@@ -79,7 +79,7 @@ import {
       } @else {
         <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 20px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
       }
-      @if (isMobile) {
+      @if (navCollapsed) {
         <button (click)="toggleMobileMenu()" aria-label="Menu" style="background:none; border:1.5px solid #5F6161; border-radius:2px; width:40px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;">
           <span style="width:18px; height:2px; background:#1c2a20;"></span>
           <span style="width:18px; height:2px; background:#1c2a20;"></span>
@@ -90,7 +90,7 @@ import {
     </div>
   </div>
 
-  @if (isMobile && mobileMenuOpen()) {
+  @if (navCollapsed && mobileMenuOpen()) {
     <nav style="display:flex; flex-direction:column; padding:8px 24px 18px; border-top:1px solid #eee;">
       <a href="#accueil"     (click)="scrollTo($event,'accueil');    closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.accueil') }}</a>
       <a href="#ecole"       (click)="scrollTo($event,'ecole');       closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.ecole') }}</a>
@@ -458,6 +458,7 @@ export class Vitrine extends CobimagBase {
 
     readonly currentYear    = new Date().getFullYear();
     readonly mobileMenuOpen = signal(false);
+    get navCollapsed(): boolean { return this.viewportWidth < 1180; }
 
     // Scroll → repli de la barre de contact
     private readonly scrollY     = signal(0);
