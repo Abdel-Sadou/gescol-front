@@ -44,7 +44,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             <aside class="sidebar" [class.is-open]="sidebarOverlayOpen()">
 
                 <a class="brand" routerLink="/app/tableau-de-bord" aria-label="COBIMAG — accueil">
-                    <span class="brand__monogram" aria-hidden="true">C</span>
+                    <img class="brand__logo" src="/assets/logo-cobimag.png" alt="Logo COBIMAG">
                     <span class="brand__text">
                         <span class="brand__name">COBIMAG</span>
                         <span class="brand__tagline">Gestion scolaire</span>
@@ -275,19 +275,12 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             text-decoration: none;
         }
 
-        .brand__monogram {
+        .brand__logo {
             width: 40px;
             height: 40px;
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-serif);
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--color-primary-dark);
-            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius-full);
+            object-fit: cover;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
         }
 

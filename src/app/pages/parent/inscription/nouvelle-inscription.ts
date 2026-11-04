@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { LanguageSwitcher } from '@/app/shared/components/language-switcher/language-switcher';
 import { CobimagBase } from '@/app/shared/cobimag-base';
 import {
     InscriptionService,
@@ -15,25 +16,35 @@ import {
 @Component({
     selector: 'app-nouvelle-inscription',
     standalone: true,
-    imports: [TranslocoDirective],
+    imports: [TranslocoDirective, LanguageSwitcher],
+    styles: [`@keyframes cob-spin { to { transform: rotate(360deg); } } .cob-spinner { animation: cob-spin 0.8s linear infinite; }`],
     template: `
 <ng-container *transloco="let t; scope: 'parent'; prefix: 'parent'">
-<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#F7F8F6; min-height:100vh; line-height:1.5; overflow-x:clip;">
+<div style="font-family:'Work Sans',sans-serif; color:#5F6161; background:#FFFFFF; min-height:100vh; line-height:1.5; overflow-x:clip;">
 
-  <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; box-shadow:0 1px 0 rgba(0,0,0,0.08);">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:16px; flex-wrap:nowrap;">
-      <a href="#" (click)="goParent($event)" style="display:flex; align-items:center; gap:10px; color:#1c2a20; text-decoration:none; min-width:0; overflow:hidden;">
-        <div style="width:34px;height:34px;border-radius:50%;background:#008B47;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:12px;color:#FFFFFF;flex-shrink:0;">EP</div>
-        <span style="font-family:'Lora',serif; font-weight:700; font-size:15px; color:#1c2a20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ t('inscription.titre') }}</span>
+  <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; box-shadow:0 1px 0 rgba(0,0,0,0.09);">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 24px; gap:16px; flex-wrap:nowrap;">
+      <a href="#" (click)="goParent($event)" style="display:flex; align-items:center; gap:11px; text-decoration:none; flex-shrink:0;">
+        <img src="/assets/logo-cobimag.png" width="38" height="38" alt="Logo COBIMAG" style="border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.14);">
+        <span style="font-family:'Lora',serif; font-weight:700; font-size:16px; color:#1c2a20; white-space:nowrap;">{{ t('inscription.titre') }}</span>
       </a>
-      <a href="#" (click)="goParent($event)" style="color:#5F6161; font-size:13px; text-decoration:none; flex-shrink:0; white-space:nowrap;">{{ t('inscription.retour') }}</a>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <app-language-switcher variant="light" />
+        <a href="#" (click)="goParent($event)"
+           style="display:inline-flex; align-items:center; gap:5px; font-size:13px; color:#5F6161; text-decoration:none; font-weight:500; white-space:nowrap;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          {{ t('inscription.retour') }}
+        </a>
+      </div>
     </div>
   </header>
 
-  <main style="max-width:720px; margin:0 auto; padding:32px 20px 64px;">
+  <main style="max-width:720px; margin:0 auto; padding:36px 20px 72px;">
 
     <!-- ══ STEPPER ══════════════════════════════════════════════════════════ -->
-    <div style="display:flex; align-items:flex-start; justify-content:center; margin-bottom:40px; overflow-x:auto; padding:4px 0;">
+    <div style="display:flex; align-items:flex-start; justify-content:center; margin-bottom:36px; overflow-x:auto; padding:4px 0;">
       @for (n of steps; track n) {
         <div style="display:flex; align-items:flex-start;">
           <div style="display:flex; flex-direction:column; align-items:center; gap:5px; min-width:56px;">
@@ -51,13 +62,13 @@ import {
 
     <!-- ══ ÉTAPE 1 — CRITÈRES ═══════════════════════════════════════════════ -->
     @if (currentStep() === 1) {
-      <div style="background:#FFFFFF; border-radius:4px; padding:28px 26px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-top:3px solid #008B47; border-radius:2px; padding:28px 26px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0 0 6px; font-weight:700;">{{ t('inscription.criteres.titre') }}</h2>
         <p style="font-size:13px; color:#5F6161; margin:0 0 22px;">{{ t('inscription.criteres.description') }}</p>
 
         @if (criteresLoading()) {
           <div style="display:flex; align-items:center; gap:10px; color:#5F6161; font-size:13px; padding:24px 0;">
-            <div style="width:20px;height:20px;border-radius:50%;border:2px solid #E7E7E5;border-top-color:#008B47;flex-shrink:0;"></div>
+            <div class="cob-spinner" style="width:20px;height:20px;border-radius:50%;border:2px solid #E7E7E5;border-top-color:#008B47;flex-shrink:0;"></div>
             {{ t('inscription.criteres.chargement') }}
           </div>
         } @else if (criteresError()) {
@@ -83,13 +94,13 @@ import {
 
     <!-- ══ ÉTAPE 2 — CLASSES DISPONIBLES ════════════════════════════════════ -->
     @if (currentStep() === 2) {
-      <div style="background:#FFFFFF; border-radius:4px; padding:28px 26px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-top:3px solid #008B47; border-radius:2px; padding:28px 26px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0 0 6px; font-weight:700;">{{ t('inscription.classes.titre') }}</h2>
         <p style="font-size:13px; color:#5F6161; margin:0 0 22px;">{{ t('inscription.classes.description') }}</p>
 
         @if (classesLoading()) {
           <div style="display:flex; align-items:center; gap:10px; color:#5F6161; font-size:13px; padding:24px 0;">
-            <div style="width:20px;height:20px;border-radius:50%;border:2px solid #E7E7E5;border-top-color:#008B47;flex-shrink:0;"></div>
+            <div class="cob-spinner" style="width:20px;height:20px;border-radius:50%;border:2px solid #E7E7E5;border-top-color:#008B47;flex-shrink:0;"></div>
             {{ t('inscription.classes.chargement') }}
           </div>
         } @else if (classesError()) {
@@ -143,7 +154,7 @@ import {
 
     <!-- ══ ÉTAPE 3 — RÉSERVATION ═════════════════════════════════════════════ -->
     @if (currentStep() === 3) {
-      <div style="background:#FFFFFF; border-radius:4px; padding:28px 26px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-top:3px solid #008B47; border-radius:2px; padding:28px 26px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0 0 6px; font-weight:700;">{{ t('inscription.reservation.titre') }}</h2>
         <p style="font-size:13px; color:#5F6161; margin:0 0 22px;">{{ t('inscription.reservation.description') }}</p>
 
@@ -205,7 +216,7 @@ import {
 
     <!-- ══ ÉTAPE 4 — INFORMATIONS PARENT ════════════════════════════════════ -->
     @if (currentStep() === 4) {
-      <div style="background:#FFFFFF; border-radius:4px; padding:28px 26px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-top:3px solid #008B47; border-radius:2px; padding:28px 26px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0 0 6px; font-weight:700;">{{ t('inscription.informations.titre') }}</h2>
         <p style="font-size:13px; color:#5F6161; margin:0 0 22px;">{{ t('inscription.informations.description') }}</p>
 
@@ -262,13 +273,13 @@ import {
 
     <!-- ══ ÉTAPE 5 — CONFIRMATION ════════════════════════════════════════════ -->
     @if (currentStep() === 5) {
-      <div style="background:#FFFFFF; border-radius:4px; padding:28px 26px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+      <div style="background:#FFFFFF; border:1px solid #E7E7E5; border-top:3px solid #008B47; border-radius:2px; padding:28px 26px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
         <h2 style="font-family:'Lora',serif; font-size:20px; color:#1c2a20; margin:0 0 6px; font-weight:700;">{{ t('inscription.confirmation.titre') }}</h2>
         <p style="font-size:13px; color:#5F6161; margin:0 0 22px;">{{ t('inscription.confirmation.description') }}</p>
 
         <!-- Récapitulatif -->
-        <div style="background:#F7F8F6; border:1px solid #E7E7E5; border-radius:4px; padding:18px 20px; margin-bottom:24px;">
-          <p style="font-size:12px; font-weight:700; color:#5F6161; letter-spacing:.06em; text-transform:uppercase; margin:0 0 12px;">{{ t('inscription.confirmation.recapitulatif') }}</p>
+        <div style="background:#FBFDF8; border:1px solid #D4EAD9; border-left:3px solid #008B47; border-radius:2px; padding:18px 20px; margin-bottom:24px;">
+          <p style="font-size:11.5px; font-weight:700; color:#E8722C; letter-spacing:1.3px; text-transform:uppercase; margin:0 0 14px;">{{ t('inscription.confirmation.recapitulatif') }}</p>
           <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px; color:#1c2a20;">
             <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;">
               <span style="color:#5F6161;">{{ t('inscription.confirmation.eleve') }}</span>

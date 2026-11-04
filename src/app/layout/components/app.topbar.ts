@@ -30,11 +30,11 @@ interface NotificationsBars {
             <a tabindex="0" #menubutton type="button" class="menu-button" (click)="onMenuButtonClick()">
                 <i class="pi pi-chevron-left"></i>
             </a>
-            <img class="horizontal-logo" src="/layout/images/logo-white.svg" alt="logo" />
+            <img class="horizontal-logo" src="/assets/logo-cobimag.png" alt="Logo COBIMAG" />
             <span class="topbar-separator"></span>
             <div app-breadcrumb></div>
             <a routerLink="/">
-                <img class="mobile-logo" src="/layout/images/logo-{{ isDarkTheme() ? 'white' : 'dark' }}.svg" alt="logo" />
+                <img class="mobile-logo" src="/assets/logo-cobimag.png" alt="Logo COBIMAG" />
             </a>
         </div>
 

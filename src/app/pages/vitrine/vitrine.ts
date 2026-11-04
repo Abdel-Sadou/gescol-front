@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { EtablissementService } from '@/app/core/services/etablissement.service';
+import { AuthService } from '@/app/core/services/auth.service';
 import { LanguageSwitcher } from '@/app/shared/components/language-switcher/language-switcher';
 import {
     VitrineService,
@@ -70,7 +71,14 @@ import {
     }
 
     <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
-      <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 20px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+      @if (isConnected()) {
+        <a href="#" (click)="goEspaceOuConnexion($event)"
+           style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 22px; border-radius:2px; white-space:nowrap; text-decoration:none;">
+          {{ t('accueil.cta.monEspace') }}
+        </a>
+      } @else {
+        <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 20px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+      }
       @if (isMobile) {
         <button (click)="toggleMobileMenu()" aria-label="Menu" style="background:none; border:1.5px solid #5F6161; border-radius:2px; width:40px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;">
           <span style="width:18px; height:2px; background:#1c2a20;"></span>
@@ -91,8 +99,12 @@ import {
       <a href="#actualites"  (click)="scrollTo($event,'actualites');  closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.actualites') }}</a>
       <a href="#admissions" (click)="scrollTo($event,'admissions'); closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.admissions') }}</a>
       <a href="#contact"     (click)="scrollTo($event,'contact');     closeMobileMenu()" style="color:#1c2a20; font-weight:600; font-size:15px; padding:10px 0; border-bottom:1px solid #f2f2f2; text-decoration:none; cursor:pointer;">{{ t('nav.contact') }}</a>
-      <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:10px; text-align:center; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14px; padding:12px; border-radius:3px; text-decoration:none;">{{ t('nav.espaceParent') }}</a>
-      <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:8px; text-align:center; font-size:12px; color:rgba(95,97,97,0.8); padding:6px 0; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
+      @if (isConnected()) {
+        <a href="#" (click)="goEspaceOuConnexion($event); closeMobileMenu()" style="margin-top:10px; text-align:center; background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:12px; border-radius:2px; text-decoration:none;">{{ t('accueil.cta.monEspace') }}</a>
+      } @else {
+        <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:10px; text-align:center; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14px; padding:12px; border-radius:2px; text-decoration:none;">{{ t('nav.espaceParent') }}</a>
+        <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:8px; text-align:center; font-size:12px; color:rgba(95,97,97,0.8); padding:6px 0; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
+      }
     </nav>
   }
 </header>
@@ -114,7 +126,11 @@ import {
     <h1 style="font-family:'Lora',serif; font-weight:700; font-size:clamp(34px,6vw,60px); margin:0 0 18px; line-height:1.08;">{{ t('accueil.mot1') }} {{ t('accueil.mot2') }} {{ t('accueil.mot3') }}</h1>
     <p style="font-size:clamp(15px,2vw,18px); max-width:600px; margin:0 0 30px; color:rgba(255,255,255,0.9);">{{ t('accueil.description') }}</p>
     <div style="display:flex; gap:14px; flex-wrap:wrap;">
-      <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:15px; padding:14px 26px; border-radius:2px; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+      @if (isConnected()) {
+        <a href="#" (click)="goEspaceOuConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:15px; padding:14px 28px; border-radius:2px; text-decoration:none;">{{ t('accueil.cta.monEspace') }}</a>
+      } @else {
+        <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:15px; padding:14px 26px; border-radius:2px; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+      }
       <a href="#ecole" (click)="scrollTo($event,'ecole')" style="border:1.5px solid rgba(255,255,255,0.6); color:#FFFFFF; font-weight:600; font-size:15px; padding:14px 26px; border-radius:2px; text-decoration:none; cursor:pointer;">{{ t('accueil.cta.decouvrir') }}</a>
     </div>
   </div>
@@ -423,6 +439,18 @@ import {
 export class Vitrine extends CobimagBase {
     private etablissementService = inject(EtablissementService);
     private vitrineService       = inject(VitrineService);
+    readonly authService         = inject(AuthService);
+
+    readonly isConnected = computed(() => !!this.authService.currentUser());
+    readonly userInitial  = computed(() => (this.authService.currentUser()?.sub ?? '?')[0].toUpperCase());
+
+    goEspaceOuConnexion(e?: Event): void {
+        e?.preventDefault();
+        const role = this.authService.role();
+        if (role === 'PARENT') this.router.navigateByUrl('/parent');
+        else if (role) this.router.navigateByUrl('/app');
+        else this.router.navigateByUrl('/connexion');
+    }
 
     nom            = this.etablissementService.nom;
     logoUrl        = this.etablissementService.logoUrl;

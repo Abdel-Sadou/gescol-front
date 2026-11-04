@@ -7,8 +7,8 @@ import { LayoutService } from '@/app/layout/service/layout.service';
     template: `
         <div class="layout-footer">
             <div class="footer-logo-container">
-                <img src="/layout/images/logo-{{ isDarkTheme() ? 'white' : 'dark' }}.svg" alt="poseidon-layout" />
-                <span class="footer-app-name">Poseidon</span>
+                <img src="/assets/logo-cobimag.png" alt="Logo COBIMAG" style="height:32px; border-radius:50%; object-fit:cover;" />
+                <span class="footer-app-name">COBIMAG</span>
             </div>
             <span class="footer-copyright">&#169; Your Organization - 2026</span>
         </div>

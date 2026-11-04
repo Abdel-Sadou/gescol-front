@@ -48,10 +48,11 @@
     "zone": "Parent Portal",
     "sousTitre": "COBIMAG — Marie Gisèle Bilingual College",
     "bientotDisponible": "Coming soon",
-    "bonjour": "Hello,",
+    "bonjour": "Welcome to your portal",
+    "description": "Access all your children's school information in real time.",
     "mesEnfants": "My children",
     "mesInscriptions": "My enrolments",
-    "nouvelleInscription": "+ New enrolment",
+    "nouvelleInscription": "New enrolment",
     "deconnexion": "Log out",
     "chargement": "Loading your data...",
     "erreur": {
@@ -60,9 +61,12 @@
       "reessayer": "Reload page"
     },
     "aucunEnfant": {
+      "surtitle": "GETTING STARTED",
       "titre": "No children linked to this account.",
-      "description": "Enrol your child to access their school progress.",
-      "cta": "Enrol my child"
+      "description": "Enrol your child to access their school progress, results and payment history.",
+      "cta": "Enrol my child",
+      "cardTitre": "How to enrol my child?",
+      "cardDesc": "Have your child's school ID ready, then follow the online enrolment steps. The COBIMAG team will validate your application within 24 hours."
     },
     "alerte": {
       "solde": "Outstanding balance:",

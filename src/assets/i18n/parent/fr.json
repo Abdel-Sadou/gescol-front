@@ -48,10 +48,11 @@
     "zone": "Espace Parent",
     "sousTitre": "COBIMAG — Marie Gisèle Bilingual College",
     "bientotDisponible": "Bientôt disponible",
-    "bonjour": "Bonjour,",
+    "bonjour": "Bienvenue dans votre espace",
+    "description": "Retrouvez ici toutes les informations scolaires de vos enfants en temps réel.",
     "mesEnfants": "Mes enfants",
     "mesInscriptions": "Mes inscriptions",
-    "nouvelleInscription": "+ Nouvelle inscription",
+    "nouvelleInscription": "Nouvelle inscription",
     "deconnexion": "Déconnexion",
     "chargement": "Chargement de vos données...",
     "erreur": {
@@ -60,9 +61,12 @@
       "reessayer": "Recharger la page"
     },
     "aucunEnfant": {
+      "surtitle": "PREMIERS PAS",
       "titre": "Aucun enfant lié à ce compte.",
-      "description": "Inscrivez votre enfant pour accéder à son suivi scolaire.",
-      "cta": "Inscrire mon enfant"
+      "description": "Inscrivez votre enfant pour accéder à son suivi scolaire, ses résultats et ses versements.",
+      "cta": "Inscrire mon enfant",
+      "cardTitre": "Comment inscrire mon enfant ?",
+      "cardDesc": "Munissez-vous du matricule fourni par l'établissement, puis suivez les étapes d'inscription en ligne. L'équipe COBIMAG valide votre dossier sous 24 h."
     },
     "alerte": {
       "solde": "Solde restant à régler :",

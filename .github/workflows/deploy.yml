@@ -1,0 +1,57 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Build de production
+        run: npm run build -- --configuration production
+
+      - name: Empaqueter le résultat
+        run: |
+          DIR=$(ls -d dist/*/browser | head -n 1)
+          echo "Sortie: $DIR"
+          test -f "$DIR/index.html"
+          tar -czf site.tgz -C "$DIR" .
+
+      - name: Copier sur le VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: site.tgz
+          target: /opt/gescol/
+
+      - name: Publier (remplacement atomique)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            rm -rf /opt/gescol/www/test.new && mkdir -p /opt/gescol/www/test.new
+            tar -xzf /opt/gescol/site.tgz -C /opt/gescol/www/test.new
+            test -f /opt/gescol/www/test.new/index.html
+            rm -rf /opt/gescol/www/test.old
+            if [ -d /opt/gescol/www/test ]; then mv /opt/gescol/www/test /opt/gescol/www/test.old; fi
+            mv /opt/gescol/www/test.new /opt/gescol/www/test
+            rm -f /opt/gescol/site.tgz
+            echo "Frontend déployé avec succès."

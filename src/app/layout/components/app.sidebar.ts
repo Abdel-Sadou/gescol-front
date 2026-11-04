@@ -14,8 +14,7 @@ const BREAKPOINT = 992;
     imports: [CommonModule, AppMenu, RouterModule, AppTopbar],
     template: `<div class="sidebar-header">
             <a class="logo" [routerLink]="['/']">
-                <img class="logo-image" src="/layout/images/logo-{{ layoutService.isDarkTheme() ? 'white' : 'dark' }}.svg" alt="logo" />
-                <span class="app-name text-4xl font-medium leading-normal">Poseidon</span></a
+                <img class="logo-image" src="/assets/logo-cobimag.png" alt="Logo COBIMAG" /></a
             >
             <button class="layout-sidebar-anchor z-2" type="button" (click)="onAnchorToggle()"></button>
         </div>
