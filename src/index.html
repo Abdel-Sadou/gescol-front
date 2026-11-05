@@ -1,37 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
-        <title>Poseidon - PrimeNG</title>
+        <title>COBIMAG — Collège Bilingue Marie Gisèle</title>
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://primefaces.org" />
-        <link rel="icon" type="image/x-icon" href="/favicon.png" />
-        <link rel="stylesheet" type="text/css" href="/layout/styles/preloading/preloading.css" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <script src="/assets/doc-page.js" defer></script>
     </head>
 
     <body>
         <app-root>
-            <div class="loader-container">
-                <div class="loader">
-                    <div class="bottom-section">
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                    </div>
-                    <div class="top-section">
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                        <div class="bottom"></div>
-                    </div>
-                    <div class="middle"></div>
+            <style>
+                @keyframes cob-spin { to { transform: rotate(360deg); } }
+            </style>
+            <div style="
+                position: fixed; inset: 0;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                background: #FFFFFF; gap: 24px;
+            ">
+                <div style="position: relative; width: 72px; height: 72px;">
+                    <img
+                        src="/assets/logo-cobimag.png"
+                        width="72" height="72" alt="COBIMAG"
+                        style="border-radius: 50%; object-fit: cover; display: block; box-shadow: 0 2px 10px rgba(0,0,0,0.13);"
+                    />
+                    <!-- Anneau vert rapide -->
+                    <div style="
+                        position: absolute; inset: -8px; border-radius: 50%;
+                        border: 3px solid #E7E7E5; border-top-color: #008B47;
+                        animation: cob-spin 0.9s linear infinite;
+                    "></div>
+                    <!-- Anneau orange lent, sens inverse -->
+                    <div style="
+                        position: absolute; inset: -17px; border-radius: 50%;
+                        border: 2px solid #F4EEE9; border-top-color: #E8722C;
+                        animation: cob-spin 1.6s linear infinite reverse;
+                    "></div>
+                </div>
+                <div style="text-align: center;">
+                    <p style="
+                        font-family: 'Lora', Georgia, serif;
+                        font-weight: 700; font-size: 15px;
+                        color: #1c2a20; letter-spacing: 0.3px; margin: 0 0 4px;
+                    ">COBIMAG</p>
+                    <p style="
+                        font-family: 'Work Sans', system-ui, sans-serif;
+                        font-size: 12px; color: #5F6161; margin: 0;
+                    ">Chargement en cours…</p>
                 </div>
             </div>
         </app-root>

@@ -31,7 +31,8 @@ import {
 
 <!-- ══ HEADER ═════════════════════════════════════════════════════════════ -->
 <header style="position:sticky; top:0; z-index:50; background:#FFFFFF; box-shadow:0 1px 0 rgba(0,0,0,0.08);">
-  <!-- Barre de contact : se replie après 80 px de scroll -->
+  <!-- Barre de contact : desktop uniquement, se replie après 80 px de scroll -->
+  @if (!navCollapsed) {
   <div [style]="topbarStyle()">
     <div style="display:flex; gap:18px; flex-wrap:wrap;">
       <span>{{ t('topbar.adresse') }}</span>
@@ -46,6 +47,7 @@ import {
       <span>{{ t('topbar.bilingue') }}</span>
     </div>
   </div>
+  }
 
   <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:16px; flex-wrap:nowrap;">
     <a href="#accueil" (click)="scrollTo($event,'accueil')" style="display:flex; align-items:center; gap:10px; color:#1c2a20; min-width:0; overflow:hidden; text-decoration:none; cursor:pointer;">
@@ -71,13 +73,16 @@ import {
     }
 
     <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
-      @if (isConnected()) {
-        <a href="#" (click)="goEspaceOuConnexion($event)"
-           style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 22px; border-radius:2px; white-space:nowrap; text-decoration:none;">
-          {{ t('accueil.cta.monEspace') }}
-        </a>
-      } @else {
-        <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 20px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+      @if (!navCollapsed) {
+        @if (isConnected()) {
+          <a href="#" (click)="goEspaceOuConnexion($event)"
+             style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 22px; border-radius:2px; white-space:nowrap; text-decoration:none;">
+            {{ t('accueil.cta.monEspace') }}
+          </a>
+        } @else {
+          <a href="#" (click)="goConnexion($event)" style="background:#E8722C; color:#FFFFFF; font-weight:700; font-size:14px; padding:11px 20px; border-radius:2px; white-space:nowrap; text-decoration:none;">{{ t('accueil.cta.inscrire') }}</a>
+        }
+        <app-language-switcher variant="light" />
       }
       @if (navCollapsed) {
         <button (click)="toggleMobileMenu()" aria-label="Menu" style="background:none; border:1.5px solid #5F6161; border-radius:2px; width:40px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer;">
@@ -86,7 +91,6 @@ import {
           <span style="width:18px; height:2px; background:#1c2a20;"></span>
         </button>
       }
-      <app-language-switcher variant="light" />
     </div>
   </div>
 
@@ -105,6 +109,9 @@ import {
         <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:10px; text-align:center; background:#008B47; color:#FFFFFF; font-weight:700; font-size:14px; padding:12px; border-radius:2px; text-decoration:none;">{{ t('nav.espaceParent') }}</a>
         <a href="#" (click)="goConnexion($event); closeMobileMenu()" style="margin-top:8px; text-align:center; font-size:12px; color:rgba(95,97,97,0.8); padding:6px 0; text-decoration:none;">{{ t('footer.connexionPersonnel') }}</a>
       }
+      <div style="margin-top:14px; padding-top:14px; border-top:1px solid #f2f2f2; display:flex; align-items:center;">
+        <app-language-switcher variant="light" />
+      </div>
     </nav>
   }
 </header>
