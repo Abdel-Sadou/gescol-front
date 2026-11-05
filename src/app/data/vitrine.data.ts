@@ -31,9 +31,9 @@ export const CYCLES: CycleData[] = [
     { fr: 'Second Cycle',        frClasses: '2nde – Terminale', en: 'Advanced Level', enClasses: 'Lower Sixth – Upper Sixth', desc: "Spécialisation et préparation aux examens de fin d'études secondaires (Baccalauréat / GCE A-Level)." },
 ];
 
-// SYSTEM_FR / SYSTEM_EN : structure générale du système éducatif camerounais.
-// POINT OUVERT : vérifier avec l'établissement que les examens listés
-// (CEP, BEPC, Bac, FSLC, GCE O-Level, GCE A-Level) sont bien tous préparés.
+// SYSTEM_FR / SYSTEM_EN : validé par M. Bertrand (établissement).
+// FR : 6e → Terminale, examens BEPC / Probatoire / Baccalauréat.
+// EN : Nursery → Upper Sixth, examens GCE O-Level / GCE A-Level.
 export interface SystemData {
     badge: string; badgeBg: string; badgeColor: string;
     bg: string; color: string; border: string; tagBorder: string;
@@ -42,14 +42,14 @@ export interface SystemData {
 export const SYSTEM_FR: SystemData = {
     badge: 'FR', badgeBg: '#008B47', badgeColor: '#FFFFFF',
     bg: '#008B47', color: '#FFFFFF', border: 'none', tagBorder: 'rgba(255,255,255,0.5)',
-    title: 'Filière Francophone', subtitle: 'De la Maternelle à la Terminale',
-    desc: "Programme conforme aux exigences du Ministère de l'Éducation de Base et des Enseignements Secondaires, préparation au BEPC et au Baccalauréat.",
-    tags: ['CEP', 'BEPC', 'Baccalauréat'],
+    title: 'Filière Francophone', subtitle: 'De la 6e en Terminale',
+    desc: "Programme conforme aux exigences du Ministère des Enseignements Secondaires, préparation au BEPC, au Probatoire et au Baccalauréat.",
+    tags: ['BEPC', 'Probatoire', 'Baccalauréat'],
 };
 export const SYSTEM_EN: SystemData = {
     badge: 'EN', badgeBg: '#FFFFFF', badgeColor: '#008B47',
     bg: '#FFFFFF', color: '#1c2a20', border: '2px solid #008B47', tagBorder: '#008B47',
     title: 'English Section', subtitle: 'From Nursery to Upper Sixth',
-    desc: 'Curriculum aligned with Cameroon GCE Board requirements, preparing students for the FSLC, GCE O-Level and A-Level.',
-    tags: ['FSLC', 'GCE O-Level', 'GCE A-Level'],
+    desc: 'Curriculum aligned with Cameroon GCE Board requirements, preparing students for GCE O-Level and A-Level.',
+    tags: ['GCE O-Level', 'GCE A-Level'],
 };
