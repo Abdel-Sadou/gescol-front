@@ -202,6 +202,7 @@
       "prenom": "First name",
       "matricule": "Student ID",
       "classe": "Class",
+      "sousSysteme": "Sub-system",
       "rechercher": "Search",
       "reinitialiser": "Reset"
     },
@@ -507,6 +508,7 @@
       "nom": "Last name",
       "matricule": "Staff ID",
       "tousTypes": "All types",
+      "tousContrats": "All contracts",
       "rechercher": "Search",
       "reinitialiser": "Reset"
     },

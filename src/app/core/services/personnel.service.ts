@@ -49,6 +49,7 @@ export interface PersonnelSearchParams {
     nom?: string;
     matricule?: string;
     typePersonnel?: TypePersonnel;
+    typeContrat?: TypeContrat;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -63,6 +64,7 @@ export class PersonnelService {
         if (params.nom)           p = p.set('nom', params.nom);
         if (params.matricule)     p = p.set('matricule', params.matricule);
         if (params.typePersonnel) p = p.set('typePersonnel', params.typePersonnel);
+        if (params.typeContrat)   p = p.set('typeContrat', params.typeContrat);
         return this.http.get<PageResponse<PersonnelResponse>>('/api/personnel', { params: p });
     }
 

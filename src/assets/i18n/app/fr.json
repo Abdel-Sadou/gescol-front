@@ -109,6 +109,7 @@
       "prenom": "Prénom",
       "matricule": "Matricule",
       "classe": "Classe",
+      "sousSysteme": "Sous-système",
       "rechercher": "Rechercher",
       "reinitialiser": "Réinitialiser"
     },
@@ -414,6 +415,7 @@
       "nom": "Nom",
       "matricule": "Matricule",
       "tousTypes": "Tous les types",
+      "tousContrats": "Tous les contrats",
       "rechercher": "Rechercher",
       "reinitialiser": "Réinitialiser"
     },

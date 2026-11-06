@@ -57,6 +57,7 @@ export interface EleveSearchParams {
     prenom?: string;
     matricule?: string;
     classeLibelle?: string;
+    sousSysteme?: 'FRANCOPHONE' | 'ANGLOPHONE';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -73,10 +74,11 @@ export class EleveService {
             .set('page', String(page))
             .set('size', String(size))
             .set('sort', sort);
-        if (params.nom)          p = p.set('nom', params.nom);
-        if (params.prenom)       p = p.set('prenom', params.prenom);
-        if (params.matricule)    p = p.set('matricule', params.matricule);
+        if (params.nom)           p = p.set('nom', params.nom);
+        if (params.prenom)        p = p.set('prenom', params.prenom);
+        if (params.matricule)     p = p.set('matricule', params.matricule);
         if (params.classeLibelle) p = p.set('classeLibelle', params.classeLibelle);
+        if (params.sousSysteme)   p = p.set('sousSysteme', params.sousSysteme);
         return this.http.get<PageResponse<EleveResponse>>('/api/eleves', { params: p });
     }
 

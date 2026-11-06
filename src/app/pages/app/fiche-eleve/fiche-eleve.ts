@@ -174,7 +174,7 @@ type DetailState =
             [disabled]="true" [title]="'Module finances à venir'"
             class="p-button-success"></button>
           <button pButton icon="pi pi-print" [label]="t('fiche.bouton.imprimer')"
-            [disabled]="true" [title]="'Impression à venir'"
+            (click)="imprimer()"
             class="p-button-outlined p-button-secondary"></button>
           @if (canEdit()) {
             <button pButton icon="pi pi-trash" [label]="t('fiche.bouton.supprimer')"
@@ -308,6 +308,10 @@ export class FicheEleve {
     onDeleted(): void {
         this.deleteVisible = false;
         this.router.navigate(['/app/eleves']);
+    }
+
+    imprimer(): void {
+        window.print();
     }
 
     onQueryChange(e: Event): void {

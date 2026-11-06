@@ -59,6 +59,13 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                     [showClear]="true"
                     [placeholder]="t('personnel.filtres.tousTypes')">
                 </p-select>
+                <p-select
+                    [(ngModel)]="filters.typeContrat"
+                    [options]="typeContratOptions(t)"
+                    optionLabel="label" optionValue="value"
+                    [showClear]="true"
+                    [placeholder]="t('personnel.filtres.tousContrats')">
+                </p-select>
             </div>
             <div class="flex gap-2 mb-5">
                 <button pButton icon="pi pi-search" [label]="t('personnel.filtres.rechercher')"
@@ -313,6 +320,14 @@ export class PersonnelListe implements OnInit {
         return [
             { label: t('personnel.typePersonnel.ENSEIGNANT'),     value: 'ENSEIGNANT'     },
             { label: t('personnel.typePersonnel.NON_ENSEIGNANT'), value: 'NON_ENSEIGNANT' }
+        ];
+    }
+
+    typeContratOptions(t: (k: string) => string) {
+        return [
+            { label: t('personnel.typeContrat.PERMANENT'),       value: 'PERMANENT'       },
+            { label: t('personnel.typeContrat.SEMI_PERMANENT'),  value: 'SEMI_PERMANENT'  },
+            { label: t('personnel.typeContrat.VACATAIRE'),       value: 'VACATAIRE'       },
         ];
     }
 

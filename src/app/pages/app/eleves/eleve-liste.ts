@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { MessageModule } from 'primeng/message';
 import { GescolTableComponent, ColDef, GescolLoadEvent } from '@/app/shared/components/gescol-table.component';
 import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-confirm-dialog.component';
@@ -20,6 +21,7 @@ import { AuthService } from '@/app/core/services/auth.service';
         TranslocoDirective,
         ButtonModule,
         InputTextModule,
+        SelectModule,
         MessageModule,
         GescolTableComponent,
         DeleteConfirmDialogComponent
@@ -44,7 +46,7 @@ import { AuthService } from '@/app/core/services/auth.service';
             }
 
             <!-- Filtres de recherche -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
                 <input pInputText type="text"
                     [(ngModel)]="filters.nom"
                     [placeholder]="t('eleves.filtres.nom')" />
@@ -57,6 +59,13 @@ import { AuthService } from '@/app/core/services/auth.service';
                 <input pInputText type="text"
                     [(ngModel)]="filters.classeLibelle"
                     [placeholder]="t('eleves.filtres.classe')" />
+                <p-select
+                    [(ngModel)]="filters.sousSysteme"
+                    [options]="sousSystemeOptions"
+                    optionLabel="label" optionValue="value"
+                    [showClear]="true"
+                    [placeholder]="t('eleves.filtres.sousSysteme')">
+                </p-select>
             </div>
             <div class="flex gap-2 mb-5">
                 <button pButton icon="pi pi-search" [label]="t('eleves.filtres.rechercher')"
@@ -103,6 +112,11 @@ export class EleveListe implements OnInit {
     readonly successMsg = signal<string | null>(null);
 
     filters: EleveSearchParams = {};
+
+    readonly sousSystemeOptions = [
+        { label: 'Francophone', value: 'FRANCOPHONE' },
+        { label: 'Anglophone',  value: 'ANGLOPHONE'  },
+    ];
 
     private currentSort = 'nom,asc';
     private pendingFilters: EleveSearchParams = {};
