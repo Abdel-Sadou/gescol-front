@@ -95,14 +95,14 @@ const VARIABLES_DISPONIBLES: { label: string; value: string }[] = [
                                         <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.3rem 0.3rem 0.3rem 0.75rem; background:var(--color-canvas); border:1px solid var(--color-border); border-radius:var(--radius-sm); cursor:pointer; transition:border-color 0.15s"
                                             [style.border-color]="copiedVar() === v.value ? 'var(--p-green-400)' : ''"
                                             [title]="v.value"
-                                            (click)="copyVar(v.value)">
+                                            (click)="copyVar(v)">
                                             <span style="font-family:monospace; font-size:0.78rem; font-weight:600; letter-spacing:0.04em; color:var(--p-primary-color)">{{ v.label }}</span>
                                             <button pButton type="button"
                                                 [icon]="copiedVar() === v.value ? 'pi pi-check' : 'pi pi-copy'"
                                                 [severity]="copiedVar() === v.value ? 'success' : 'secondary'"
                                                 size="small" text rounded
                                                 [title]="v.value"
-                                                (click)="$event.stopPropagation(); copyVar(v.value)"></button>
+                                                (click)="$event.stopPropagation(); copyVar(v)"></button>
                                         </div>
                                     }
                                 </div>
@@ -161,7 +161,7 @@ export class ModeleEngagementForm implements OnInit {
             this.loadingItem.set(true);
             this.svc.getModeleById(this.itemId).subscribe({
                 next: (item) => {
-                    this.form.patchValue({ libelle: item.libelle, contenu: item.contenu });
+                    this.form.patchValue({ libelle: item.libelle, contenu: this.toDisplay(item.contenu) });
                     this.loadingItem.set(false);
                 },
                 error: () => { this.loadError.set(true); this.loadingItem.set(false); }
@@ -169,13 +169,21 @@ export class ModeleEngagementForm implements OnInit {
         }
     }
 
-    copyVar(value: string): void {
-        navigator.clipboard.writeText(value).then(() => {
-            this.copiedVar.set(value);
+    copyVar(v: { label: string; value: string }): void {
+        navigator.clipboard.writeText(v.label).then(() => {
+            this.copiedVar.set(v.value);
             this.zone.runOutsideAngular(() =>
                 setTimeout(() => this.zone.run(() => this.copiedVar.set(null)), 1500)
             );
         });
+    }
+
+    private toDisplay(contenu: string): string {
+        return VARIABLES_DISPONIBLES.reduce((acc, v) => acc.replaceAll(v.value, v.label), contenu);
+    }
+
+    private toBackend(contenu: string): string {
+        return VARIABLES_DISPONIBLES.reduce((acc, v) => acc.replaceAll(v.label, v.value), contenu);
     }
 
     onSubmit(): void {
@@ -184,7 +192,7 @@ export class ModeleEngagementForm implements OnInit {
         this.saving.set(true);
         this.saveError.set(null);
         const v = this.form.getRawValue();
-        const req = { libelle: v.libelle!.trim(), contenu: v.contenu! };
+        const req = { libelle: v.libelle!.trim(), contenu: this.toBackend(v.contenu!) };
         const req$ = this.isEditMode && this.itemId
             ? this.svc.modifierModele(this.itemId, req)
             : this.svc.creerModele(req);
