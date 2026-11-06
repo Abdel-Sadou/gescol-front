@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -9,10 +9,13 @@ import { MessageModule } from 'primeng/message';
 import { FluidModule } from 'primeng/fluid';
 import { ParametrageService } from '@/app/core/services/parametrage.service';
 
-// Variables de substitution reconnues côté backend pour les lettres d'engagement
-const VARIABLES_DISPONIBLES = [
-    '{{nomEleve}}', '{{prenomEleve}}', '{{classeLibelle}}',
-    '{{anneeScolaire}}', '{{nomEtablissement}}', '{{dateConfirmation}}'
+const VARIABLES_DISPONIBLES: { label: string; value: string }[] = [
+    { label: 'NOM_ELEVE',         value: '{{nomEleve}}' },
+    { label: 'PRENOM_ELEVE',      value: '{{prenomEleve}}' },
+    { label: 'CLASSE',            value: '{{classeLibelle}}' },
+    { label: 'ANNEE_SCOLAIRE',    value: '{{anneeScolaire}}' },
+    { label: 'NOM_ETABLISSEMENT', value: '{{nomEtablissement}}' },
+    { label: 'DATE_CONFIRMATION', value: '{{dateConfirmation}}' },
 ];
 
 @Component({
@@ -87,10 +90,20 @@ const VARIABLES_DISPONIBLES = [
                                 <p style="color:var(--color-text-muted); font-size:0.8rem; margin:0 0 0.75rem">
                                     {{ t('parametrage.modelesEngagement.form.variablesHint') }}
                                 </p>
-                                <div class="flex flex-col gap-2">
-                                    @for (v of variables; track v) {
-                                        <code style="display:block; font-size:0.8rem; padding:0.4rem 0.6rem; background:var(--color-canvas); border:1px solid var(--color-border); border-radius:var(--radius-sm); word-break:break-all; cursor:pointer; user-select:all"
-                                            [title]="v">{{ v }}</code>
+                                <div class="flex flex-col gap-1">
+                                    @for (v of variables; track v.value) {
+                                        <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; padding:0.3rem 0.3rem 0.3rem 0.75rem; background:var(--color-canvas); border:1px solid var(--color-border); border-radius:var(--radius-sm); cursor:pointer; transition:border-color 0.15s"
+                                            [style.border-color]="copiedVar() === v.value ? 'var(--p-green-400)' : ''"
+                                            [title]="v.value"
+                                            (click)="copyVar(v.value)">
+                                            <span style="font-family:monospace; font-size:0.78rem; font-weight:600; letter-spacing:0.04em; color:var(--p-primary-color)">{{ v.label }}</span>
+                                            <button pButton type="button"
+                                                [icon]="copiedVar() === v.value ? 'pi pi-check' : 'pi pi-copy'"
+                                                [severity]="copiedVar() === v.value ? 'success' : 'secondary'"
+                                                size="small" text rounded
+                                                [title]="v.value"
+                                                (click)="$event.stopPropagation(); copyVar(v.value)"></button>
+                                        </div>
                                     }
                                 </div>
                             </div>
@@ -125,6 +138,7 @@ export class ModeleEngagementForm implements OnInit {
     private fb        = inject(FormBuilder);
     private svc       = inject(ParametrageService);
     private transloco = inject(TranslocoService);
+    private zone      = inject(NgZone);
 
     readonly isEditMode  = !!this.route.snapshot.paramMap.get('id');
     private readonly itemId = this.route.snapshot.paramMap.get('id');
@@ -133,6 +147,7 @@ export class ModeleEngagementForm implements OnInit {
     readonly loadError   = signal(false);
     readonly saving      = signal(false);
     readonly saveError   = signal<string | null>(null);
+    readonly copiedVar   = signal<string | null>(null);
 
     readonly variables = VARIABLES_DISPONIBLES;
 
@@ -152,6 +167,15 @@ export class ModeleEngagementForm implements OnInit {
                 error: () => { this.loadError.set(true); this.loadingItem.set(false); }
             });
         }
+    }
+
+    copyVar(value: string): void {
+        navigator.clipboard.writeText(value).then(() => {
+            this.copiedVar.set(value);
+            this.zone.runOutsideAngular(() =>
+                setTimeout(() => this.zone.run(() => this.copiedVar.set(null)), 1500)
+            );
+        });
     }
 
     onSubmit(): void {
