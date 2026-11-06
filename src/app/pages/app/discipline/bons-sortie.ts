@@ -423,7 +423,7 @@ export class BonsSortie {
     private searchEleves(): void {
         const q = this.searchQuery.trim();
         if (q.length < 2) { this.eleveResults.set([]); return; }
-        const isMatricule = /^[A-Z]{1,4}-\d{4}-/i.test(q);
+        const isMatricule = /^[A-Z]{1,4}-\d{4}-|^\d{4}[GF]/i.test(q);
         this.searchLoading.set(true);
         this.eleveService.rechercher(isMatricule ? { matricule: q } : { nom: q }, 0, 10).subscribe({
             next: res => {
@@ -472,8 +472,8 @@ export class BonsSortie {
         this.showErrors.set(true);
         const eleve = this.selectedEleve();
         if (!eleve || !this.motif.trim() || !this.dateSortie) return;
-        const utilisateurId = this.authService.currentUser()?.utilisateurId;
-        if (!utilisateurId) {
+        const personnelId = this.authService.currentUser()?.personnelId;
+        if (!personnelId) {
             this.createError.set(this.transloco.translate('app.discipline.bonsSortie.erreurAutorise'));
             return;
         }
@@ -484,7 +484,7 @@ export class BonsSortie {
             eleveId:       eleve.id,
             dateSortie:    this.datetimeLocalToISO(this.dateSortie),
             motif:         this.motif.trim(),
-            autoriseParId: utilisateurId
+            autoriseParId: personnelId
         }).subscribe({
             next: bon => {
                 this.creating.set(false);

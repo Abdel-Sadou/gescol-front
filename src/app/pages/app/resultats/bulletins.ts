@@ -513,7 +513,7 @@ export class Bulletins implements OnInit {
     private searchEleves(): void {
         const q = this.searchQuery.trim();
         if (q.length < 2) { this.eleveResults.set([]); return; }
-        const isMatricule = /^[A-Z]{1,4}-\d{4}-/i.test(q);
+        const isMatricule = /^[A-Z]{1,4}-\d{4}-|^\d{4}[GF]/i.test(q);
         const params = isMatricule ? { matricule: q } : { nom: q };
         this.searchLoading.set(true);
         this.eleveService.rechercher(params, 0, 10).subscribe({

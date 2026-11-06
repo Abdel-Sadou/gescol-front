@@ -527,7 +527,7 @@ export class Sanctions implements OnInit {
     private searchEleves(): void {
         const q = this.searchQuery.trim();
         if (q.length < 2) { this.eleveResults.set([]); return; }
-        const isMatricule = /^[A-Z]{1,4}-\d{4}-/i.test(q);
+        const isMatricule = /^[A-Z]{1,4}-\d{4}-|^\d{4}[GF]/i.test(q);
         this.searchLoading.set(true);
         this.eleveService.rechercher(isMatricule ? { matricule: q } : { nom: q }, 0, 10).subscribe({
             next: res => {
@@ -579,13 +579,13 @@ export class Sanctions implements OnInit {
         this.saving.set(true);
         this.formError.set(null);
         this.saveSuccess.set(false);
-        const utilisateurId = this.authService.currentUser()?.utilisateurId;
+        const personnelId = this.authService.currentUser()?.personnelId;
         this.disciplineService.creerSanction({
             eleveId:      eleve.id,
             typeSanction: type,
             dateSanction: this.datetimeLocalToISO(this.dateSanction),
             motif:        this.motif.trim(),
-            ...(utilisateurId ? { enregistreParId: utilisateurId } : {})
+            ...(personnelId ? { enregistreParId: personnelId } : {})
         }).subscribe({
             next: () => {
                 this.saving.set(false);
