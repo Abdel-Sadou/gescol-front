@@ -1160,6 +1160,7 @@ export class AppLayout {
             sysEntries.push(this.section(this.t('menu.parametrage.label'), 'pi pi-cog', [
                 this.item(this.t('menu.parametrage.classes'),           '', '/app/parametrage/classes'),
                 this.item(this.t('menu.parametrage.trimestres'),        '', '/app/parametrage/trimestres'),
+                this.item(this.t('menu.parametrage.sequences'),         '', '/app/parametrage/sequences'),
                 this.item(this.t('menu.parametrage.tauxScolarite'),     '', '/app/parametrage/taux-scolarite'),
                 this.item(this.t('menu.parametrage.quotasHoraires'),    '', '/app/parametrage/quotas-horaires'),
                 this.item(this.t('menu.parametrage.matieres'),          '', '/app/parametrage/matieres'),

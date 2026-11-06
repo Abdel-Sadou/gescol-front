@@ -47,6 +47,26 @@ export interface MoyennesResponse {
     moyenneGenerale: number | null;
 }
 
+export interface MoyenneTrimestreDetail {
+    matiereId: string;
+    matiereLibelle: string;
+    noteS1: number | null;
+    noteS2: number | null;
+    noteTrimestre: number | null;
+    coefficient: number;
+}
+
+export interface MoyenneTrimestreResponse {
+    eleveId: string;
+    trimestreId: string;
+    trimestreLibelle: string;
+    anneeScolaire: string;
+    sequenceS1Libelle: string | null;
+    sequenceS2Libelle: string | null;
+    details: MoyenneTrimestreDetail[];
+    moyenneGenerale: number | null;
+}
+
 // ─── Service ─────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
@@ -80,6 +100,19 @@ export class ResultatsService {
     getBulletinPdf(eleveId: string, sequenceId: string): Observable<Blob> {
         return this.http.get(
             `/api/resultats/bulletins/${eleveId}/sequence/${sequenceId}/pdf`,
+            { responseType: 'blob' }
+        );
+    }
+
+    getMoyennesTrimestre(eleveId: string, trimestreId: string): Observable<MoyenneTrimestreResponse> {
+        return this.http.get<MoyenneTrimestreResponse>(
+            `/api/resultats/moyennes/eleve/${eleveId}/trimestre/${trimestreId}`
+        );
+    }
+
+    getBulletinTrimestrePdf(eleveId: string, trimestreId: string): Observable<Blob> {
+        return this.http.get(
+            `/api/resultats/bulletins/${eleveId}/trimestre/${trimestreId}/pdf`,
             { responseType: 'blob' }
         );
     }

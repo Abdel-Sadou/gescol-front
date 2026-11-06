@@ -19,7 +19,8 @@
     "parametrage": {
       "label": "Paramétrage",
       "classes": "Classes",
-      "trimestres": "Trimestres & séquences",
+      "trimestres": "Trimestres",
+      "sequences": "Séquences",
       "tauxScolarite": "Taux de scolarité",
       "quotasHoraires": "Quotas horaires",
       "matieres": "Matières",
@@ -298,6 +299,28 @@
           "dateDebut": "Début",
           "dateFin": "Fin"
         }
+      }
+    },
+    "sequences": {
+      "titre": "Séquences",
+      "nouveau": "Nouvelle séquence",
+      "filtreTrimestre": "Filtrer par trimestre",
+      "tousLesTrimestres": "Tous les trimestres",
+      "form": {
+        "titreCreation": "Nouvelle séquence",
+        "titreEdition": "Modifier la séquence",
+        "libelle": "Libellé",
+        "trimestreId": "Trimestre",
+        "trimestrePlaceholder": "Sélectionner un trimestre",
+        "dateDebut": "Date de début",
+        "dateFin": "Date de fin"
+      },
+      "cols": {
+        "libelle": "Libellé",
+        "trimestre": "Trimestre",
+        "anneeScolaire": "Année scolaire",
+        "dateDebut": "Début",
+        "dateFin": "Fin"
       }
     },
     "tauxScolarite": {
@@ -590,7 +613,17 @@
       "erreurMoyennes": "Impossible de charger les moyennes. Veuillez réessayer.",
       "rechercheDisablee": "Choisissez d'abord une séquence (étape 1)…",
       "miniCaracteres": "Saisissez au moins 2 caractères pour rechercher.",
-      "erreurPdf": "Impossible de télécharger le bulletin PDF. Veuillez réessayer."
+      "erreurPdf": "Impossible de télécharger le bulletin PDF. Veuillez réessayer.",
+      "modeSequence": "Par séquence",
+      "modeTrimestre": "Par trimestre",
+      "etape1Trimestre": "Choisir le trimestre",
+      "choisirTrimestre": "Choisir un trimestre",
+      "rechercheDisableeTrimestre": "Choisissez d'abord un trimestre (étape 1)…",
+      "colNoteS1": "Note S1",
+      "colNoteS2": "Note S2",
+      "colMoyTrimestre": "Moy. Trimestre",
+      "telechargerPdfTrimestre": "Télécharger le bulletin du trimestre",
+      "erreurMoyennesTrimestre": "Impossible de charger les moyennes du trimestre. Veuillez réessayer."
     }
   },
 

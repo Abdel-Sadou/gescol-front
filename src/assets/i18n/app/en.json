@@ -19,7 +19,8 @@
     "parametrage": {
       "label": "Settings",
       "classes": "Classes",
-      "trimestres": "Terms & sequences",
+      "trimestres": "Terms",
+      "sequences": "Sequences",
       "tauxScolarite": "Tuition rates",
       "quotasHoraires": "Teaching quotas",
       "matieres": "Subjects",
@@ -393,6 +394,28 @@
         }
       }
     },
+    "sequences": {
+      "titre": "Sequences",
+      "nouveau": "New sequence",
+      "filtreTrimestre": "Filter by term",
+      "tousLesTrimestres": "All terms",
+      "form": {
+        "titreCreation": "New sequence",
+        "titreEdition": "Edit sequence",
+        "libelle": "Name",
+        "trimestreId": "Term",
+        "trimestrePlaceholder": "Select a term",
+        "dateDebut": "Start date",
+        "dateFin": "End date"
+      },
+      "cols": {
+        "libelle": "Name",
+        "trimestre": "Term",
+        "anneeScolaire": "School year",
+        "dateDebut": "Start",
+        "dateFin": "End"
+      }
+    },
     "tauxScolarite": {
       "titre": "Tuition rates",
       "nouveau": "New rate",
@@ -683,7 +706,17 @@
       "erreurMoyennes": "Unable to load averages. Please try again.",
       "rechercheDisablee": "Select a sequence first (step 1)…",
       "miniCaracteres": "Enter at least 2 characters to search.",
-      "erreurPdf": "Unable to download the report card PDF. Please try again."
+      "erreurPdf": "Unable to download the report card PDF. Please try again.",
+      "modeSequence": "By sequence",
+      "modeTrimestre": "By quarter",
+      "etape1Trimestre": "Choose the quarter",
+      "choisirTrimestre": "Choose a quarter",
+      "rechercheDisableeTrimestre": "Select a quarter first (step 1)…",
+      "colNoteS1": "Score S1",
+      "colNoteS2": "Score S2",
+      "colMoyTrimestre": "Quarter avg.",
+      "telechargerPdfTrimestre": "Download quarterly report card",
+      "erreurMoyennesTrimestre": "Unable to load quarter averages. Please try again."
     }
   },
 

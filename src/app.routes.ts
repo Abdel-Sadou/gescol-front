@@ -93,7 +93,8 @@ export const appRoutes: Routes = [
             // --- Modules métier — placeholders (F09-F16) ---
             // Paramétrage (F09)
             { path: 'parametrage/classes',         loadComponent: () => import('@/app/pages/app/parametrage/classes/classes-liste').then(c => c.ClassesListe),                        data: { breadcrumb: 'Classes' } },
-            { path: 'parametrage/trimestres',      loadComponent: () => import('@/app/pages/app/parametrage/trimestres/trimestres-liste').then(c => c.TrimestresListe),              data: { breadcrumb: 'Trimestres & séquences' } },
+            { path: 'parametrage/trimestres',      loadComponent: () => import('@/app/pages/app/parametrage/trimestres/trimestres-liste').then(c => c.TrimestresListe),              data: { breadcrumb: 'Trimestres' } },
+            { path: 'parametrage/sequences',       loadComponent: () => import('@/app/pages/app/parametrage/sequences/sequences-liste').then(c => c.SequencesListe),                data: { breadcrumb: 'Séquences' } },
             { path: 'parametrage/taux-scolarite',  loadComponent: () => import('@/app/pages/app/parametrage/taux-scolarite/taux-scolarite-liste').then(c => c.TauxScolariteListe),  data: { breadcrumb: 'Taux de scolarité' } },
             { path: 'parametrage/quotas-horaires', loadComponent: () => import('@/app/pages/app/parametrage/quotas-horaires/quotas-horaires-liste').then(c => c.QuotasHorairesListe), data: { breadcrumb: 'Quotas horaires' } },
             { path: 'parametrage/matieres',        loadComponent: () => import('@/app/pages/app/parametrage/matieres/matieres-liste').then(c => c.MatieresListe),                    data: { breadcrumb: 'Matières' } },
