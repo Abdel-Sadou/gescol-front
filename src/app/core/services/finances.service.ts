@@ -3,9 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PageResponse } from './eleve.service';
 
-export type StatutVersement = 'VALIDE' | 'EN_ATTENTE_VALIDATION' | 'REJETE';
-export type ModePaiement    = 'CAISSE' | 'VALIDATION_BANCAIRE';
-export type StatutMoratoire = 'EN_ATTENTE' | 'VALIDE' | 'REFUSE';
+export type StatutVersement  = 'VALIDE' | 'EN_ATTENTE_VALIDATION' | 'REJETE';
+export type ModePaiement     = 'CAISSE' | 'VALIDATION_BANCAIRE';
+export type StatutMoratoire  = 'EN_ATTENTE' | 'VALIDE' | 'REFUSE';
+export type StatutCorrection = 'EN_ATTENTE' | 'APPROUVE' | 'REJETE';
 
 // ── Versements ─────────────────────────────────────────────────────────────────
 
@@ -18,6 +19,29 @@ export interface VersementRequest {
 }
 
 export interface RejeterVersementRequest { motifRejet: string; }
+
+export interface CorrectionVersementRequest {
+    montantPropose: number;
+    motif: string;
+}
+
+export interface CorrectionVersementResponse {
+    id: string;
+    versementId: string;
+    eleveNom: string;
+    elevePrenom: string;
+    eleveMatricule: string;
+    montantActuel: number;
+    montantPropose: number;
+    motif: string;
+    statut: StatutCorrection;
+    demandeParId: string;
+    demandeParEmail: string;
+    dateDemande: string;
+    traiteParId: string | null;
+    dateDecision: string | null;
+    motifRejet: string | null;
+}
 
 export interface VersementResponse {
     id: string;
@@ -187,6 +211,24 @@ export class FinancesService {
 
     setSeuil(nombreJoursAvantAlerte: number): Observable<{ nombreJoursAvantAlerte: number }> {
         return this.http.put<{ nombreJoursAvantAlerte: number }>('/api/finances/alertes/seuil', { nombreJoursAvantAlerte });
+    }
+
+    // -- Corrections de montant --
+
+    demanderCorrection(versementId: string, req: CorrectionVersementRequest): Observable<CorrectionVersementResponse> {
+        return this.http.post<CorrectionVersementResponse>(`/api/finances/versements/${versementId}/demander-correction`, req);
+    }
+
+    getCorrectionsEnAttente(): Observable<CorrectionVersementResponse[]> {
+        return this.http.get<CorrectionVersementResponse[]>('/api/finances/corrections/en-attente');
+    }
+
+    approuverCorrection(id: string): Observable<CorrectionVersementResponse> {
+        return this.http.put<CorrectionVersementResponse>(`/api/finances/corrections/${id}/approuver`, {});
+    }
+
+    rejeterCorrection(id: string, motifRejet: string): Observable<CorrectionVersementResponse> {
+        return this.http.put<CorrectionVersementResponse>(`/api/finances/corrections/${id}/rejeter`, { motifRejet });
     }
 
     // -- États --

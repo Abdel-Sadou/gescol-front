@@ -1,16 +1,19 @@
 import {
-    ChangeDetectionStrategy, Component, ElementRef, inject, signal, ViewChild
+    ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, computed
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { SkeletonModule } from 'primeng/skeleton';
 import { EleveService, EleveResponse } from '@/app/core/services/eleve.service';
+import { AuthService } from '@/app/core/services/auth.service';
 import {
-    FinancesService, VersementResponse, SoldeResponse
+    FinancesService, VersementResponse, SoldeResponse, CorrectionVersementResponse
 } from '@/app/core/services/finances.service';
 
 @Component({
@@ -19,7 +22,8 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormsModule, TranslocoDirective,
-        ButtonModule, InputNumberModule, InputTextModule, MessageModule, SkeletonModule
+        ButtonModule, InputNumberModule, InputTextModule, TextareaModule,
+        DialogModule, MessageModule, SkeletonModule
     ],
     styles: [`
         :host {
@@ -164,6 +168,28 @@ import {
             color: var(--color-primary); }
         .fv-pdf-btn i { font-size: 14px; color: #dc2626; }
         .fv-pdf-btn.loading { opacity: .6; pointer-events: none; }
+        /* ── Bouton correction ── */
+        .fv-corr-btn { display: inline-flex; align-items: center; gap: 4px;
+            background: transparent; border: 1px solid var(--color-border);
+            border-radius: 7px; padding: 4px 9px; cursor: pointer; font-size: 11px;
+            font-weight: 600; color: var(--color-text-muted); transition: all .15s; margin-top: 4px; }
+        .fv-corr-btn:hover { border-color: var(--color-accent); color: var(--color-accent); background: rgba(232,114,44,.06); }
+        /* ── Carte corrections en attente ── */
+        .fv-card-accent-warn { border-top: 3px solid #f59e0b; }
+        .fv-corr-row {
+            display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: center;
+            padding: 10px 14px; border-bottom: 1px solid var(--color-border); font-size: 13px; }
+        .fv-corr-row:last-child { border-bottom: 0; }
+        .fv-corr-eleve { font-weight: 700; }
+        .fv-corr-meta { font-size: 11px; color: var(--color-text-muted); }
+        .fv-corr-amounts { display: flex; align-items: center; gap: 7px; }
+        .fv-corr-old { text-decoration: line-through; color: var(--color-text-muted); font-size: 12px; }
+        .fv-corr-new { font-weight: 800; color: var(--c-ok-fg); }
+        .fv-corr-arrow { color: var(--color-text-muted); }
+        .fv-corr-actions { display: flex; gap: 6px; }
+        .fv-dialog-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .fv-dialog-label { font-size: 13px; font-weight: 600; }
+        .fv-dialog-hint  { font-size: 11px; color: var(--color-text-muted); font-style: italic; }
     `],
     template: `
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
@@ -175,6 +201,46 @@ import {
                 <p class="fv-sub">{{ t('finances.versements.sousTitre') }}</p>
             </div>
         </div>
+
+        <!-- Carte corrections en attente (SUPER_ADMIN uniquement) -->
+        @if (isSuperAdmin() && correctionsEnAttente().length > 0) {
+            <div class="fv-card fv-card-accent-warn">
+                <h2><i class="pi pi-clock" aria-hidden="true"></i>
+                    {{ t('finances.corrections.titrePending') }}
+                    <span class="fv-count" style="margin-left:8px">{{ correctionsEnAttente().length }}</span>
+                </h2>
+                <div class="fv-table-wrap">
+                    @for (c of correctionsEnAttente(); track c.id) {
+                        <div class="fv-corr-row">
+                            <div>
+                                <div class="fv-corr-eleve">{{ c.elevePrenom }} {{ c.eleveNom }}</div>
+                                <div class="fv-corr-meta">{{ c.eleveMatricule }}</div>
+                                <div class="fv-corr-meta" style="margin-top:2px;font-style:italic">{{ c.motif }}</div>
+                            </div>
+                            <div class="fv-corr-amounts">
+                                <span class="fv-corr-old">{{ formatFcfa(c.montantActuel) }}</span>
+                                <span class="fv-corr-arrow">→</span>
+                                <span class="fv-corr-new">{{ formatFcfa(c.montantPropose) }}</span>
+                            </div>
+                            <div class="fv-corr-meta">
+                                {{ t('finances.corrections.demandePar') }} {{ c.demandeParEmail }}<br/>
+                                {{ formatDate(c.dateDemande) }}
+                            </div>
+                            <div class="fv-corr-actions">
+                                <p-button icon="pi pi-check" severity="success" size="small"
+                                    [loading]="approvingId() === c.id"
+                                    [attr.aria-label]="t('finances.corrections.approuver')"
+                                    (onClick)="onApprouverCorrection(c)"></p-button>
+                                <p-button icon="pi pi-times" severity="danger" size="small"
+                                    [loading]="rejectingId() === c.id"
+                                    [attr.aria-label]="t('finances.corrections.rejeter')"
+                                    (onClick)="openRejeterDialog(c)"></p-button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
 
         <!-- Feedback global -->
         @if (feedbackError()) {
@@ -339,7 +405,7 @@ import {
                                                 <div class="fv-en-attente-info">{{ t('finances.versements.enAttenteInfo') }}</div>
                                             }
                                         </td>
-                                        <td>
+                                        <td style="white-space:nowrap">
                                             @if (v.statutValidation === 'VALIDE') {
                                                 <button class="fv-pdf-btn" [class.loading]="downloadingId() === v.id"
                                                     (click)="onDownloadPdf(v)"
@@ -350,6 +416,13 @@ import {
                                                         <i class="pi pi-file-pdf"></i>
                                                     }
                                                     PDF
+                                                </button>
+                                                <br/>
+                                                <button class="fv-corr-btn"
+                                                    (click)="openCorrectionDialog(v)"
+                                                    [attr.aria-label]="t('finances.corrections.demanderBtn')">
+                                                    <i class="pi pi-pencil" style="font-size:11px"></i>
+                                                    {{ t('finances.corrections.demanderBtn') }}
                                                 </button>
                                             }
                                         </td>
@@ -362,13 +435,78 @@ import {
             </div>
         }
 
+        <!-- Dialog demande de correction -->
+        <p-dialog [(visible)]="correctionDialogVisible" [modal]="true" [style]="{width:'440px'}"
+            [header]="t('finances.corrections.dialogTitre')" [draggable]="false" [resizable]="false">
+            @if (correctionTarget()) {
+                <div>
+                    <p class="fv-dialog-hint" style="margin-bottom:14px">
+                        {{ t('finances.corrections.dialogSub') }}
+                        <strong>{{ correctionTarget()!.elevePrenom }} {{ correctionTarget()!.eleveNom }}</strong>
+                        — {{ t('finances.corrections.montantActuel') }}
+                        <strong>{{ formatFcfa(correctionTarget()!.montant) }}</strong>
+                    </p>
+
+                    <div class="fv-dialog-field">
+                        <label class="fv-dialog-label">{{ t('finances.corrections.nouveauMontant') }} <span class="fv-req">*</span></label>
+                        <p-inputnumber [(ngModel)]="correctionMontant"
+                            [min]="1" [minFractionDigits]="0" [maxFractionDigits]="0"
+                            [class.p-invalid]="correctionShowErrors() && (!correctionMontant || correctionMontant <= 0)"
+                            [placeholder]="t('finances.corrections.montantPh')">
+                        </p-inputnumber>
+                        @if (correctionShowErrors() && (!correctionMontant || correctionMontant <= 0)) {
+                            <small style="color:var(--color-danger);font-size:12px">{{ t('parametrage.commun.requis') }}</small>
+                        }
+                    </div>
+
+                    <div class="fv-dialog-field">
+                        <label class="fv-dialog-label">{{ t('finances.corrections.motif') }} <span class="fv-req">*</span></label>
+                        <textarea pTextarea [(ngModel)]="correctionMotif" rows="3"
+                            [class.p-invalid]="correctionShowErrors() && !correctionMotif?.trim()"
+                            [placeholder]="t('finances.corrections.motifPh')" style="width:100%"></textarea>
+                        @if (correctionShowErrors() && !correctionMotif?.trim()) {
+                            <small style="color:var(--color-danger);font-size:12px">{{ t('parametrage.commun.requis') }}</small>
+                        }
+                    </div>
+
+                    <div class="flex justify-end gap-3 mt-2">
+                        <p-button severity="secondary" [label]="t('commun.annuler')"
+                            (onClick)="correctionDialogVisible = false"></p-button>
+                        <p-button severity="warning" icon="pi pi-send"
+                            [label]="t('finances.corrections.soumettre')"
+                            [loading]="correctionSaving()"
+                            (onClick)="onSoumettreCorrectiontion()"></p-button>
+                    </div>
+                </div>
+            }
+        </p-dialog>
+
+        <!-- Dialog rejet de correction -->
+        <p-dialog [(visible)]="rejetDialogVisible" [modal]="true" [style]="{width:'400px'}"
+            [header]="t('finances.corrections.rejetTitre')" [draggable]="false" [resizable]="false">
+            <div class="fv-dialog-field">
+                <label class="fv-dialog-label">{{ t('finances.corrections.motifRejet') }} <span class="fv-req">*</span></label>
+                <textarea pTextarea [(ngModel)]="rejetMotif" rows="3"
+                    [placeholder]="t('finances.corrections.motifRejetPh')" style="width:100%"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <p-button severity="secondary" [label]="t('commun.annuler')"
+                    (onClick)="rejetDialogVisible = false"></p-button>
+                <p-button severity="danger" icon="pi pi-times"
+                    [label]="t('finances.corrections.rejeter')"
+                    [loading]="rejectingId() !== null"
+                    (onClick)="onConfirmerRejet()"></p-button>
+            </div>
+        </p-dialog>
+
     </ng-container>
     `
 })
-export class Versements {
+export class Versements implements OnInit {
     private eleveService   = inject(EleveService);
     private financesSvc    = inject(FinancesService);
     private transloco      = inject(TranslocoService);
+    private authService    = inject(AuthService);
 
     @ViewChild('montantRef') montantRef!: ElementRef<HTMLDivElement>;
 
@@ -389,8 +527,30 @@ export class Versements {
     readonly feedbackSuccess = signal<string | null>(null);
     readonly downloadingId  = signal<string | null>(null);
 
+    // ── Corrections de montant ──────────────────────────────────────────────────
+    readonly correctionsEnAttente  = signal<CorrectionVersementResponse[]>([]);
+    readonly correctionTarget      = signal<VersementResponse | null>(null);
+    readonly correctionSaving      = signal(false);
+    readonly correctionShowErrors  = signal(false);
+    readonly approvingId           = signal<string | null>(null);
+    readonly rejectingId           = signal<string | null>(null);
+    correctionDialogVisible = false;
+    correctionMontant: number | null = null;
+    correctionMotif: string = '';
+    rejetDialogVisible = false;
+    rejetMotif: string = '';
+    private pendingRejetId: string | null = null;
+
+    readonly isSuperAdmin = computed(() => this.authService.role() === 'SUPER_ADMIN');
+
     private searchTimer: ReturnType<typeof setTimeout> | null = null;
     private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+    ngOnInit(): void {
+        if (this.authService.role() === 'SUPER_ADMIN') {
+            this.loadCorrectionsEnAttente();
+        }
+    }
 
     onSearchChange(): void {
         this.didSearch.set(false);
@@ -483,6 +643,95 @@ export class Versements {
         else { this.feedbackError.set(msg); this.feedbackSuccess.set(null); }
         if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
         this.feedbackTimer = setTimeout(() => { this.feedbackSuccess.set(null); this.feedbackError.set(null); }, 4000);
+    }
+
+    // ── Corrections ────────────────────────────────────────────────────────────
+
+    private loadCorrectionsEnAttente(): void {
+        this.financesSvc.getCorrectionsEnAttente().subscribe({
+            next: list => this.correctionsEnAttente.set(list),
+            error: ()   => { /* silencieux — non bloquant */ }
+        });
+    }
+
+    openCorrectionDialog(v: VersementResponse): void {
+        this.correctionTarget.set(v);
+        this.correctionMontant = null;
+        this.correctionMotif = '';
+        this.correctionShowErrors.set(false);
+        this.correctionDialogVisible = true;
+    }
+
+    onSoumettreCorrectiontion(): void {
+        this.correctionShowErrors.set(true);
+        const target = this.correctionTarget();
+        if (!target || !this.correctionMontant || this.correctionMontant <= 0 || !this.correctionMotif?.trim()) return;
+        this.correctionSaving.set(true);
+        this.financesSvc.demanderCorrection(target.id, {
+            montantPropose: this.correctionMontant,
+            motif: this.correctionMotif.trim()
+        }).subscribe({
+            next: () => {
+                this.correctionSaving.set(false);
+                this.correctionDialogVisible = false;
+                this.setFeedback('success', this.transloco.translate('app.finances.corrections.demandeOk'));
+                // Refresh corrections si SUPER_ADMIN
+                if (this.isSuperAdmin()) this.loadCorrectionsEnAttente();
+            },
+            error: err => {
+                this.correctionSaving.set(false);
+                const msg = err?.error?.message ?? null;
+                this.setFeedback('error', typeof msg === 'string' ? msg
+                    : this.transloco.translate('app.finances.corrections.demandeErreur'));
+            }
+        });
+    }
+
+    onApprouverCorrection(c: CorrectionVersementResponse): void {
+        this.approvingId.set(c.id);
+        this.financesSvc.approuverCorrection(c.id).subscribe({
+            next: () => {
+                this.approvingId.set(null);
+                this.correctionsEnAttente.update(list => list.filter(x => x.id !== c.id));
+                this.setFeedback('success', this.transloco.translate('app.finances.corrections.approuveOk'));
+                // Refresh l'historique si l'élève est sélectionné
+                const eleve = this.selectedEleve();
+                if (eleve) { this.loadSolde(eleve.id); this.loadHistory(eleve.id); }
+            },
+            error: err => {
+                this.approvingId.set(null);
+                const msg = err?.error?.message ?? null;
+                this.setFeedback('error', typeof msg === 'string' ? msg
+                    : this.transloco.translate('app.finances.corrections.approuveErreur'));
+            }
+        });
+    }
+
+    openRejeterDialog(c: CorrectionVersementResponse): void {
+        this.pendingRejetId = c.id;
+        this.rejetMotif = '';
+        this.rejetDialogVisible = true;
+    }
+
+    onConfirmerRejet(): void {
+        if (!this.pendingRejetId || !this.rejetMotif.trim()) return;
+        this.rejectingId.set(this.pendingRejetId);
+        this.financesSvc.rejeterCorrection(this.pendingRejetId, this.rejetMotif.trim()).subscribe({
+            next: () => {
+                this.rejectingId.set(null);
+                this.rejetDialogVisible = false;
+                const id = this.pendingRejetId!;
+                this.correctionsEnAttente.update(list => list.filter(x => x.id !== id));
+                this.pendingRejetId = null;
+                this.setFeedback('success', this.transloco.translate('app.finances.corrections.rejeteOk'));
+            },
+            error: err => {
+                this.rejectingId.set(null);
+                const msg = err?.error?.message ?? null;
+                this.setFeedback('error', typeof msg === 'string' ? msg
+                    : this.transloco.translate('app.finances.corrections.rejeteErreur'));
+            }
+        });
     }
 
     statutClass(s: string): string {
