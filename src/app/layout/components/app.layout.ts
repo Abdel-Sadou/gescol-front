@@ -1168,7 +1168,8 @@ export class AppLayout {
                 this.item(this.t('menu.parametrage.niveaux'),           '', '/app/parametrage/niveaux'),
                 this.item(this.t('menu.parametrage.modelesEngagement'), '', '/app/parametrage/modeles-engagement'),
             ]));
-            sysEntries.push(this.item(this.t('menu.administration.comptes'), 'pi pi-lock', '/app/administration/comptes'));
+            sysEntries.push(this.item(this.t('menu.administration.comptes'),      'pi pi-lock',   '/app/administration/comptes'));
+            sysEntries.push(this.item(this.t('menu.administration.permissions'), 'pi pi-shield', '/app/administration/permissions'));
         }
 
         const groups: NavGroup[] = [home];

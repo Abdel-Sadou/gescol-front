@@ -79,7 +79,8 @@
     },
     "administration": {
       "label": "Administration",
-      "comptes": "User accounts"
+      "comptes": "User accounts",
+      "permissions": "Role permissions"
     }
   },
 
@@ -1299,6 +1300,21 @@
       "imprimer": "Print record",
       "supprimer": "Delete",
       "suppressionInfo": "Deletion requires authorisation"
+    }
+  },
+
+  "permissions": {
+    "titre": "Role permissions",
+    "sousTitre": "Check the permissions to assign to each role. Changes are saved immediately. The SUPER_ADMIN role always has all permissions (not editable).",
+    "colPermission": "Permission",
+    "colDescription": "Description",
+    "erreurChargement": "Unable to load the permissions matrix. Please try again.",
+    "noteAdmin": "The SUPER_ADMIN role always has all permissions and does not appear in this table.",
+    "roles": {
+      "SECRETARIAT":   "Secretariat",
+      "ECONOMAT":      "Finance office",
+      "ENSEIGNANT":    "Teacher",
+      "COMMUNICATION": "Communication"
     }
   },
 

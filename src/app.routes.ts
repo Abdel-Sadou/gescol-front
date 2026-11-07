@@ -134,7 +134,8 @@ export const appRoutes: Routes = [
             { path: 'cahier-texte/consultation',  loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Consultation cahier' } },
             { path: 'cahier-texte/validation',    loadComponent: () => import('@/app/pages/placeholder/placeholder').then(c => c.Placeholder), data: { breadcrumb: 'Validation cahier' } },
             // Administration (F17) — SUPER_ADMIN uniquement
-            { path: 'administration/comptes', canActivate: [roleGuard(['SUPER_ADMIN'])], loadComponent: () => import('@/app/pages/app/administration/comptes/comptes-liste').then(c => c.ComptesListe), data: { breadcrumb: 'Comptes utilisateurs' } },
+            { path: 'administration/comptes',      canActivate: [roleGuard(['SUPER_ADMIN'])], loadComponent: () => import('@/app/pages/app/administration/comptes/comptes-liste').then(c => c.ComptesListe),          data: { breadcrumb: 'Comptes utilisateurs' } },
+            { path: 'administration/permissions',  canActivate: [roleGuard(['SUPER_ADMIN'])], loadComponent: () => import('@/app/pages/app/administration/gestion-permissions').then(c => c.GestionPermissions), data: { breadcrumb: 'Permissions' } },
 
             // Communication (F16) — SUPER_ADMIN + COMMUNICATION
             { path: 'communication/actualites',           canActivate: [roleGuard(['SUPER_ADMIN', 'COMMUNICATION'])], loadComponent: () => import('@/app/pages/app/communication/actualites-liste').then(c => c.ActualitesListe), data: { breadcrumb: 'Actualités' } },

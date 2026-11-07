@@ -79,7 +79,8 @@
     },
     "administration": {
       "label": "Administration",
-      "comptes": "Comptes utilisateurs"
+      "comptes": "Comptes utilisateurs",
+      "permissions": "Permissions par rôle"
     }
   },
 
@@ -1300,6 +1301,21 @@
     "successReinit":    "Mot de passe réinitialisé.",
     "successDesactive": "Compte désactivé.",
     "successReactive":  "Compte réactivé."
+  },
+
+  "permissions": {
+    "titre": "Permissions par rôle",
+    "sousTitre": "Cochez les permissions à attribuer à chaque rôle. Les modifications sont enregistrées immédiatement. Le rôle SUPER_ADMIN possède toujours toutes les permissions (non modifiable).",
+    "colPermission": "Permission",
+    "colDescription": "Description",
+    "erreurChargement": "Impossible de charger la matrice des permissions. Veuillez réessayer.",
+    "noteAdmin": "Le rôle SUPER_ADMIN possède toujours toutes les permissions et ne figure pas dans ce tableau.",
+    "roles": {
+      "SECRETARIAT":   "Secrétariat",
+      "ECONOMAT":      "Économat",
+      "ENSEIGNANT":    "Enseignant",
+      "COMMUNICATION": "Communication"
+    }
   },
 
   "dashboard": {
