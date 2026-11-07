@@ -12,6 +12,7 @@ import { GescolTableComponent, ColDef, GescolLoadEvent } from '@/app/shared/comp
 import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-confirm-dialog.component';
 import { EleveService, EleveResponse, EleveSearchParams, PageResponse } from '@/app/core/services/eleve.service';
 import { AuthService } from '@/app/core/services/auth.service';
+import { ParametrageService, NiveauResponse } from '@/app/core/services/parametrage.service';
 
 @Component({
     selector: 'app-eleve-liste',
@@ -35,18 +36,23 @@ import { AuthService } from '@/app/core/services/auth.service';
                     <i class="pi pi-graduation-cap mr-2" style="color:var(--color-primary)"></i>
                     {{ t('eleves.titre') }}
                 </h2>
-                @if (canCreate()) {
-                    <button pButton icon="pi pi-plus" [label]="t('eleves.nouveau')"
-                        class="p-button-success"
-                        (click)="router.navigate(['/app/eleves/nouveau'])"></button>
-                }
+                <div class="flex gap-2">
+                    <button pButton icon="pi pi-print" [label]="t('commun.imprimer')"
+                        class="p-button-outlined p-button-secondary"
+                        (click)="imprimer()"></button>
+                    @if (canCreate()) {
+                        <button pButton icon="pi pi-plus" [label]="t('eleves.nouveau')"
+                            class="p-button-success"
+                            (click)="router.navigate(['/app/eleves/nouveau'])"></button>
+                    }
+                </div>
             </div>
             @if (successMsg()) {
                 <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
             }
 
             <!-- Filtres de recherche -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
                 <input pInputText type="text"
                     [(ngModel)]="filters.nom"
                     [placeholder]="t('eleves.filtres.nom')" />
@@ -59,6 +65,13 @@ import { AuthService } from '@/app/core/services/auth.service';
                 <input pInputText type="text"
                     [(ngModel)]="filters.classeLibelle"
                     [placeholder]="t('eleves.filtres.classe')" />
+                <p-select
+                    [(ngModel)]="filters.niveauId"
+                    [options]="niveauOptions()"
+                    optionLabel="label" optionValue="value"
+                    [showClear]="true"
+                    [placeholder]="t('eleves.filtres.niveau')">
+                </p-select>
                 <p-select
                     [(ngModel)]="filters.sousSysteme"
                     [options]="sousSystemeOptions"
@@ -101,15 +114,17 @@ import { AuthService } from '@/app/core/services/auth.service';
     `
 })
 export class EleveListe implements OnInit {
-    protected router      = inject(Router);
-    private eleveService  = inject(EleveService);
-    private authService   = inject(AuthService);
-    private transloco     = inject(TranslocoService);
+    protected router          = inject(Router);
+    private eleveService      = inject(EleveService);
+    private authService       = inject(AuthService);
+    private transloco         = inject(TranslocoService);
+    private parametrageSvc    = inject(ParametrageService);
 
     @ViewChild('tableRef') tableRef!: GescolTableComponent;
 
     readonly data       = signal<PageResponse<EleveResponse> | 'error' | undefined>(undefined);
     readonly successMsg = signal<string | null>(null);
+    readonly niveaux    = signal<NiveauResponse[]>([]);
 
     filters: EleveSearchParams = {};
 
@@ -117,6 +132,12 @@ export class EleveListe implements OnInit {
         { label: 'Francophone', value: 'FRANCOPHONE' },
         { label: 'Anglophone',  value: 'ANGLOPHONE'  },
     ];
+
+    niveauOptions(): { label: string; value: string }[] {
+        return this.niveaux().map(n => ({ label: n.libelle, value: n.id }));
+    }
+
+    imprimer(): void { window.print(); }
 
     private currentSort = 'nom,asc';
     private pendingFilters: EleveSearchParams = {};
@@ -133,6 +154,9 @@ export class EleveListe implements OnInit {
             this.successMsg.set(this.transloco.translate('app.' + key));
             setTimeout(() => this.successMsg.set(null), 4000);
         }
+        this.parametrageSvc.getNiveaux(0, 100, 'ordre,asc').subscribe({
+            next: res => this.niveaux.set(res.content)
+        });
     }
 
     columns(t: (k: string) => string): ColDef[] {

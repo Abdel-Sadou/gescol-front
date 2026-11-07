@@ -58,6 +58,7 @@ export interface EleveSearchParams {
     matricule?: string;
     classeLibelle?: string;
     sousSysteme?: 'FRANCOPHONE' | 'ANGLOPHONE';
+    niveauId?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -79,6 +80,7 @@ export class EleveService {
         if (params.matricule)     p = p.set('matricule', params.matricule);
         if (params.classeLibelle) p = p.set('classeLibelle', params.classeLibelle);
         if (params.sousSysteme)   p = p.set('sousSysteme', params.sousSysteme);
+        if (params.niveauId)      p = p.set('niveauId', params.niveauId);
         return this.http.get<PageResponse<EleveResponse>>('/api/eleves', { params: p });
     }
 

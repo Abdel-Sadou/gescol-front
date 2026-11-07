@@ -34,11 +34,16 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                     <i class="pi pi-users mr-2" style="color:var(--color-primary)"></i>
                     {{ t('personnel.titre') }}
                 </h2>
-                @if (canModify()) {
-                    <button pButton icon="pi pi-plus" [label]="t('personnel.nouveau')"
-                        class="p-button-success"
-                        (click)="router.navigate(['/app/personnel/nouveau'])"></button>
-                }
+                <div class="flex gap-2">
+                    <button pButton icon="pi pi-print" [label]="t('commun.imprimer')"
+                        class="p-button-outlined p-button-secondary"
+                        (click)="imprimer()"></button>
+                    @if (canModify()) {
+                        <button pButton icon="pi pi-plus" [label]="t('personnel.nouveau')"
+                            class="p-button-success"
+                            (click)="router.navigate(['/app/personnel/nouveau'])"></button>
+                    }
+                </div>
             </div>
             @if (successMsg()) {
                 <p-message severity="success" [text]="successMsg()!" class="mb-3 block"></p-message>
@@ -80,7 +85,7 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                 #tableRef
                 [columns]="columns(t)"
                 [data]="data()"
-                [showView]="false"
+                [showView]="true"
                 [showEdit]="canModify()"
                 [showDelete]="canModify()"
                 [showToggleActive]="canModify()"
@@ -91,6 +96,7 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                 [tooltipCustomAction]="t('comptes.creerDepuisPersonnel')"
                 [customActionCondition]="creerCompteCondition"
                 (load)="onLoad($event)"
+                (view)="onView($event)"
                 (edit)="onEdit($event)"
                 (delete)="onDeleteRequest($event)"
                 (toggleActive)="onToggleActif($event)"
@@ -362,9 +368,15 @@ export class PersonnelListe implements OnInit {
         this.tableRef?.resetPage();
     }
 
+    onView(row: PersonnelResponse): void {
+        this.router.navigate(['/app/personnel', row.id]);
+    }
+
     onEdit(row: PersonnelResponse): void {
         this.router.navigate(['/app/personnel', row.id, 'editer']);
     }
+
+    imprimer(): void { window.print(); }
 
     onToggleActif(row: PersonnelResponse): void {
         this.toggleTarget.set(row);

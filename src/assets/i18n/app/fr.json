@@ -109,6 +109,7 @@
       "prenom": "Prénom",
       "matricule": "Matricule",
       "classe": "Classe",
+      "niveau": "Niveau",
       "sousSysteme": "Sous-système",
       "rechercher": "Rechercher",
       "reinitialiser": "Réinitialiser"
@@ -205,7 +206,10 @@
       "creer": "Créer",
       "modifier": "Enregistrer",
       "successEnregistrement": "Enregistrement effectué avec succès.",
-      "successPP": "Professeur principal désigné avec succès."
+      "successPP": "Professeur principal désigné avec succès.",
+      "imprimer": "Imprimer",
+      "retour": "Retour",
+      "nonRenseigne": "—"
     },
     "sousSysteme": {
       "FRANCOPHONE": "Francophone",
@@ -496,6 +500,13 @@
         "statutActif": "● Actif",
         "statutInactif": "● Inactif"
       }
+    },
+    "fiche": {
+      "introuvable": "Personnel introuvable.",
+      "identification": "Identification",
+      "contact": "Contact",
+      "remuneration": "Rémunération",
+      "btnEditer": "Modifier"
     }
   },
 

@@ -202,6 +202,7 @@
       "prenom": "First name",
       "matricule": "Student ID",
       "classe": "Class",
+      "niveau": "Level",
       "sousSysteme": "Sub-system",
       "rechercher": "Search",
       "reinitialiser": "Reset"
@@ -298,7 +299,10 @@
       "creer": "Create",
       "modifier": "Save",
       "successEnregistrement": "Saved successfully.",
-      "successPP": "Homeroom teacher assigned successfully."
+      "successPP": "Homeroom teacher assigned successfully.",
+      "imprimer": "Print",
+      "retour": "Back",
+      "nonRenseigne": "—"
     },
     "sousSysteme": {
       "FRANCOPHONE": "Francophone",
@@ -589,6 +593,13 @@
         "statutActif": "● Active",
         "statutInactif": "● Inactive"
       }
+    },
+    "fiche": {
+      "introuvable": "Staff member not found.",
+      "identification": "Identification",
+      "contact": "Contact",
+      "remuneration": "Remuneration",
+      "btnEditer": "Edit"
     }
   },
 

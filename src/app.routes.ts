@@ -105,8 +105,9 @@ export const appRoutes: Routes = [
             { path: 'parametrage/modeles-engagement/:id/editer', canActivate: [roleGuard(['SUPER_ADMIN'])], loadComponent: () => import('@/app/pages/app/parametrage/modeles-engagement/modele-engagement-form').then(c => c.ModeleEngagementForm), data: { breadcrumb: 'Modifier modèle' } },
             // Personnel (F10)
             { path: 'personnel',            loadComponent: () => import('@/app/pages/app/personnel/personnel-liste').then(c => c.PersonnelListe), data: { breadcrumb: 'Personnel' } },
-            { path: 'personnel/nouveau',    canActivate: [roleGuard(['SUPER_ADMIN', 'SECRETARIAT'])], loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),   data: { breadcrumb: 'Nouveau personnel' } },
-            { path: 'personnel/:id/editer', canActivate: [roleGuard(['SUPER_ADMIN', 'SECRETARIAT'])], loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),   data: { breadcrumb: 'Modifier personnel' } },
+            { path: 'personnel/nouveau',    canActivate: [roleGuard(['SUPER_ADMIN', 'SECRETARIAT'])], loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),     data: { breadcrumb: 'Nouveau personnel' } },
+            { path: 'personnel/:id/editer', canActivate: [roleGuard(['SUPER_ADMIN', 'SECRETARIAT'])], loadComponent: () => import('@/app/pages/app/personnel/personnel-form').then(c => c.PersonnelForm),     data: { breadcrumb: 'Modifier personnel' } },
+            { path: 'personnel/:id',        loadComponent: () => import('@/app/pages/app/personnel/fiche-personnel').then(c => c.FichePersonnel),                                                             data: { breadcrumb: 'Fiche personnel' } },
             // Emploi du temps (F10)
             { path: 'emploi-du-temps/classe',     loadComponent: () => import('@/app/pages/app/emploi-du-temps/emploi-du-temps-classe').then(c => c.EmploiDuTempsClasse),       data: { breadcrumb: 'EDT par classe' } },
             { path: 'emploi-du-temps/enseignant', loadComponent: () => import('@/app/pages/app/emploi-du-temps/emploi-du-temps-enseignant').then(c => c.EmploiDuTempsEnseignant), data: { breadcrumb: 'EDT par enseignant' } },
