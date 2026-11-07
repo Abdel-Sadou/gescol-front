@@ -1163,7 +1163,10 @@
 
   "commun": {
     "annuler": "Cancel",
-    "chargement": "Loading…"
+    "chargement": "Loading…",
+    "imprimer": "Print",
+    "exporterExcel": "Export Excel",
+    "exportEnCours": "Exporting…"
   },
 
   "communication": {

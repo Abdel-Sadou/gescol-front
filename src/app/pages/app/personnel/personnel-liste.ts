@@ -11,6 +11,7 @@ import { MessageModule } from 'primeng/message';
 import { GescolTableComponent, ColDef, GescolLoadEvent } from '@/app/shared/components/gescol-table.component';
 import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-confirm-dialog.component';
 import { PersonnelService, PersonnelResponse, PersonnelSearchParams } from '@/app/core/services/personnel.service';
+import { downloadCsv } from '@/app/shared/csv-export';
 import { UtilisateurService, RoleStaff } from '@/app/core/services/utilisateur.service';
 import { AuthService } from '@/app/core/services/auth.service';
 import { PageResponse } from '@/app/core/services/eleve.service';
@@ -34,10 +35,15 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                     <i class="pi pi-users mr-2" style="color:var(--color-primary)"></i>
                     {{ t('personnel.titre') }}
                 </h2>
-                <div class="flex gap-2">
+                <div class="flex gap-2 print-hide">
                     <button pButton icon="pi pi-print" [label]="t('commun.imprimer')"
                         class="p-button-outlined p-button-secondary"
                         (click)="imprimer()"></button>
+                    <button pButton icon="pi pi-file-excel"
+                        [label]="exportLoading() ? t('commun.exportEnCours') : t('commun.exporterExcel')"
+                        class="p-button-outlined p-button-secondary"
+                        [loading]="exportLoading()"
+                        (click)="exporterCsv()"></button>
                     @if (canModify()) {
                         <button pButton icon="pi pi-plus" [label]="t('personnel.nouveau')"
                             class="p-button-success"
@@ -50,7 +56,7 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
             }
 
             <!-- Filtres -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 print-hide">
                 <input pInputText type="text"
                     [(ngModel)]="filters.nom"
                     [placeholder]="t('personnel.filtres.nom')" />
@@ -72,7 +78,7 @@ const ROLES_STAFF: RoleStaff[] = ['SUPER_ADMIN', 'SECRETARIAT', 'ECONOMAT', 'ENS
                     [placeholder]="t('personnel.filtres.tousContrats')">
                 </p-select>
             </div>
-            <div class="flex gap-2 mb-5">
+            <div class="flex gap-2 mb-5 print-hide">
                 <button pButton icon="pi pi-search" [label]="t('personnel.filtres.rechercher')"
                     (click)="onSearch()"></button>
                 <button pButton icon="pi pi-times" [label]="t('personnel.filtres.reinitialiser')"
@@ -247,11 +253,13 @@ export class PersonnelListe implements OnInit {
 
     @ViewChild('tableRef') tableRef!: GescolTableComponent;
 
-    readonly data       = signal<PageResponse<PersonnelResponse> | 'error' | undefined>(undefined);
-    readonly successMsg = signal<string | null>(null);
+    readonly data          = signal<PageResponse<PersonnelResponse> | 'error' | undefined>(undefined);
+    readonly successMsg    = signal<string | null>(null);
+    readonly exportLoading = signal(false);
 
     filters: PersonnelSearchParams = {};
     private pendingFilters: PersonnelSearchParams = {};
+    private currentSort = 'nom,asc';
 
     readonly canModify = computed(() => {
         const r = this.authService.role();
@@ -354,6 +362,7 @@ export class PersonnelListe implements OnInit {
     }
 
     onLoad(event: GescolLoadEvent): void {
+        this.currentSort = event.sort;
         this.loadData(event.page, event.size, event.sort);
     }
 
@@ -377,6 +386,24 @@ export class PersonnelListe implements OnInit {
     }
 
     imprimer(): void { window.print(); }
+
+    exporterCsv(): void {
+        if (this.exportLoading()) return;
+        this.exportLoading.set(true);
+        this.personnelService.rechercher(this.pendingFilters, 0, 10000, this.currentSort).subscribe({
+            next: res => {
+                const headers = ['Matricule', 'Nom', 'Prénom', 'Type', 'Contrat', 'Fonction', 'Téléphone', 'Email', 'Date embauche', 'Statut'];
+                const rows = res.content.map(p => [
+                    p.matricule, p.nom, p.prenom, p.typePersonnel, p.typeContrat,
+                    p.fonction ?? '', p.telephone ?? '', p.email ?? '',
+                    p.dateEmbauche ?? '', p.actif ? 'Actif' : 'Inactif'
+                ]);
+                downloadCsv('personnel.csv', headers, rows);
+                this.exportLoading.set(false);
+            },
+            error: () => this.exportLoading.set(false)
+        });
+    }
 
     onToggleActif(row: PersonnelResponse): void {
         this.toggleTarget.set(row);

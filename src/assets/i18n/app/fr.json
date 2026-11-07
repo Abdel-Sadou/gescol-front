@@ -1070,7 +1070,10 @@
 
   "commun": {
     "annuler": "Annuler",
-    "chargement": "Chargement…"
+    "chargement": "Chargement…",
+    "imprimer": "Imprimer",
+    "exporterExcel": "Exporter Excel",
+    "exportEnCours": "Export…"
   },
 
   "communication": {

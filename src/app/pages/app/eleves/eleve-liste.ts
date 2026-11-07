@@ -13,6 +13,7 @@ import { DeleteConfirmDialogComponent } from '@/app/shared/components/delete-con
 import { EleveService, EleveResponse, EleveSearchParams, PageResponse } from '@/app/core/services/eleve.service';
 import { AuthService } from '@/app/core/services/auth.service';
 import { ParametrageService, NiveauResponse } from '@/app/core/services/parametrage.service';
+import { downloadCsv } from '@/app/shared/csv-export';
 
 @Component({
     selector: 'app-eleve-liste',
@@ -36,10 +37,15 @@ import { ParametrageService, NiveauResponse } from '@/app/core/services/parametr
                     <i class="pi pi-graduation-cap mr-2" style="color:var(--color-primary)"></i>
                     {{ t('eleves.titre') }}
                 </h2>
-                <div class="flex gap-2">
+                <div class="flex gap-2 print-hide">
                     <button pButton icon="pi pi-print" [label]="t('commun.imprimer')"
                         class="p-button-outlined p-button-secondary"
                         (click)="imprimer()"></button>
+                    <button pButton icon="pi pi-file-excel"
+                        [label]="exportLoading() ? t('commun.exportEnCours') : t('commun.exporterExcel')"
+                        class="p-button-outlined p-button-secondary"
+                        [loading]="exportLoading()"
+                        (click)="exporterCsv()"></button>
                     @if (canCreate()) {
                         <button pButton icon="pi pi-plus" [label]="t('eleves.nouveau')"
                             class="p-button-success"
@@ -52,7 +58,7 @@ import { ParametrageService, NiveauResponse } from '@/app/core/services/parametr
             }
 
             <!-- Filtres de recherche -->
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4 print-hide">
                 <input pInputText type="text"
                     [(ngModel)]="filters.nom"
                     [placeholder]="t('eleves.filtres.nom')" />
@@ -80,7 +86,7 @@ import { ParametrageService, NiveauResponse } from '@/app/core/services/parametr
                     [placeholder]="t('eleves.filtres.sousSysteme')">
                 </p-select>
             </div>
-            <div class="flex gap-2 mb-5">
+            <div class="flex gap-2 mb-5 print-hide">
                 <button pButton icon="pi pi-search" [label]="t('eleves.filtres.rechercher')"
                     (click)="onSearch()"></button>
                 <button pButton icon="pi pi-times" [label]="t('eleves.filtres.reinitialiser')"
@@ -122,9 +128,10 @@ export class EleveListe implements OnInit {
 
     @ViewChild('tableRef') tableRef!: GescolTableComponent;
 
-    readonly data       = signal<PageResponse<EleveResponse> | 'error' | undefined>(undefined);
-    readonly successMsg = signal<string | null>(null);
-    readonly niveaux    = signal<NiveauResponse[]>([]);
+    readonly data         = signal<PageResponse<EleveResponse> | 'error' | undefined>(undefined);
+    readonly successMsg   = signal<string | null>(null);
+    readonly niveaux      = signal<NiveauResponse[]>([]);
+    readonly exportLoading = signal(false);
 
     filters: EleveSearchParams = {};
 
@@ -138,6 +145,23 @@ export class EleveListe implements OnInit {
     }
 
     imprimer(): void { window.print(); }
+
+    exporterCsv(): void {
+        if (this.exportLoading()) return;
+        this.exportLoading.set(true);
+        this.eleveService.rechercher(this.pendingFilters, 0, 10000, this.currentSort).subscribe({
+            next: res => {
+                const headers = ['Matricule', 'Nom', 'Prénom', 'Sexe', 'Date de naissance', 'Classe', 'Sous-système', 'Redoublant'];
+                const rows = res.content.map(e => [
+                    e.matricule, e.nom, e.prenom, e.sexe, e.dateNaissance,
+                    e.classeLibelle, e.sousSysteme ?? '', e.redoublant ? 'Oui' : 'Non'
+                ]);
+                downloadCsv('eleves.csv', headers, rows);
+                this.exportLoading.set(false);
+            },
+            error: () => this.exportLoading.set(false)
+        });
+    }
 
     private currentSort = 'nom,asc';
     private pendingFilters: EleveSearchParams = {};

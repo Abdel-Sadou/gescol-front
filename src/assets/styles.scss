@@ -2,3 +2,19 @@
 @use 'primeicons/primeicons.css';
 @use './layout/layout.scss';
 @use './demo/demo.scss';
+
+@media print {
+  .sidebar,
+  .topbar,
+  .print-hide { display: none !important; }
+
+  .main { margin: 0 !important; }
+  .content { padding: 0.5cm !important; }
+
+  .p-paginator { display: none !important; }
+  .p-datatable-wrapper { overflow: visible !important; }
+  .p-datatable table { width: 100% !important; font-size: 10.5pt; }
+  .p-datatable .p-datatable-thead > tr > th,
+  .p-datatable .p-datatable-tbody > tr > td { padding: 4px 6px !important; }
+  .p-datatable .p-datatable-tbody > tr > td .p-button { display: none !important; }
+}
