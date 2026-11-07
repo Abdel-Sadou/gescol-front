@@ -401,15 +401,28 @@ import {
                     <p-select [(ngModel)]="filtreStatut" [options]="statutOptions"
                         optionLabel="label" optionValue="value"
                         [placeholder]="t('finances.moratoires.tousStatuts')"
-                        [showClear]="true" style="width:200px"
+                        [showClear]="true" style="width:160px"
                         (onChange)="loadHistorique()"
                         [attr.aria-label]="t('finances.moratoires.filtreStatut')">
                     </p-select>
+                    <p-datepicker [(ngModel)]="filtreDebut"
+                        [showClear]="true" dateFormat="dd/mm/yy" [placeholder]="t('finances.moratoires.dateDebut')"
+                        (onSelect)="loadHistorique()" (onClear)="loadHistorique()"
+                        style="width:140px">
+                    </p-datepicker>
+                    <p-datepicker [(ngModel)]="filtreFin"
+                        [showClear]="true" dateFormat="dd/mm/yy" [placeholder]="t('finances.moratoires.dateFin')"
+                        (onSelect)="loadHistorique()" (onClear)="loadHistorique()"
+                        style="width:140px">
+                    </p-datepicker>
+                    <input pInputText type="text" [(ngModel)]="filtreClasse"
+                        style="width:140px"
+                        [placeholder]="t('finances.moratoires.filtreClasse')">
                 </div>
 
                 @if (loadingHisto()) {
                     <p-skeleton height="100px" borderRadius="8px"></p-skeleton>
-                } @else if (historique().length === 0) {
+                } @else if (filtreHisto().length === 0) {
                     <div class="mo-empty"><i class="pi pi-inbox"></i>{{ t('finances.moratoires.aucunHistorique') }}</div>
                 } @else {
                     <div class="mo-table-wrap">
@@ -417,6 +430,7 @@ import {
                             <thead>
                                 <tr>
                                     <th>{{ t('finances.moratoires.colEleve') }}</th>
+                                    <th>{{ t('finances.moratoires.colClasse') }}</th>
                                     <th>{{ t('finances.moratoires.colDemande') }}</th>
                                     <th>{{ t('finances.moratoires.colDateProposee') }}</th>
                                     <th>{{ t('finances.moratoires.colMotif') }}</th>
@@ -424,12 +438,13 @@ import {
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (m of historique(); track m.id) {
+                                @for (m of filtreHisto(); track m.id) {
                                     <tr>
                                         <td>
                                             <div style="font-weight:600">{{ m.elevePrenom }} {{ m.eleveNom }}</div>
                                             <div class="mo-date">{{ m.eleveMatricule }}</div>
                                         </td>
+                                        <td class="mo-date">{{ m.classeLibelle ?? '—' }}</td>
                                         <td class="mo-date">{{ m.dateDemande }}</td>
                                         <td class="mo-date">{{ m.dateProposee }}</td>
                                         <td>
@@ -459,6 +474,9 @@ export class Moratoires implements OnInit {
     dateProposee: Date | null = null;
     motif = '';
     filtreStatut: StatutMoratoire | null = null;
+    filtreDebut: Date | null = null;
+    filtreFin: Date | null = null;
+    filtreClasse = '';
 
     readonly today = new Date();
 
@@ -472,6 +490,14 @@ export class Moratoires implements OnInit {
     readonly historique      = signal<MoratoireResponse[]>([]);
     readonly loadingAttente  = signal(true);
     readonly loadingHisto    = signal(false);
+
+    readonly filtreHisto = computed(() => {
+        const classe = this.filtreClasse.trim().toLowerCase();
+        if (!classe) return this.historique();
+        return this.historique().filter(m =>
+            (m.classeLibelle ?? '').toLowerCase().includes(classe)
+        );
+    });
     readonly submitting      = signal(false);
     readonly showErrors      = signal(false);
     readonly actionId        = signal<string | null>(null);
@@ -542,8 +568,10 @@ export class Moratoires implements OnInit {
     loadHistorique(): void {
         this.activeTab.set('historique');
         this.loadingHisto.set(true);
-        const statut = this.filtreStatut ?? undefined;
-        this.financesSvc.getHistoriqueMoratoires(statut).subscribe({
+        const statut    = this.filtreStatut ?? undefined;
+        const dateDebut = this.filtreDebut ? this.formatDateISO(this.filtreDebut) : undefined;
+        const dateFin   = this.filtreFin   ? this.formatDateISO(this.filtreFin)   : undefined;
+        this.financesSvc.getHistoriqueMoratoires(statut, dateDebut, dateFin).subscribe({
             next: list => { this.historique.set(list); this.loadingHisto.set(false); },
             error: () => this.loadingHisto.set(false)
         });

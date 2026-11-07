@@ -73,6 +73,7 @@ export interface MoratoireResponse {
     demandeParId: string | null;
     valideParId: string | null;
     dateDecision: string | null;
+    classeLibelle: string | null;
 }
 
 // ── Alertes ────────────────────────────────────────────────────────────────────
@@ -162,9 +163,11 @@ export class FinancesService {
         return this.http.patch<MoratoireResponse>(`/api/finances/moratoires/${id}/refuser`, null);
     }
 
-    getHistoriqueMoratoires(statut?: StatutMoratoire): Observable<MoratoireResponse[]> {
+    getHistoriqueMoratoires(statut?: StatutMoratoire, dateDebut?: string, dateFin?: string): Observable<MoratoireResponse[]> {
         let params = new HttpParams();
-        if (statut) params = params.set('statut', statut);
+        if (statut)    params = params.set('statut',    statut);
+        if (dateDebut) params = params.set('dateDebut', dateDebut);
+        if (dateFin)   params = params.set('dateFin',   dateFin);
         return this.http.get<MoratoireResponse[]>('/api/finances/moratoires/historique', { params });
     }
 

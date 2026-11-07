@@ -853,6 +853,10 @@
       "refuseSucces": "Demande de {{nom}} refusée.",
       "erreurValidation": "Erreur lors de la validation. Veuillez réessayer.",
       "erreurRefus": "Erreur lors du refus. Veuillez réessayer.",
+      "dateDebut": "Depuis",
+      "dateFin": "Jusqu'au",
+      "filtreClasse": "Classe",
+      "colClasse": "Classe",
       "statuts": {
         "EN_ATTENTE": "En attente",
         "VALIDE": "Validé",

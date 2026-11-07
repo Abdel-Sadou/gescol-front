@@ -47,7 +47,7 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                     <img class="brand__logo" src="/assets/logo-cobimag.png" alt="Logo COBIMAG">
                     <span class="brand__text">
                         <span class="brand__name">COBIMAG</span>
-                        <span class="brand__tagline">Gestion scolaire</span>
+                        <span class="brand__tagline">GESCOL · v1.0</span>
                     </span>
                 </a>
 

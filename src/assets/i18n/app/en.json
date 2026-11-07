@@ -946,6 +946,10 @@
       "refuseSucces": "Request for {{nom}} refused.",
       "erreurValidation": "Error during approval. Please try again.",
       "erreurRefus": "Error during refusal. Please try again.",
+      "dateDebut": "From",
+      "dateFin": "Until",
+      "filtreClasse": "Class",
+      "colClasse": "Class",
       "statuts": {
         "EN_ATTENTE": "Pending",
         "VALIDE": "Approved",
