@@ -472,7 +472,7 @@ import {
                     <div class="flex justify-end gap-3 mt-2">
                         <p-button severity="secondary" [label]="t('commun.annuler')"
                             (onClick)="correctionDialogVisible = false"></p-button>
-                        <p-button severity="warning" icon="pi pi-send"
+                        <p-button  severity="warn" icon="pi pi-send"
                             [label]="t('finances.corrections.soumettre')"
                             [loading]="correctionSaving()"
                             (onClick)="onSoumettreCorrectiontion()"></p-button>
