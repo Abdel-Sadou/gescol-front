@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy, Component, inject, OnInit, signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UpperCasePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,7 +12,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { EleveService, EleveResponse } from '@/app/core/services/eleve.service';
 import { ParametrageService, SequenceResponse, TrimestreResponse } from '@/app/core/services/parametrage.service';
 import {
-    ResultatsService, MoyennesResponse, MoyenneTrimestreResponse
+    ResultatsService, MoyennesResponse, MoyenneTrimestreResponse, BulletinSequenceDto, BulletinGroupeDto
 } from '@/app/core/services/resultats.service';
 
 type Opt = { label: string; value: string };
@@ -22,7 +23,7 @@ type Mode = 'sequence' | 'trimestre';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        FormsModule, TranslocoDirective,
+        FormsModule, TranslocoDirective, UpperCasePipe,
         ButtonModule, InputTextModule, SelectModule, MessageModule, SkeletonModule
     ],
     styles: [`
@@ -89,7 +90,7 @@ type Mode = 'sequence' | 'trimestre';
             margin-top: 10px; font-size: 14px; font-weight: 600; color: var(--color-primary);
         }
 
-        /* ── Tableau moyennes ── */
+        /* ── Tableau moyennes (trimestre) ── */
         .bl-moy-section { margin-top: 24px; }
         .bl-moy-title {
             font-size: 14px; font-weight: 700; color: var(--color-text);
@@ -120,6 +121,59 @@ type Mode = 'sequence' | 'trimestre';
         }
         .bl-moy-val { font-size: 20px; font-weight: 800; color: var(--color-primary); }
         .bl-actions { display: flex; justify-content: flex-end; }
+
+        /* ── Bulletin complet (séquence) ── */
+        .bul-wrap {
+            margin-top: 20px;
+            border: 2px solid #333;
+            font-size: 11px; color: #000;
+            font-family: Arial, sans-serif;
+        }
+        .bul-header {
+            display: grid; grid-template-columns: 1fr auto 1fr;
+            border-bottom: 1px solid #333; padding: 8px;
+        }
+        .bul-logo-col { text-align: center; }
+        .bul-logo-img { max-height: 60px; }
+        .bul-title-col { text-align: center; padding: 4px 16px; }
+        .bul-title { font-size: 14px; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px; }
+        .bul-annee { font-size: 11px; }
+        .bul-eleve-info { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #333; }
+        .bul-info-cell { padding: 4px 8px; font-size: 10px; }
+        .bul-info-cell b { font-weight: 700; }
+        .bul-table { width: 100%; border-collapse: collapse; }
+        .bul-table th, .bul-table td {
+            border: 1px solid #aaa; padding: 3px 5px; font-size: 10px; text-align: center;
+        }
+        .bul-table th { background: #e8e8e8; font-weight: 700; font-size: 9px; white-space: nowrap; }
+        .bul-table td.bul-td-matiere { text-align: left; font-size: 10px; padding-left: 6px; }
+        .bul-table td.bul-td-ens { text-align: left; font-size: 8px; color: #555; padding-left: 6px; }
+        .bul-groupe-row td {
+            background: #c8c8c8; font-weight: 700; font-size: 10px;
+            border-top: 2px solid #333; border-bottom: 2px solid #333;
+            padding: 4px 6px;
+        }
+        .bul-groupe-row td:first-child { text-align: left; }
+        .bul-bande-row td {
+            background: #555; color: #fff; font-weight: 700; font-size: 10px;
+            border-top: 2px solid #333; border-bottom: 2px solid #333;
+            padding: 4px 6px;
+        }
+        .bul-bottom { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid #333; }
+        .bul-travail, .bul-discipline { padding: 6px; }
+        .bul-section-title { font-weight: 700; font-size: 10px; margin-bottom: 4px; border-bottom: 1px solid #aaa; padding-bottom: 2px; }
+        .bul-sumtable { width: 100%; border-collapse: collapse; font-size: 9px; }
+        .bul-sumtable th, .bul-sumtable td { border: 1px solid #aaa; padding: 2px 4px; text-align: center; }
+        .bul-sumtable th { background: #e8e8e8; font-weight: 700; }
+        .bul-print-bar {
+            display: flex; justify-content: flex-end; gap: 10px; align-items: center;
+            padding: 10px 0 6px;
+        }
+        @media print {
+            .bul-print-bar { display: none; }
+            :host { padding: 0; }
+            .bl-step, .bl-mode-bar, h1, .bl-sub { display: none; }
+        }
     `],
     template: `
     <ng-container *transloco="let t; scope: 'app'; prefix: 'app'">
@@ -213,56 +267,148 @@ type Mode = 'sequence' | 'trimestre';
                 }
             </div>
 
-            <!-- Moyennes séquence -->
+            <!-- Bulletin séquence complet -->
             @if (loadMoyError()) {
                 <p-message severity="error" [text]="t('resultats.bulletins.erreurMoyennes')"></p-message>
             }
             @if (loadingMoy()) {
-                <p-skeleton height="200px" borderRadius="8px"></p-skeleton>
+                <p-skeleton height="400px" borderRadius="8px"></p-skeleton>
             }
-            @if (moyennes(); as moy) {
-                <div class="bl-moy-section">
-                    <div class="bl-moy-title">
-                        <i class="pi pi-chart-bar" style="color:var(--color-primary)"></i>
-                        {{ t('resultats.bulletins.titreMoyennes') }}
-                    </div>
-                    <div class="bl-table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{{ t('resultats.bulletins.colMatiere') }}</th>
-                                    <th>{{ t('resultats.bulletins.colNote') }}</th>
-                                    <th>{{ t('resultats.bulletins.colCoefficient') }}</th>
-                                    <th>{{ t('resultats.bulletins.colPoids') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (d of moy.details; track d.matiereId) {
-                                    <tr>
-                                        <td>{{ d.matiereLibelle }}</td>
-                                        <td>{{ d.note !== null ? d.note : '—' }}</td>
-                                        <td>{{ d.coefficient }}</td>
-                                        <td class="td-poids">{{ contribution(d.note, d.coefficient) }}</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <div class="bl-moy-generale">
-                            <span>{{ t('resultats.bulletins.moyenneGenerale') }}</span>
-                            <span class="bl-moy-val">{{ moy.moyenneGenerale !== null ? moy.moyenneGenerale : '—' }}</span>
+            @if (bulletin(); as bul) {
+                <div class="bul-print-bar">
+                    <p-button [label]="t('resultats.bulletins.imprimer')" icon="pi pi-print"
+                        severity="secondary" size="small" (onClick)="onPrint()">
+                    </p-button>
+                </div>
+                <div class="bul-wrap">
+                    <!-- En-tête -->
+                    <div class="bul-header">
+                        <div>
+                            <div style="font-size:9px;line-height:1.5">
+                                REPUBLIQUE DU CAMEROUN<br>
+                                Ministère des Enseignements Secondaires<br>
+                                Délégation Régionale du Centre
+                            </div>
+                        </div>
+                        <div class="bul-title-col">
+                            <div class="bul-title">BULLETIN — {{ bul.sequenceLibelle | uppercase }}</div>
+                            <div class="bul-annee">Année scolaire {{ bul.anneeScolaire }}</div>
+                        </div>
+                        <div style="text-align:right;font-size:9px;line-height:1.5">
+                            <b>{{ bul.etablissementNom }}</b>
                         </div>
                     </div>
-                    @if (downloadError()) {
-                        <p-message severity="error" [text]="downloadError()!" class="mb-3 block"></p-message>
+                    <!-- Infos élève -->
+                    <div class="bul-eleve-info">
+                        <div class="bul-info-cell">
+                            <b>{{ bul.eleveMatricule }}</b> — {{ bul.elevePrenom }} {{ bul.eleveNom }}
+                        </div>
+                        <div class="bul-info-cell" style="text-align:right">
+                            Né(e) le {{ bul.dateNaissanceFormatee ?? '—' }} à {{ bul.lieuNaissance ?? '—' }}
+                        </div>
+                        <div class="bul-info-cell">
+                            <b>Classe :</b> {{ bul.classeLibelle }} &nbsp;|&nbsp; <b>Effectif :</b> {{ bul.effectifClasse }}
+                        </div>
+                        <div class="bul-info-cell" style="text-align:right">
+                            {{ bul.redoublant ? 'Redoublant' : 'Non redoublant' }}
+                        </div>
+                    </div>
+                    <!-- Tableau des notes -->
+                    <table class="bul-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;width:22%">Matières</th>
+                                <th>DP</th>
+                                <th>DH</th>
+                                <th>Moy</th>
+                                <th>Coef</th>
+                                <th>Total</th>
+                                <th>Rang</th>
+                                <th>Moy.Cl</th>
+                                <th>Min/Max</th>
+                                <th style="width:14%">Appréciation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (groupe of bul.groupes; track groupe.groupeNum) {
+                                @for (ligne of groupe.lignes; track ligne.matiereLibelle) {
+                                    <tr>
+                                        <td class="bul-td-matiere">
+                                            {{ ligne.matiereLibelle }}<br>
+                                            <span class="bul-td-ens">{{ ligne.enseignantNom ?? '' }}</span>
+                                        </td>
+                                        <td>{{ ligne.dp !== null ? ligne.dp : '—' }}</td>
+                                        <td>{{ ligne.dh !== null ? ligne.dh : '—' }}</td>
+                                        <td>{{ ligne.moy !== null ? ligne.moy : '—' }}</td>
+                                        <td>{{ ligne.coef }}</td>
+                                        <td>{{ ligne.total !== null ? ligne.total : '—' }}</td>
+                                        <td>{{ ligne.rang !== null ? ligne.rang : '—' }}</td>
+                                        <td>{{ ligne.moyClasse !== null ? ligne.moyClasse : '—' }}</td>
+                                        <td>{{ ligne.minClasse !== null ? ligne.minClasse : '—' }}/{{ ligne.maxClasse !== null ? ligne.maxClasse : '—' }}</td>
+                                        <td>{{ ligne.appreciation ?? '—' }}</td>
+                                    </tr>
+                                }
+                                @if (groupe.groupeNum > 0) {
+                                    <tr class="bul-groupe-row">
+                                        <td colspan="4">GROUPE {{ groupe.groupeNum }} — Points : {{ groupe.totalPoints }}/{{ groupe.totalPointsMax }} &nbsp; Coef : {{ groupe.totalCoef }}</td>
+                                        <td colspan="6">Moyenne : {{ groupe.moyenneGroupe !== null ? groupe.moyenneGroupe : '—' }}/20,00 — {{ groupe.mention ?? '' }}</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <!-- Bande scolaire Groupe 1 + Groupe 2 -->
+                    @if (bul.bandeScolaire.totalCoef > 0) {
+                        <table class="bul-table">
+                            <tbody>
+                                <tr class="bul-bande-row">
+                                    <td colspan="10">
+                                        SCOLAIRE (GROUPE 1 + GROUPE 2) — Points : {{ bul.bandeScolaire.totalPoints }}/{{ bul.bandeScolaire.totalPointsMax }} &nbsp; Coef : {{ bul.bandeScolaire.totalCoef }} &nbsp; Moyenne : {{ bul.bandeScolaire.average ?? '—' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     }
-                    <div class="bl-actions">
-                        <p-button
-                            [label]="t('resultats.bulletins.telechargerPdf')"
-                            icon="pi pi-download"
-                            [loading]="downloadingPdf()"
-                            [disabled]="downloadingPdf()"
-                            (onClick)="downloadPdf()">
-                        </p-button>
+                    <!-- Tables TRAVAIL + DISCIPLINE -->
+                    <div class="bul-bottom">
+                        <div class="bul-travail">
+                            <div class="bul-section-title">TRAVAIL</div>
+                            <table class="bul-sumtable">
+                                <thead>
+                                    <tr><th>Points</th><th>Coef</th><th>Moy</th><th>Rang</th><th>Moy.Cl</th><th>Min</th><th>Max</th><th>Mention</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ bul.travail.totalPoints }}</td>
+                                        <td>{{ bul.travail.totalCoef }}</td>
+                                        <td><b>{{ bul.travail.moyenne ?? '—' }}</b></td>
+                                        <td>{{ bul.travail.rang ?? '—' }}</td>
+                                        <td>{{ bul.travail.moyClasse ?? '—' }}</td>
+                                        <td>{{ bul.travail.minClasse ?? '—' }}</td>
+                                        <td>{{ bul.travail.maxClasse ?? '—' }}</td>
+                                        <td><b>{{ bul.travail.mention ?? '—' }}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bul-discipline">
+                            <div class="bul-section-title">DISCIPLINE</div>
+                            <table class="bul-sumtable">
+                                <thead>
+                                    <tr><th>Abs.inj</th><th>Abs.j</th><th>Retards</th><th>Avert.</th><th>Blâmes</th><th>Exclu.</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ bul.discipline.absencesInjustifiees || '' }}</td>
+                                        <td>{{ bul.discipline.absencesJustifiees || '' }}</td>
+                                        <td>{{ bul.discipline.retards || '' }}</td>
+                                        <td>{{ bul.discipline.avertissements || '' }}</td>
+                                        <td>{{ bul.discipline.blames || '' }}</td>
+                                        <td>{{ bul.discipline.exclusions || '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             }
@@ -420,6 +566,7 @@ export class Bulletins implements OnInit {
     readonly sequenceOptions     = signal<Opt[]>([]);
     readonly loadingSequences    = signal(false);
     readonly moyennes            = signal<MoyennesResponse | null>(null);
+    readonly bulletin            = signal<BulletinSequenceDto | null>(null);
     readonly loadingMoy          = signal(false);
     readonly loadMoyError        = signal(false);
     readonly downloadingPdf      = signal(false);
@@ -474,6 +621,7 @@ export class Bulletins implements OnInit {
         this.mode.set(m);
         this.selectedEleve.set(null);
         this.moyennes.set(null);
+        this.bulletin.set(null);
         this.moyennesTrimestre.set(null);
         this.selectedSequenceId.set(null);
         this.selectedTrimestreId.set(null);
@@ -539,6 +687,7 @@ export class Bulletins implements OnInit {
     clearEleve(): void {
         this.selectedEleve.set(null);
         this.moyennes.set(null);
+        this.bulletin.set(null);
         this.moyennesTrimestre.set(null);
         this.loadMoyError.set(false);
         this.loadMoyTriError.set(false);
@@ -549,12 +698,14 @@ export class Bulletins implements OnInit {
     private loadMoyennesSeq(eleve: EleveResponse, sequenceId: string): void {
         this.loadingMoy.set(true);
         this.loadMoyError.set(false);
-        this.moyennes.set(null);
-        this.resultatsService.getMoyennesEleve(eleve.id, sequenceId).subscribe({
-            next: moy => { this.moyennes.set(moy); this.loadingMoy.set(false); },
+        this.bulletin.set(null);
+        this.resultatsService.getBulletinSequence(eleve.id, sequenceId).subscribe({
+            next: bul => { this.bulletin.set(bul); this.loadingMoy.set(false); },
             error: () => { this.loadMoyError.set(true); this.loadingMoy.set(false); }
         });
     }
+
+    onPrint(): void { window.print(); }
 
     private loadMoyennesTri(eleve: EleveResponse, trimestreId: string): void {
         this.loadingMoyTri.set(true);

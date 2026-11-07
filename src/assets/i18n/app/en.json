@@ -332,11 +332,14 @@
         "titreCreation": "New subject",
         "titreEdition": "Edit subject",
         "libelle": "Name",
-        "sousSysteme": "Sub-system"
+        "sousSysteme": "Sub-system",
+        "groupe": "Subject group",
+        "groupeAucun": "No group"
       },
       "cols": {
         "libelle": "Name",
-        "sousSysteme": "Sub-system"
+        "sousSysteme": "Sub-system",
+        "groupe": "Group"
       }
     },
     "classes": {
@@ -668,6 +671,7 @@
       "colMatricule": "Student ID",
       "colNom": "Student",
       "colNote": "Grade /20",
+      "colMoy": "Avg.",
       "validee": "Validated",
       "enregistrer": "Save",
       "nonEnregistre": "Unsaved changes",
@@ -717,6 +721,7 @@
       "colPoids": "Weight",
       "moyenneGenerale": "Overall average",
       "telechargerPdf": "Download PDF report card",
+      "imprimer": "Print",
       "erreurMoyennes": "Unable to load averages. Please try again.",
       "rechercheDisablee": "Select a sequence first (step 1)…",
       "miniCaracteres": "Enter at least 2 characters to search.",

@@ -60,10 +60,10 @@ export interface QuotaHoraireRequest { matiereId: string; classeId: string; heur
 
 // Matières
 export interface MatiereResponse {
-    id: string; libelle: string; sousSysteme: SousSysteme;
+    id: string; libelle: string; sousSysteme: SousSysteme; groupe: number | null;
     etablissementId: string; dateCreation: string; dateModification: string | null;
 }
-export interface MatiereRequest { libelle: string; sousSysteme: SousSysteme; }
+export interface MatiereRequest { libelle: string; sousSysteme: SousSysteme; groupe?: number | null; }
 
 // Coefficients
 export interface CoefficientResponse {

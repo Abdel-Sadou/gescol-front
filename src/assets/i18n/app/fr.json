@@ -239,11 +239,14 @@
         "titreCreation": "Nouvelle matière",
         "titreEdition": "Modifier la matière",
         "libelle": "Libellé",
-        "sousSysteme": "Sous-système"
+        "sousSysteme": "Sous-système",
+        "groupe": "Groupe de matières",
+        "groupeAucun": "Aucun groupe"
       },
       "cols": {
         "libelle": "Libellé",
-        "sousSysteme": "Sous-système"
+        "sousSysteme": "Sous-système",
+        "groupe": "Groupe"
       }
     },
     "classes": {
@@ -575,6 +578,7 @@
       "colMatricule": "Matricule",
       "colNom": "Élève",
       "colNote": "Note /20",
+      "colMoy": "Moy.",
       "validee": "Validée",
       "enregistrer": "Enregistrer",
       "nonEnregistre": "Modifications non enregistrées",
@@ -624,6 +628,7 @@
       "colPoids": "Contribution",
       "moyenneGenerale": "Moyenne générale",
       "telechargerPdf": "Télécharger le bulletin PDF",
+      "imprimer": "Imprimer",
       "erreurMoyennes": "Impossible de charger les moyennes. Veuillez réessayer.",
       "rechercheDisablee": "Choisissez d'abord une séquence (étape 1)…",
       "miniCaracteres": "Saisissez au moins 2 caractères pour rechercher.",

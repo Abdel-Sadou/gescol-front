@@ -16,6 +16,8 @@ export interface NoteResponse {
     matiereLibelle: string;
     sequenceId: string;
     sequenceLibelle: string;
+    noteDp: number | null;
+    noteDh: number | null;
     valeur: number | null;
     statut: StatutNote;
     saisieParId: string | null;
@@ -23,10 +25,84 @@ export interface NoteResponse {
     dateModification: string | null;
 }
 
+export interface LigneNoteRequest {
+    eleveId: string;
+    noteDp?: number | null;
+    noteDh?: number | null;
+    valeur?: number | null;
+}
+
 export interface NoteLotRequest {
     matiereId: string;
     sequenceId: string;
-    notes: { eleveId: string; valeur: number }[];
+    notes: LigneNoteRequest[];
+}
+
+// ─── Bulletin JSON (N°14) ──────────────────────────────────────────────────
+
+export interface BulletinLigneDto {
+    matiereLibelle: string;
+    enseignantNom: string | null;
+    dp: number | null;
+    dh: number | null;
+    moy: number | null;
+    coef: number;
+    total: number | null;
+    rang: number | null;
+    moyClasse: number | null;
+    minClasse: number | null;
+    maxClasse: number | null;
+    appreciation: string | null;
+}
+
+export interface BulletinGroupeDto {
+    groupeNum: number;
+    totalPoints: number;
+    totalPointsMax: number;
+    totalCoef: number;
+    moyenneGroupe: number | null;
+    mention: string | null;
+    lignes: BulletinLigneDto[];
+}
+
+export interface BulletinSequenceDto {
+    eleveId: string;
+    eleveNom: string;
+    elevePrenom: string;
+    eleveMatricule: string;
+    dateNaissanceFormatee: string | null;
+    lieuNaissance: string | null;
+    classeLibelle: string;
+    anneeScolaire: string;
+    redoublant: boolean;
+    effectifClasse: number;
+    etablissementNom: string;
+    sequenceLibelle: string;
+    groupes: BulletinGroupeDto[];
+    bandeScolaire: {
+        totalPoints: number;
+        totalPointsMax: number;
+        totalCoef: number;
+        average: number | null;
+    };
+    travail: {
+        totalPoints: number;
+        totalCoef: number;
+        moyenne: number | null;
+        rang: number | null;
+        moyClasse: number | null;
+        minClasse: number | null;
+        maxClasse: number | null;
+        mention: string | null;
+    };
+    discipline: {
+        absencesInjustifiees: number;
+        absencesJustifiees: number;
+        retards: number;
+        avertissements: number;
+        blames: number;
+        exclusions: number;
+    };
 }
 
 export interface ValiderNotesRequest {
@@ -94,6 +170,12 @@ export class ResultatsService {
     getMoyennesEleve(eleveId: string, sequenceId: string): Observable<MoyennesResponse> {
         return this.http.get<MoyennesResponse>(
             `/api/resultats/moyennes/eleve/${eleveId}/sequence/${sequenceId}`
+        );
+    }
+
+    getBulletinSequence(eleveId: string, sequenceId: string): Observable<BulletinSequenceDto> {
+        return this.http.get<BulletinSequenceDto>(
+            `/api/resultats/bulletins/${eleveId}/sequence/${sequenceId}`
         );
     }
 

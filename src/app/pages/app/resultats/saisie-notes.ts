@@ -88,6 +88,13 @@ import { ResultatsService, NoteResponse } from '@/app/core/services/resultats.se
             display: inline-block; min-width: 36px; text-align: center;
         }
         .sn-note-input { width: 80px; }
+        .sn-moy-computed {
+            font-size: 14px; font-weight: 700; color: var(--color-primary);
+            display: inline-block; min-width: 40px; text-align: center;
+        }
+        .th-dp { background: #f0f9ff !important; }
+        .th-dh { background: #f0fdf4 !important; }
+        .th-moy { background: var(--color-surface-alt) !important; }
         .sn-empty {
             padding: 40px; text-align: center;
             color: var(--color-text-muted); font-size: 14px;
@@ -166,7 +173,9 @@ import { ResultatsService, NoteResponse } from '@/app/core/services/resultats.se
                             <tr>
                                 <th>{{ t('resultats.saisie.colMatricule') }}</th>
                                 <th>{{ t('resultats.saisie.colNom') }}</th>
-                                <th class="th-note">{{ t('resultats.saisie.colNote') }}</th>
+                                <th class="th-note th-dp">DP</th>
+                                <th class="th-note th-dh">DH</th>
+                                <th class="th-note th-moy">{{ t('resultats.saisie.colMoy') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,7 +183,9 @@ import { ResultatsService, NoteResponse } from '@/app/core/services/resultats.se
                                 <tr class="sn-skeleton-row">
                                     <td><p-skeleton width="80px" height="14px"></p-skeleton></td>
                                     <td><p-skeleton width="160px" height="14px"></p-skeleton></td>
-                                    <td><p-skeleton width="80px" height="30px"></p-skeleton></td>
+                                    <td><p-skeleton width="70px" height="30px"></p-skeleton></td>
+                                    <td><p-skeleton width="70px" height="30px"></p-skeleton></td>
+                                    <td><p-skeleton width="50px" height="14px"></p-skeleton></td>
                                 </tr>
                             }
                         </tbody>
@@ -195,7 +206,9 @@ import { ResultatsService, NoteResponse } from '@/app/core/services/resultats.se
                             <tr>
                                 <th>{{ t('resultats.saisie.colMatricule') }}</th>
                                 <th>{{ t('resultats.saisie.colNom') }}</th>
-                                <th class="th-note">{{ t('resultats.saisie.colNote') }}</th>
+                                <th class="th-note th-dp">DP</th>
+                                <th class="th-note th-dh">DH</th>
+                                <th class="th-note th-moy">{{ t('resultats.saisie.colMoy') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -203,22 +216,34 @@ import { ResultatsService, NoteResponse } from '@/app/core/services/resultats.se
                                 <tr [class.sn-row--vide]="row.statut !== 'VALIDEE' && isNoteNonSaisie(row.eleveId)">
                                     <td class="sn-matricule">{{ row.eleveMatricule }}</td>
                                     <td>{{ row.elevePrenom }} {{ row.eleveNom }}</td>
-                                    <td class="td-note">
-                                        @if (row.statut === 'VALIDEE') {
+                                    @if (row.statut === 'VALIDEE') {
+                                        <td class="td-note"><span class="sn-note-readonly">{{ row.noteDp ?? '—' }}</span></td>
+                                        <td class="td-note"><span class="sn-note-readonly">{{ row.noteDh ?? '—' }}</span></td>
+                                        <td class="td-note">
                                             <span class="sn-note-readonly">{{ row.valeur ?? '—' }}</span>
                                             <p-tag [value]="t('resultats.saisie.validee')" severity="success" styleClass="ml-2"></p-tag>
-                                        } @else {
-                                            <p-inputnumber
-                                                class="sn-note-input"
-                                                [ngModel]="noteValues[row.eleveId]"
-                                                (ngModelChange)="onNoteChange(row.eleveId, $event)"
-                                                [min]="0" [max]="20"
-                                                [maxFractionDigits]="2"
-                                                [useGrouping]="false"
-                                                [placeholder]="'—'">
+                                        </td>
+                                    } @else {
+                                        <td class="td-note">
+                                            <p-inputnumber class="sn-note-input"
+                                                [ngModel]="dpValues[row.eleveId]"
+                                                (ngModelChange)="onDpChange(row.eleveId, $event)"
+                                                [min]="0" [max]="20" [maxFractionDigits]="2"
+                                                [useGrouping]="false" [placeholder]="'—'">
                                             </p-inputnumber>
-                                        }
-                                    </td>
+                                        </td>
+                                        <td class="td-note">
+                                            <p-inputnumber class="sn-note-input"
+                                                [ngModel]="dhValues[row.eleveId]"
+                                                (ngModelChange)="onDhChange(row.eleveId, $event)"
+                                                [min]="0" [max]="20" [maxFractionDigits]="2"
+                                                [useGrouping]="false" [placeholder]="'—'">
+                                            </p-inputnumber>
+                                        </td>
+                                        <td class="td-note">
+                                            <span class="sn-moy-computed">{{ computedMoy(row.eleveId) }}</span>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>
@@ -255,7 +280,8 @@ export class SaisieNotes implements OnInit {
     readonly isDirty   = signal(false);
     readonly rows      = signal<NoteResponse[]>([]);
 
-    noteValues: Record<string, number | null> = {};
+    dpValues: Record<string, number | null> = {};
+    dhValues: Record<string, number | null> = {};
 
     @HostListener('window:beforeunload', ['$event'])
     onBeforeUnload(event: BeforeUnloadEvent): void {
@@ -292,9 +318,11 @@ export class SaisieNotes implements OnInit {
             .subscribe({
                 next: notes => {
                     this.rows.set(notes);
-                    this.noteValues = {};
+                    this.dpValues = {};
+                    this.dhValues = {};
                     for (const n of notes) {
-                        this.noteValues[n.eleveId] = n.valeur; // null = pas encore saisi
+                        this.dpValues[n.eleveId] = n.noteDp;
+                        this.dhValues[n.eleveId] = n.noteDh;
                     }
                     this.isDirty.set(false);
                     this.loading.set(false);
@@ -306,16 +334,31 @@ export class SaisieNotes implements OnInit {
             });
     }
 
-    onNoteChange(eleveId: string, value: number | null): void {
-        this.noteValues[eleveId] = value;
+    onDpChange(eleveId: string, value: number | null): void {
+        this.dpValues[eleveId] = value;
         this.isDirty.set(true);
         this.saved.set(false);
         this.saveError.set(null);
     }
 
+    onDhChange(eleveId: string, value: number | null): void {
+        this.dhValues[eleveId] = value;
+        this.isDirty.set(true);
+        this.saved.set(false);
+        this.saveError.set(null);
+    }
+
+    computedMoy(eleveId: string): string {
+        const dp = this.dpValues[eleveId];
+        const dh = this.dhValues[eleveId];
+        if (dp != null && dh != null) return ((dp + dh) / 2).toFixed(2);
+        if (dp != null) return dp.toFixed(2);
+        if (dh != null) return dh.toFixed(2);
+        return '—';
+    }
+
     isNoteNonSaisie(eleveId: string): boolean {
-        const v = this.noteValues[eleveId];
-        return v === null || v === undefined;
+        return (this.dpValues[eleveId] == null) && (this.dhValues[eleveId] == null);
     }
 
     hasNonSaisies(): boolean {
@@ -330,10 +373,13 @@ export class SaisieNotes implements OnInit {
         this.saveError.set(null);
         this.saved.set(false);
 
-        // N'envoyer que les notes explicitement saisies (valeur non nulle)
         const payload = this.rows()
-            .filter(r => r.statut !== 'VALIDEE' && this.noteValues[r.eleveId] !== null && this.noteValues[r.eleveId] !== undefined)
-            .map(r => ({ eleveId: r.eleveId, valeur: this.noteValues[r.eleveId] as number }));
+            .filter(r => r.statut !== 'VALIDEE' && !this.isNoteNonSaisie(r.eleveId))
+            .map(r => ({
+                eleveId: r.eleveId,
+                noteDp: this.dpValues[r.eleveId] ?? null,
+                noteDh: this.dhValues[r.eleveId] ?? null
+            }));
 
         this.resultatsService.saisirEnLot({
             matiereId: sel.matiereId,
@@ -343,7 +389,8 @@ export class SaisieNotes implements OnInit {
             next: notes => {
                 this.rows.set(notes);
                 for (const n of notes) {
-                    this.noteValues[n.eleveId] = n.valeur;
+                    this.dpValues[n.eleveId] = n.noteDp;
+                    this.dhValues[n.eleveId] = n.noteDh;
                 }
                 this.isDirty.set(false);
                 this.saved.set(true);
