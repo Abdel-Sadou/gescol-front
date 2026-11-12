@@ -224,7 +224,7 @@ export class CoefficientsListe implements OnInit {
 
     openCreate(): void {
         this.selectedItem.set(null);
-        this.form.reset({ matiereId: null, classeId: null, valeur: null });
+        this.form.reset({ matiereId: null, classeId: null, valeur: null, groupe: null });
         this.saveError.set(null);
         this.dialogVisible.set(true);
     }
