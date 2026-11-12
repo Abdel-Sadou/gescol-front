@@ -177,6 +177,10 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                     </label>
 
                     <div class="topbar__actions">
+                        <a class="notif" routerLink="/" title="Retour à l'accueil" aria-label="Retour à l'accueil">
+                            <cob-icon [path]="homeIcon" [size]="19" />
+                        </a>
+
                         <button type="button" class="notif" [attr.aria-label]="'Notifications (' + alertCount + ')'">
                             <cob-icon [path]="bellIcon" [size]="19" />
                             @if (alertCount > 0) {
@@ -200,6 +204,11 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
                             </button>
                             @if (profileMenuOpen()) {
                                 <div class="profile-menu" role="menu">
+                                    <a class="profile-menu__item" routerLink="/" role="menuitem" (click)="profileMenuOpen.set(false)">
+                                        <cob-icon [path]="homeIcon" [size]="14" />
+                                        Retour à l'accueil
+                                    </a>
+                                    <hr class="profile-menu__sep" />
                                     <button type="button" class="profile-menu__item profile-menu__item--danger"
                                         role="menuitem" (click)="logout()">
                                         <cob-icon [path]="signOutIcon" [size]="14" />
@@ -682,12 +691,14 @@ interface NavGroup   { label: string;  entries: NavEntry[]; }
             border: 0;
             cursor: pointer;
             color: var(--color-text-body);
+            text-decoration: none;
             transition: background 0.12s;
         }
 
         .profile-menu__item:hover { background: var(--color-surface-sunken); }
         .profile-menu__item--danger { color: var(--color-danger); }
         .profile-menu__item--danger:hover { background: var(--color-danger-soft); }
+        .profile-menu__sep { margin: 0; border: 0; border-top: 1px solid var(--color-border); }
 
         /* ── Contenu ────────────────────────────────────────────────────────── */
         .content { flex: 1; min-height: 0; padding: 24px 26px; overflow-y: auto; }
@@ -944,6 +955,7 @@ export class AppLayout {
     readonly menuIcon    = ICONS['menu'];
     readonly xIcon       = ICONS['x'];
     readonly signOutIcon = ICONS['signOut'];
+    readonly homeIcon    = ICONS['house'];
 
     constructor() {
         const initialUrl = this.router.routerState.snapshot.url;
