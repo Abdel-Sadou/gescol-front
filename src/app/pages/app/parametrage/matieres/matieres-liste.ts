@@ -5,7 +5,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { FluidModule } from 'primeng/fluid';
@@ -21,7 +20,7 @@ import { PageResponse } from '@/app/core/services/eleve.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ReactiveFormsModule, TranslocoDirective,
-        ButtonModule, DialogModule, SelectButtonModule, SelectModule, InputTextModule, MessageModule, FluidModule,
+        ButtonModule, DialogModule, SelectButtonModule, InputTextModule, MessageModule, FluidModule,
         GescolTableComponent, DeleteConfirmDialogComponent
     ],
     template: `
@@ -74,10 +73,6 @@ import { PageResponse } from '@/app/core/services/eleve.service';
                             <small style="color:var(--color-danger)">{{ t('parametrage.commun.requis') }}</small>
                         }
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="font-semibold text-sm">{{ t('parametrage.matieres.form.groupe') }}</label>
-                        <p-select formControlName="groupe" [options]="groupeOptions" optionLabel="label" optionValue="value" [showClear]="true" [placeholder]="t('parametrage.matieres.form.groupeAucun')"></p-select>
-                    </div>
                     @if (saveError()) {
                         <p-message severity="error" [text]="saveError()!"></p-message>
                     }
@@ -119,8 +114,7 @@ export class MatieresListe {
 
     readonly form = this.fb.group({
         libelle:     ['', Validators.required],
-        sousSysteme: [null as 'FRANCOPHONE' | 'ANGLOPHONE' | null, Validators.required],
-        groupe:      [null as number | null]
+        sousSysteme: [null as 'FRANCOPHONE' | 'ANGLOPHONE' | null, Validators.required]
     });
 
     readonly sousSystemeOptions = computed(() => {
@@ -131,17 +125,10 @@ export class MatieresListe {
         ];
     });
 
-    readonly groupeOptions = [
-        { value: 1, label: 'Groupe 1' },
-        { value: 2, label: 'Groupe 2' },
-        { value: 3, label: 'Groupe 3' }
-    ];
-
     columns(t: (k: string) => string): ColDef[] {
         return [
             { field: 'libelle',    header: t('parametrage.matieres.cols.libelle'),    sortable: true },
-            { field: 'sousSysteme',header: t('parametrage.matieres.cols.sousSysteme') },
-            { field: 'groupe',     header: t('parametrage.matieres.cols.groupe') }
+            { field: 'sousSysteme',header: t('parametrage.matieres.cols.sousSysteme') }
         ];
     }
 
@@ -162,7 +149,7 @@ export class MatieresListe {
 
     openEdit(row: MatiereResponse): void {
         this.selectedItem.set(row);
-        this.form.patchValue({ libelle: row.libelle, sousSysteme: row.sousSysteme, groupe: row.groupe });
+        this.form.patchValue({ libelle: row.libelle, sousSysteme: row.sousSysteme });
         this.saveError.set(null);
         this.dialogVisible.set(true);
     }
@@ -175,7 +162,7 @@ export class MatieresListe {
         this.saving.set(true);
         this.saveError.set(null);
         const v = this.form.getRawValue();
-        const req = { libelle: v.libelle!.trim(), sousSysteme: v.sousSysteme!, groupe: v.groupe ?? null };
+        const req = { libelle: v.libelle!.trim(), sousSysteme: v.sousSysteme! };
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierMatiere(item.id, req) : this.svc.creerMatiere(req);
         req$.subscribe({

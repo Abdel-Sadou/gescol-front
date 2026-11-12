@@ -60,19 +60,19 @@ export interface QuotaHoraireRequest { matiereId: string; classeId: string; heur
 
 // Matières
 export interface MatiereResponse {
-    id: string; libelle: string; sousSysteme: SousSysteme; groupe: number | null;
+    id: string; libelle: string; sousSysteme: SousSysteme;
     etablissementId: string; dateCreation: string; dateModification: string | null;
 }
-export interface MatiereRequest { libelle: string; sousSysteme: SousSysteme; groupe?: number | null; }
+export interface MatiereRequest { libelle: string; sousSysteme: SousSysteme; }
 
 // Coefficients
 export interface CoefficientResponse {
     id: string; matiereId: string; matiereLibelle: string;
     classeId: string; classeLibelle: string;
-    valeur: number;
+    valeur: number; groupe: number | null;
     etablissementId: string; dateCreation: string; dateModification: string | null;
 }
-export interface CoefficientRequest { matiereId: string; classeId: string; valeur: number; }
+export interface CoefficientRequest { matiereId: string; classeId: string; valeur: number; groupe?: number | null; }
 
 // Modèles de lettre d'engagement
 export interface ModeleLettreEngagementResponse {

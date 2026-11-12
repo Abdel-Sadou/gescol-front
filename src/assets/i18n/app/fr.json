@@ -239,14 +239,11 @@
         "titreCreation": "Nouvelle matière",
         "titreEdition": "Modifier la matière",
         "libelle": "Libellé",
-        "sousSysteme": "Sous-système",
-        "groupe": "Groupe de matières",
-        "groupeAucun": "Aucun groupe"
+        "sousSysteme": "Sous-système"
       },
       "cols": {
         "libelle": "Libellé",
-        "sousSysteme": "Sous-système",
-        "groupe": "Groupe"
+        "sousSysteme": "Sous-système"
       }
     },
     "classes": {
@@ -381,12 +378,15 @@
         "matierePlaceholder": "Sélectionner une matière",
         "classeId": "Classe",
         "classePlaceholder": "Sélectionner une classe",
-        "valeur": "Valeur"
+        "valeur": "Valeur",
+        "groupe": "Groupe de matières",
+        "groupeAucun": "Aucun groupe"
       },
       "cols": {
         "matiere": "Matière",
         "classe": "Classe",
-        "valeur": "Coefficient"
+        "valeur": "Coefficient",
+        "groupe": "Groupe"
       }
     },
     "modelesEngagement": {

@@ -332,14 +332,11 @@
         "titreCreation": "New subject",
         "titreEdition": "Edit subject",
         "libelle": "Name",
-        "sousSysteme": "Sub-system",
-        "groupe": "Subject group",
-        "groupeAucun": "No group"
+        "sousSysteme": "Sub-system"
       },
       "cols": {
         "libelle": "Name",
-        "sousSysteme": "Sub-system",
-        "groupe": "Group"
+        "sousSysteme": "Sub-system"
       }
     },
     "classes": {
@@ -474,12 +471,15 @@
         "matierePlaceholder": "Select a subject",
         "classeId": "Class",
         "classePlaceholder": "Select a class",
-        "valeur": "Value"
+        "valeur": "Value",
+        "groupe": "Subject group",
+        "groupeAucun": "No group"
       },
       "cols": {
         "matiere": "Subject",
         "classe": "Class",
-        "valeur": "Coefficient"
+        "valeur": "Coefficient",
+        "groupe": "Group"
       }
     },
     "modelesEngagement": {

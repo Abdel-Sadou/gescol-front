@@ -117,6 +117,10 @@ interface SelectOption { value: string; label: string; }
                             <small style="color:var(--color-danger)">{{ t('parametrage.commun.requis') }}</small>
                         }
                     </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm">{{ t('parametrage.coefficients.form.groupe') }}</label>
+                        <p-select formControlName="groupe" [options]="groupeOptions" optionLabel="label" optionValue="value" [showClear]="true" appendTo="body" [placeholder]="t('parametrage.coefficients.form.groupeAucun')"></p-select>
+                    </div>
                     @if (saveError()) {
                         <p-message severity="error" [text]="saveError()!"></p-message>
                     }
@@ -159,17 +163,26 @@ export class CoefficientsListe implements OnInit {
 
     readonly canWrite = computed(() => this.authService.role() === 'SUPER_ADMIN');
 
+    readonly groupeOptions = [
+        { value: 1, label: 'Groupe 1' },
+        { value: 2, label: 'Groupe 2' },
+        { value: 3, label: 'Groupe 3' },
+        { value: 4, label: 'Groupe 4' }
+    ];
+
     readonly form = this.fb.group({
         matiereId:[null as string | null, Validators.required],
         classeId: [null as string | null, Validators.required],
-        valeur:   [null as number | null, [Validators.required, Validators.min(0.01)]]
+        valeur:   [null as number | null, [Validators.required, Validators.min(0.01)]],
+        groupe:   [null as number | null]
     });
 
     columns(t: (k: string) => string): ColDef[] {
         return [
             { field: 'matiereLibelle', header: t('parametrage.coefficients.cols.matiere') },
             { field: 'classeLibelle',  header: t('parametrage.coefficients.cols.classe') },
-            { field: 'valeur',         header: t('parametrage.coefficients.cols.valeur'), width: '100px', sortable: true }
+            { field: 'valeur',         header: t('parametrage.coefficients.cols.valeur'), width: '100px', sortable: true },
+            { field: 'groupe',         header: t('parametrage.coefficients.cols.groupe'),  width: '100px' }
         ];
     }
 
@@ -218,7 +231,7 @@ export class CoefficientsListe implements OnInit {
 
     openEdit(row: CoefficientResponse): void {
         this.selectedItem.set(row);
-        this.form.patchValue({ matiereId: row.matiereId, classeId: row.classeId, valeur: row.valeur });
+        this.form.patchValue({ matiereId: row.matiereId, classeId: row.classeId, valeur: row.valeur, groupe: row.groupe });
         this.saveError.set(null);
         this.dialogVisible.set(true);
     }
@@ -231,7 +244,7 @@ export class CoefficientsListe implements OnInit {
         this.saving.set(true);
         this.saveError.set(null);
         const v = this.form.getRawValue();
-        const req = { matiereId: v.matiereId!, classeId: v.classeId!, valeur: v.valeur! };
+        const req = { matiereId: v.matiereId!, classeId: v.classeId!, valeur: v.valeur!, groupe: v.groupe ?? null };
         const item = this.selectedItem();
         const req$ = item ? this.svc.modifierCoefficient(item.id, req) : this.svc.creerCoefficient(req);
         req$.subscribe({

@@ -154,8 +154,9 @@ const EMPTY_DRAFT: CreneauDraft = {
                                 [options]="matiereOptions()"
                                 optionLabel="label" optionValue="value"
                                 [filter]="true"
-                                [placeholder]="t('emploiDuTemps.form.selectionner')"
-                                [loading]="matieresLoading()">
+                                [disabled]="!draft().classeId"
+                                [placeholder]="draft().classeId ? t('emploiDuTemps.form.selectionner') : t('emploiDuTemps.form.classe')"
+                                [loading]="coeffsLoading()">
                             </p-select>
                         </div>
                         <div class="cf-field">
@@ -166,7 +167,8 @@ const EMPTY_DRAFT: CreneauDraft = {
                                 [options]="enseignantOptions()"
                                 optionLabel="label" optionValue="value"
                                 [filter]="true"
-                                [placeholder]="t('emploiDuTemps.form.selectionner')"
+                                [disabled]="!draft().matiereId"
+                                [placeholder]="draft().matiereId ? t('emploiDuTemps.form.selectionner') : t('emploiDuTemps.form.matiere')"
                                 [loading]="enseignantsLoading()">
                             </p-select>
                         </div>
@@ -257,12 +259,35 @@ export class CreneauForm implements OnInit {
     readonly conflictError    = signal<string | null>(null);
     readonly genericError     = signal(false);
 
-    readonly classesLoading   = signal(false);
-    readonly matieresLoading  = signal(false);
+    readonly classesLoading     = signal(false);
+    readonly coeffsLoading      = signal(false);
     readonly enseignantsLoading = signal(false);
-    readonly classeOptions    = signal<{ label: string; value: string }[]>([]);
-    readonly matiereOptions   = signal<{ label: string; value: string }[]>([]);
-    readonly enseignantOptions = signal<{ label: string; value: string }[]>([]);
+
+    readonly classeOptions      = signal<{ label: string; value: string }[]>([]);
+    private readonly _allCoeffs = signal<import('@/app/core/services/parametrage.service').CoefficientResponse[]>([]);
+    private readonly _allPersonnel = signal<import('@/app/core/services/personnel.service').PersonnelResponse[]>([]);
+
+    readonly matiereOptions = computed(() => {
+        const classeId = this._draft().classeId;
+        if (!classeId) return [];
+        const seen = new Set<string>();
+        const opts: { label: string; value: string }[] = [];
+        for (const c of this._allCoeffs()) {
+            if (c.classeId === classeId && !seen.has(c.matiereId)) {
+                seen.add(c.matiereId);
+                opts.push({ value: c.matiereId, label: c.matiereLibelle });
+            }
+        }
+        return opts.sort((a, b) => a.label.localeCompare(b.label));
+    });
+
+    readonly enseignantOptions = computed(() => {
+        const matiereId = this._draft().matiereId;
+        if (!matiereId) return [];
+        return this._allPersonnel()
+            .filter(p => p.matiereIds.includes(matiereId))
+            .map(p => ({ value: p.id, label: `${p.prenom} ${p.nom}` }));
+    });
 
     private readonly _draft = signal<CreneauDraft>({ ...EMPTY_DRAFT });
     readonly draft = this._draft.asReadonly();
@@ -297,7 +322,13 @@ export class CreneauForm implements OnInit {
     }
 
     patch<K extends keyof CreneauDraft>(key: K, value: CreneauDraft[K]): void {
-        this._draft.update(d => ({ ...d, [key]: value }));
+        if (key === 'classeId') {
+            this._draft.update(d => ({ ...d, classeId: value as string | null, matiereId: null, enseignantId: null }));
+        } else if (key === 'matiereId') {
+            this._draft.update(d => ({ ...d, matiereId: value as string | null, enseignantId: null }));
+        } else {
+            this._draft.update(d => ({ ...d, [key]: value }));
+        }
         this.conflictError.set(null);
         this.genericError.set(false);
     }
@@ -306,7 +337,7 @@ export class CreneauForm implements OnInit {
         this.initClasseId     = this.route.snapshot.queryParamMap.get('classeId');
         this.initEnseignantId = this.route.snapshot.queryParamMap.get('enseignantId');
         this.loadClasses();
-        this.loadMatieres();
+        this.loadCoefficients();
         this.loadEnseignants();
     }
 
@@ -329,14 +360,14 @@ export class CreneauForm implements OnInit {
         });
     }
 
-    private loadMatieres(): void {
-        this.matieresLoading.set(true);
-        this.paramService.getMatieres(0, 200).subscribe({
+    private loadCoefficients(): void {
+        this.coeffsLoading.set(true);
+        this.paramService.getCoefficients(0, 2000, 'matiereLibelle,asc').subscribe({
             next: res => {
-                this.matiereOptions.set(res.content.map(m => ({ label: m.libelle, value: m.id })));
-                this.matieresLoading.set(false);
+                this._allCoeffs.set(res.content);
+                this.coeffsLoading.set(false);
             },
-            error: () => this.matieresLoading.set(false)
+            error: () => this.coeffsLoading.set(false)
         });
     }
 
@@ -344,9 +375,7 @@ export class CreneauForm implements OnInit {
         this.enseignantsLoading.set(true);
         this.personnelSvc.rechercher({ typePersonnel: 'ENSEIGNANT' }, 0, 200, 'nom,asc').subscribe({
             next: res => {
-                this.enseignantOptions.set(
-                    res.content.map(p => ({ label: `${p.prenom} ${p.nom}`, value: p.id }))
-                );
+                this._allPersonnel.set(res.content);
                 this.enseignantsLoading.set(false);
                 if (this.initEnseignantId) {
                     this._draft.update(d => ({ ...d, enseignantId: this.initEnseignantId }));
