@@ -78,6 +78,7 @@ export interface BulletinSequenceDto {
     effectifClasse: number;
     etablissementNom: string;
     sequenceLibelle: string;
+    sousSysteme: 'FRANCOPHONE' | 'ANGLOPHONE';
     groupes: BulletinGroupeDto[];
     bandeScolaire: {
         totalPoints: number;

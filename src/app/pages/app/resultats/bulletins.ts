@@ -12,7 +12,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { EleveService, EleveResponse } from '@/app/core/services/eleve.service';
 import { ParametrageService, SequenceResponse, TrimestreResponse } from '@/app/core/services/parametrage.service';
 import {
-    ResultatsService, MoyennesResponse, MoyenneTrimestreResponse, BulletinSequenceDto, BulletinGroupeDto
+    ResultatsService, MoyennesResponse, MoyenneTrimestreResponse,
+    BulletinSequenceDto, BulletinGroupeDto, BulletinLigneDto
 } from '@/app/core/services/resultats.service';
 
 type Opt = { label: string; value: string };
@@ -129,6 +130,13 @@ type Mode = 'sequence' | 'trimestre';
             font-size: 11px; color: #000;
             font-family: Arial, sans-serif;
         }
+        /* ── Bulletin anglophone ── */
+        .bul-ang .bul-ang-grade { font-weight: 700; }
+        .bul-ang .bul-ang-grade.A { color: #15803d; }
+        .bul-ang .bul-ang-grade.B { color: #1d4ed8; }
+        .bul-ang .bul-ang-grade.C { color: #92400e; }
+        .bul-ang .bul-ang-grade.D { color: #b45309; }
+        .bul-ang .bul-ang-grade.E { color: #b91c1c; }
         .bul-header {
             display: grid; grid-template-columns: 1fr auto 1fr;
             border-bottom: 1px solid #333; padding: 8px;
@@ -280,6 +288,9 @@ type Mode = 'sequence' | 'trimestre';
                         severity="secondary" size="small" (onClick)="onPrint()">
                     </p-button>
                 </div>
+
+                <!-- ══ BULLETIN FRANCOPHONE ══ -->
+                @if (bul.sousSysteme !== 'ANGLOPHONE') {
                 <div class="bul-wrap">
                     <!-- En-tête -->
                     <div class="bul-header">
@@ -411,6 +422,118 @@ type Mode = 'sequence' | 'trimestre';
                         </div>
                     </div>
                 </div>
+                }
+
+                <!-- ══ BULLETIN ANGLOPHONE (REPORT CARD) ══ -->
+                @if (bul.sousSysteme === 'ANGLOPHONE') {
+                <div class="bul-wrap bul-ang">
+                    <!-- Header -->
+                    <div class="bul-header">
+                        <div>
+                            <div style="font-size:9px;line-height:1.5">
+                                REPUBLIC OF CAMEROON<br>
+                                Peace – Work – Fatherland<br>
+                                Ministry of Secondary Education
+                            </div>
+                        </div>
+                        <div class="bul-title-col">
+                            <div class="bul-title">REPORT CARD — {{ bul.sequenceLibelle | uppercase }}</div>
+                            <div class="bul-annee">School Year {{ bul.anneeScolaire }}</div>
+                        </div>
+                        <div style="text-align:right;font-size:9px;line-height:1.5">
+                            <b>{{ bul.etablissementNom }}</b>
+                        </div>
+                    </div>
+                    <!-- Student info -->
+                    <div class="bul-eleve-info">
+                        <div class="bul-info-cell">
+                            <b>{{ bul.eleveMatricule }}</b> — {{ bul.elevePrenom }} {{ bul.eleveNom }}
+                        </div>
+                        <div class="bul-info-cell" style="text-align:right">
+                            Born on {{ bul.dateNaissanceFormatee ?? '—' }} at {{ bul.lieuNaissance ?? '—' }}
+                        </div>
+                        <div class="bul-info-cell">
+                            <b>Class:</b> {{ bul.classeLibelle }} &nbsp;|&nbsp; <b>Roll:</b> {{ bul.effectifClasse }}
+                        </div>
+                        <div class="bul-info-cell" style="text-align:right">
+                            {{ bul.redoublant ? 'Repeater' : 'Not a repeater' }}
+                        </div>
+                    </div>
+                    <!-- Marks table (flat — no groups in anglophone) -->
+                    <table class="bul-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;width:26%">Subject</th>
+                                <th>Mark /20</th>
+                                <th>Coef</th>
+                                <th>Total</th>
+                                <th>Rank</th>
+                                <th>C.Avg</th>
+                                <th>Min/Max</th>
+                                <th style="width:10%">Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (ligne of allLignes(bul); track ligne.matiereLibelle) {
+                                <tr>
+                                    <td class="bul-td-matiere">
+                                        {{ ligne.matiereLibelle }}<br>
+                                        <span class="bul-td-ens">{{ ligne.enseignantNom ?? '' }}</span>
+                                    </td>
+                                    <td>{{ ligne.moy !== null ? ligne.moy : '—' }}</td>
+                                    <td>{{ ligne.coef }}</td>
+                                    <td>{{ ligne.total !== null ? ligne.total : '—' }}</td>
+                                    <td>{{ ligne.rang !== null ? ligne.rang : '—' }}</td>
+                                    <td>{{ ligne.moyClasse !== null ? ligne.moyClasse : '—' }}</td>
+                                    <td>{{ ligne.minClasse !== null ? ligne.minClasse : '—' }}/{{ ligne.maxClasse !== null ? ligne.maxClasse : '—' }}</td>
+                                    <td><span [class]="'bul-ang-grade ' + gradeAng(ligne.moy)">{{ gradeAng(ligne.moy) }}</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <!-- WORK + CONDUCT -->
+                    <div class="bul-bottom">
+                        <div class="bul-travail">
+                            <div class="bul-section-title">WORK</div>
+                            <table class="bul-sumtable">
+                                <thead>
+                                    <tr><th>Points</th><th>Coef</th><th>Average</th><th>Rank</th><th>C.Avg</th><th>Min</th><th>Max</th><th>Grade</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ bul.travail.totalPoints }}</td>
+                                        <td>{{ bul.travail.totalCoef }}</td>
+                                        <td><b>{{ bul.travail.moyenne ?? '—' }}</b></td>
+                                        <td>{{ bul.travail.rang ?? '—' }}</td>
+                                        <td>{{ bul.travail.moyClasse ?? '—' }}</td>
+                                        <td>{{ bul.travail.minClasse ?? '—' }}</td>
+                                        <td>{{ bul.travail.maxClasse ?? '—' }}</td>
+                                        <td><b><span [class]="'bul-ang-grade ' + gradeAng(bul.travail.moyenne)">{{ gradeAng(bul.travail.moyenne) }}</span></b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="bul-discipline">
+                            <div class="bul-section-title">CONDUCT</div>
+                            <table class="bul-sumtable">
+                                <thead>
+                                    <tr><th>Unexc.Abs</th><th>Exc.Abs</th><th>Latenesses</th><th>Warnings</th><th>Blames</th><th>Excl.</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ bul.discipline.absencesInjustifiees || '' }}</td>
+                                        <td>{{ bul.discipline.absencesJustifiees || '' }}</td>
+                                        <td>{{ bul.discipline.retards || '' }}</td>
+                                        <td>{{ bul.discipline.avertissements || '' }}</td>
+                                        <td>{{ bul.discipline.blames || '' }}</td>
+                                        <td>{{ bul.discipline.exclusions || '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
             }
 
         }
@@ -706,6 +829,19 @@ export class Bulletins implements OnInit {
     }
 
     onPrint(): void { window.print(); }
+
+    gradeAng(moy: number | null): string {
+        if (moy === null) return '—';
+        if (moy >= 16) return 'A';
+        if (moy >= 13) return 'B';
+        if (moy >= 10) return 'C';
+        if (moy >= 7)  return 'D';
+        return 'E';
+    }
+
+    allLignes(bul: BulletinSequenceDto): BulletinLigneDto[] {
+        return bul.groupes.flatMap(g => g.lignes);
+    }
 
     private loadMoyennesTri(eleve: EleveResponse, trimestreId: string): void {
         this.loadingMoyTri.set(true);
